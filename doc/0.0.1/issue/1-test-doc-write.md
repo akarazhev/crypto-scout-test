@@ -2,6 +2,7 @@
 
 The `crypto-scout-test` project has been implemented to provide mock data and to manage of podman compose service for
 testing. So let's write professional documentation of the `crypto-scout-test` project that it is ready for production.
+Provide project description for the `github` repository.
 
 ## Roles
 

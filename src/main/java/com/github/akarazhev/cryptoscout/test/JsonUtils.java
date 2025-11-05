@@ -28,7 +28,6 @@ import com.dslplatform.json.DslJson;
 import com.dslplatform.json.runtime.Settings;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -44,31 +43,9 @@ final class JsonUtils {
         throw new UnsupportedOperationException();
     }
 
-    public static String object2Json(final Object object) throws IOException {
-        final var os = new ByteArrayOutputStream();
-        DSL_JSON.serialize(object, os);
-        return os.toString(StandardCharsets.UTF_8);
-    }
-
-    public static String map2Json(final Map<String, Object> map) throws IOException {
-        final var os = new ByteArrayOutputStream();
-        DSL_JSON.serialize(map, os);
-        return os.toString(StandardCharsets.UTF_8);
-    }
-
     @SuppressWarnings("unchecked")
     public static Map<String, Object> json2Map(final String json) throws IOException {
         final var bytes = json.getBytes(StandardCharsets.UTF_8);
         return DSL_JSON.deserialize(Map.class, new ByteArrayInputStream(bytes));
-    }
-
-    public static <T> byte[] object2Bytes(final T object) throws IOException {
-        final var os = new ByteArrayOutputStream();
-        DSL_JSON.serialize(object, os);
-        return os.toByteArray();
-    }
-
-    public static <T> T bytes2Object(final byte[] bytes, final Class<T> clazz) throws IOException {
-        return DSL_JSON.deserialize(clazz, new ByteArrayInputStream(bytes));
     }
 }

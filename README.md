@@ -13,11 +13,11 @@ fail-fast errors, clear defaults, and repeatable test setup.
 
 ## Features
 
-- **Bybit mock data API** (`com.github.akarazhev.cryptoscout.test.BybitMockData`)
+- **Bybit mock data API** (`com.github.akarazhev.cryptoscout.test.MockData`)
     - Typed access to bundled JSON fixtures.
-    - Supported types (`BybitMockData.Type`): `KLINE_1`, `KLINE_5`, `KLINE_15`, `KLINE_60`, `KLINE_240`, `KLINE_D`,
+    - Supported types (`MockData.Type`): `KLINE_1`, `KLINE_5`, `KLINE_15`, `KLINE_60`, `KLINE_240`, `KLINE_D`,
       `TICKERS`, `PUBLIC_TRADE`, `ORDER_BOOK_1`, `ORDER_BOOK_50`, `ORDER_BOOK_200`, `ORDER_BOOK_1000`.
-    - Sources (`BybitMockData.Source`): `SPOT` is provided in this version. `LINEAR` is reserved for future use.
+    - Sources (`MockData.Source`): `SPOT` is provided in this version. `LINEAR` is reserved for future use.
 - **Podman Compose manager** (`com.github.akarazhev.cryptoscout.test.PodmanCompose`)
     - `up()` starts a TimescaleDB service defined in `src/main/resources/podman/podman-compose.yml` and waits until the
       DB is ready.
@@ -71,12 +71,12 @@ and not transitive):
 ### Mock data
 
 ```java
-import com.github.akarazhev.cryptoscout.test.BybitMockData;
+import com.github.akarazhev.cryptoscout.test.MockData;
 
 // Load SPOT 1m klines
-var data = BybitMockData.get(
-        BybitMockData.Source.SPOT,
-        BybitMockData.Type.KLINE_1
+var data = MockData.get(
+        MockData.Source.SPOT,
+        MockData.Type.KLINE_1
 );
 // "data" is a Map<String, Object> parsed from the bundled JSON fixture
 ```
@@ -133,10 +133,10 @@ mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://lo
 
 ## Error handling and behavior
 
-- `BybitMockData.get(...)` throws `IllegalStateException` if a fixture is not found and may propagate parsing
+- `MockData.get(...)` throws `IllegalStateException` if a fixture is not found and may propagate parsing
   exceptions.
 - `PodmanCompose.up()/down()` throw `IllegalStateException` on command failure or timeout.
-- Resource loading: `BybitMockData` reads JSON fixtures from the classpath. `PodmanCompose` resolves `podman/` assets to
+- Resource loading: `MockData` reads JSON fixtures from the classpath. `PodmanCompose` resolves `podman/` assets to
   a real directory automatically: if they are on disk it uses them; if packaged in a JAR it extracts them to a temporary
   folder. No manual resource copying is required.
 

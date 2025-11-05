@@ -1,0 +1,20 @@
+{
+  "topic": "kline.1.BTCUSDT",
+  "data": [
+    {
+      "start": 1760121060000,
+      "end": 1760121119999,
+      "interval": "1",
+      "open": "117559.8",
+      "close": "117577.7",
+      "high": "117600.9",
+      "low": "117559.8",
+      "volume": "4.257",
+      "turnover": "500571.8578",
+      "confirm": false,
+      "timestamp": 1760121068798
+    }
+  ],
+  "ts": 1760121068798,
+  "type": "snapshot"
+}

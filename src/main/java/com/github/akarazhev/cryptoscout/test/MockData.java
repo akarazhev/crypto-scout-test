@@ -26,17 +26,17 @@ package com.github.akarazhev.cryptoscout.test;
 
 import java.util.Map;
 
-import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.ERR_FILE_NOT_FOUND_PREFIX;
-import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.JSON_EXTENSION;
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.ERR_FILE_NOT_FOUND_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.JSON_EXTENSION;
 import static com.github.akarazhev.cryptoscout.test.Constants.PATH_SEPARATOR;
-import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.SOURCE_LINEAR;
-import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.SOURCE_SPOT;
 
-public final class BybitMockData {
+public final class MockData {
 
     public enum Source {
-        SPOT(SOURCE_SPOT),
-        LINEAR(SOURCE_LINEAR);
+        CMC_PARSER(Constants.MockData.BYBIT_PARSER),
+        BYBIT_PARSER(Constants.MockData.BYBIT_PARSER),
+        BYBIT_SPOT(Constants.MockData.BYBIT_SPOT),
+        BYBIT_LINEAR(Constants.MockData.BYBIT_LINEAR);
 
         private final String source;
 
@@ -47,23 +47,23 @@ public final class BybitMockData {
 
     public enum Type {
         // Klines
-        KLINE_1(Constants.BybitMockData.KLINE_1),
-        KLINE_5(Constants.BybitMockData.KLINE_5),
-        KLINE_15(Constants.BybitMockData.KLINE_15),
-        KLINE_60(Constants.BybitMockData.KLINE_60),
-        KLINE_240(Constants.BybitMockData.KLINE_240),
-        KLINE_D(Constants.BybitMockData.KLINE_D),
+        KLINE_1(Constants.MockData.KLINE_1),
+        KLINE_5(Constants.MockData.KLINE_5),
+        KLINE_15(Constants.MockData.KLINE_15),
+        KLINE_60(Constants.MockData.KLINE_60),
+        KLINE_240(Constants.MockData.KLINE_240),
+        KLINE_D(Constants.MockData.KLINE_D),
         // Ticker
-        TICKERS(Constants.BybitMockData.TICKERS),
+        TICKERS(Constants.MockData.TICKERS),
         // Public trade
-        PUBLIC_TRADE(Constants.BybitMockData.PUBLIC_TRADE),
+        PUBLIC_TRADE(Constants.MockData.PUBLIC_TRADE),
         // Order books
-        ORDER_BOOK_1(Constants.BybitMockData.ORDER_BOOK_1),
-        ORDER_BOOK_50(Constants.BybitMockData.ORDER_BOOK_50),
-        ORDER_BOOK_200(Constants.BybitMockData.ORDER_BOOK_200),
-        ORDER_BOOK_1000(Constants.BybitMockData.ORDER_BOOK_1000),
+        ORDER_BOOK_1(Constants.MockData.ORDER_BOOK_1),
+        ORDER_BOOK_50(Constants.MockData.ORDER_BOOK_50),
+        ORDER_BOOK_200(Constants.MockData.ORDER_BOOK_200),
+        ORDER_BOOK_1000(Constants.MockData.ORDER_BOOK_1000),
         // All liquidations
-        ALL_LIQUIDATION(Constants.BybitMockData.ALL_LIQUDATION);
+        ALL_LIQUIDATION(Constants.MockData.ALL_LIQUDATION);
 
         private final String type;
 
@@ -76,12 +76,12 @@ public final class BybitMockData {
         }
     }
 
-    private BybitMockData() {
+    private MockData() {
         throw new UnsupportedOperationException();
     }
 
     public static Map<String, Object> get(final Source source, final Type type) throws Exception {
-        try (final var is = BybitMockData.class.getClassLoader().getResourceAsStream(type.getPath(source))) {
+        try (final var is = MockData.class.getClassLoader().getResourceAsStream(type.getPath(source))) {
             if (is == null) {
                 throw new IllegalStateException(ERR_FILE_NOT_FOUND_PREFIX + type.getPath(source));
             }

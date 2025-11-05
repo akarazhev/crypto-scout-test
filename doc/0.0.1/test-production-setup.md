@@ -19,12 +19,12 @@
 - **Build**: `pom.xml` (Java 25, Maven plugins, dependencies: DSL-JSON, optional PostgreSQL runtime, JUnit Jupiter for
   tests)
 - **Library classes**:
-    - `src/main/java/com/github/akarazhev/cryptoscout/test/BybitMockData.java`
+    - `src/main/java/com/github/akarazhev/cryptoscout/test/MockData.java`
     - `src/main/java/com/github/akarazhev/cryptoscout/test/PodmanCompose.java`
     - `src/main/java/com/github/akarazhev/cryptoscout/test/JsonUtils.java`
     - `src/main/java/com/github/akarazhev/cryptoscout/test/Constants.java`
 - **Tests**:
-    - `src/test/java/com/github/akarazhev/cryptoscout/test/BybitMockDataTest.java`
+    - `src/test/java/com/github/akarazhev/cryptoscout/test/MockDataTest.java`
     - `src/test/java/com/github/akarazhev/cryptoscout/test/PodmanComposeTest.java`
 - **Resources**:
     - `src/main/resources/bybit-spot/` – JSON fixtures for spot klines (1/5/15/60/240/1d), tickers, public trades, and
@@ -39,7 +39,7 @@
   manager).
 - **Requirements**: Java 25, Maven 3.9+, Podman and `podman-compose` for DB lifecycle.
 - **Installation**: Added Maven dependency snippet and optional PostgreSQL driver note for tests.
-- **Usage**: Included Java examples for `BybitMockData.get(...)` and JUnit lifecycle with `PodmanCompose.up()/down()`.
+- **Usage**: Included Java examples for `MockData.get(...)` and JUnit lifecycle with `PodmanCompose.up()/down()`.
 - **Configuration**: Documented all system properties and defaults from `Constants.PodmanCompose`:
     - `podman.compose.cmd` (default: `podman-compose`)
     - `podman.cmd` (default: `podman`)
@@ -49,7 +49,7 @@
     - `podman.compose.up.timeout.min` (default: `3`)
     - `podman.compose.down.timeout.min` (default: `1`)
     - `podman.compose.ready.interval.sec` (default: `2`)
-- **Resource loading**: Clarified that `BybitMockData` reads fixtures from the classpath and `PodmanCompose`
+- **Resource loading**: Clarified that `MockData` reads fixtures from the classpath and `PodmanCompose`
   automatically extracts the `podman/` assets to a temporary directory when packaged in a JAR; if resources are already
   on disk during test runs (e.g., Maven), it uses them in place. No manual copying is required.
 - **Packaged Resources**: Listed all Bybit Spot fixtures and described the TimescaleDB compose service and bootstrap
@@ -71,7 +71,7 @@
 
 ## Considerations
 
-- **Resource loading**: `BybitMockData` reads JSON fixtures directly from the classpath. `PodmanCompose` resolves
+- **Resource loading**: `MockData` reads JSON fixtures directly from the classpath. `PodmanCompose` resolves
   compose assets via the classpath and will auto-extract the `podman/` directory to a temporary location if the
   resources are packaged in a JAR; when resources are available on disk (typical during Maven test runs), it uses them
   directly. No manual copying is necessary.
@@ -88,7 +88,7 @@
 - **Constants mapped to README**: Verified all property keys and defaults from `Constants.PodmanCompose` are
   documented.
 - **Resource inventory**: Verified filenames and locations for Bybit Spot fixtures and compose assets.
-- **Examples compile conceptually**: Code snippets reflect actual class names and signatures in `BybitMockData` and
+- **Examples compile conceptually**: Code snippets reflect actual class names and signatures in `MockData` and
   `PodmanCompose`.
 
 ## Change log

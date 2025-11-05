@@ -1,0 +1,43 @@
+{
+  "topic": "publicTrade.BTCUSDT",
+  "type": "snapshot",
+  "ts": 1760121132335,
+  "data": [
+    {
+      "T": 1760121132334,
+      "s": "BTCUSDT",
+      "S": "Sell",
+      "v": "0.154",
+      "p": "117500.00",
+      "L": "ZeroMinusTick",
+      "i": "c2b08e63-ced0-5b5d-b81f-05ba75fa8cd8",
+      "BT": false,
+      "RPI": false,
+      "seq": 462754183220
+    },
+    {
+      "T": 1760121132334,
+      "s": "BTCUSDT",
+      "S": "Sell",
+      "v": "0.158",
+      "p": "117500.00",
+      "L": "ZeroMinusTick",
+      "i": "58b9ee3b-48ae-5c8e-b4b3-faa6494232c6",
+      "BT": false,
+      "RPI": false,
+      "seq": 462754183221
+    },
+    {
+      "T": 1760121132334,
+      "s": "BTCUSDT",
+      "S": "Sell",
+      "v": "0.056",
+      "p": "117500.00",
+      "L": "ZeroMinusTick",
+      "i": "35b1e5f0-7ef0-55fc-9452-0c0cad7c7833",
+      "BT": false,
+      "RPI": false,
+      "seq": 462754183223
+    }
+  ]
+}

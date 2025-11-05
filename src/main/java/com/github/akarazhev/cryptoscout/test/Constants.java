@@ -32,14 +32,16 @@ final class Constants {
     // Common path separator for resource paths
     static final String PATH_SEPARATOR = "/";
 
-    final static class BybitMockData {
-        private BybitMockData() {
+    final static class MockData {
+        private MockData() {
             throw new UnsupportedOperationException();
         }
 
         // Source directories
-        static final String SOURCE_SPOT = "bybit-spot";
-        static final String SOURCE_LINEAR = "bybit-linear";
+        static final String CMC_PARSER = "cmc-parser";
+        static final String BYBIT_PARSER = "bybit-parser";
+        static final String BYBIT_SPOT = "bybit-spot";
+        static final String BYBIT_LINEAR = "bybit-linear";
         // Stream types
         static final String KLINE_1 = "kline.1";
         static final String KLINE_5 = "kline.5";

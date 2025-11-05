@@ -53,6 +53,7 @@ final class Constants {
         static final String ORDER_BOOK_50 = "orderbook.50";
         static final String ORDER_BOOK_200 = "orderbook.200";
         static final String ORDER_BOOK_1000 = "orderbook.1000";
+        static final String ALL_LIQUDATION = "allLiquidation";
         // File extension
         static final String JSON_EXTENSION = ".json";
         // Error messages

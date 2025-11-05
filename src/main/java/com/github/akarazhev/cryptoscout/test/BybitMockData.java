@@ -61,7 +61,9 @@ public final class BybitMockData {
         ORDER_BOOK_1(Constants.BybitMockData.ORDER_BOOK_1),
         ORDER_BOOK_50(Constants.BybitMockData.ORDER_BOOK_50),
         ORDER_BOOK_200(Constants.BybitMockData.ORDER_BOOK_200),
-        ORDER_BOOK_1000(Constants.BybitMockData.ORDER_BOOK_1000);
+        ORDER_BOOK_1000(Constants.BybitMockData.ORDER_BOOK_1000),
+        // All liquidations
+        ALL_LIQUIDATION(Constants.BybitMockData.ALL_LIQUDATION);
 
         private final String type;
 

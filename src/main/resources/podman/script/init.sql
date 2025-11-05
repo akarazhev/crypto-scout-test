@@ -43,14 +43,14 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_spot_tickers (
     symbol TEXT NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     cross_sequence BIGINT NOT NULL,
-    last_price NUMERIC(20, 2) NOT NULL,
-    high_price_24h NUMERIC(20, 2) NOT NULL,
-    low_price_24h NUMERIC(20, 2) NOT NULL,
-    prev_price_24h NUMERIC(20, 2) NOT NULL,
+    last_price NUMERIC(20, 8) NOT NULL,
+    high_price_24h NUMERIC(20, 8) NOT NULL,
+    low_price_24h NUMERIC(20, 8) NOT NULL,
+    prev_price_24h NUMERIC(20, 8) NOT NULL,
     volume_24h NUMERIC(20, 8) NOT NULL,
-    turnover_24h NUMERIC(20, 4) NOT NULL,
-    price_24h_pcnt NUMERIC(10, 4) NOT NULL,
-    usd_index_price NUMERIC(20, 6),
+    turnover_24h NUMERIC(20, 8) NOT NULL,
+    price_24h_pcnt NUMERIC(3, 4) NOT NULL,
+    usd_index_price NUMERIC(20, 8),
     CONSTRAINT bybit_spot_tickers_pkey PRIMARY KEY (id, timestamp)
 );
 alter table crypto_scout.bybit_spot_tickers OWNER TO crypto_scout_db;
@@ -368,14 +368,14 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_linear_tickers (
     symbol TEXT NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     cross_sequence BIGINT NOT NULL,
-    last_price NUMERIC(20, 2) NOT NULL,
-    high_price_24h NUMERIC(20, 2) NOT NULL,
-    low_price_24h NUMERIC(20, 2) NOT NULL,
-    prev_price_24h NUMERIC(20, 2) NOT NULL,
+    last_price NUMERIC(20, 8) NOT NULL,
+    high_price_24h NUMERIC(20, 8) NOT NULL,
+    low_price_24h NUMERIC(20, 8) NOT NULL,
+    prev_price_24h NUMERIC(20, 8) NOT NULL,
     volume_24h NUMERIC(20, 8) NOT NULL,
-    turnover_24h NUMERIC(20, 4) NOT NULL,
-    price_24h_pcnt NUMERIC(10, 4) NOT NULL,
-    usd_index_price NUMERIC(20, 6),
+    turnover_24h NUMERIC(20, 8) NOT NULL,
+    price_24h_pcnt NUMERIC(3, 4) NOT NULL,
+    usd_index_price NUMERIC(20, 8),
     CONSTRAINT bybit_linear_tickers_pkey PRIMARY KEY (id, timestamp)
 );
 alter table crypto_scout.bybit_linear_tickers OWNER TO crypto_scout_db;
@@ -752,8 +752,8 @@ create TABLE IF NOT EXISTS crypto_scout.cmc_fgi (
     score INTEGER NOT NULL,
     name TEXT NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
-    btc_price NUMERIC(20, 2) NOT NULL,
-    btc_volume NUMERIC(20, 2) NOT NULL,
+    btc_price NUMERIC(20, 8) NOT NULL,
+    btc_volume NUMERIC(20, 8) NOT NULL,
     CONSTRAINT fgi_pkey PRIMARY KEY (id, timestamp)
 );
 

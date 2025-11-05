@@ -52,6 +52,8 @@ final class Constants {
         static final String ORDER_BOOK_1000 = "orderbook.1000";
         // File extension
         static final String JSON_EXTENSION = ".json";
+        // Path separator
+        static final String PATH_SEPARATOR = "/";
         // Error messages
         static final String ERR_FILE_NOT_FOUND_PREFIX = "File not found: ";
     }
@@ -87,6 +89,11 @@ final class Constants {
         static final String DB_HEALTH_QUERY = "SELECT 1";
         // Thread names
         static final String OUTPUT_THREAD_NAME = "podman-compose-output";
+        // Podman resource files
+        static final String SCRIPT_DIR_NAME = "script";
+        static final String INIT_SCRIPT_NAME = "init.sql";
+        static final String TEMP_DIR_PREFIX = "crypto-scout-podman-";
+        static final String PROTOCOL_FILE = "file";
         // Podman command args
         static final String FILE_ARG = "-f";
         static final String UP_CMD = "up";
@@ -100,6 +107,7 @@ final class Constants {
         static final long PS_TIMEOUT_SEC = 15L;
         // Misc
         static final String LINE_SPLIT_REGEX = "\\R";
+        static final String RESOURCE_PATH_SEPARATOR = "/";
         // Numeric boundaries
         static final long MIN_SECONDS = 1L;
         static final long MIN_MILLIS = 1L;
@@ -117,5 +125,6 @@ final class Constants {
         static final String ERR_CMD_FAILED_MIDDLE = "): ";
         static final String ERR_OUTPUT_PREFIX = "\nOutput:\n";
         static final String ERR_RUN_CMD_PREFIX = "Failed to run command: ";
+        static final String ERR_EXTRACT_RESOURCES = "Failed to extract podman resources";
     }
 }

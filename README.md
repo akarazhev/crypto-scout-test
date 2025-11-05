@@ -103,7 +103,7 @@ class IntegrationTest {
 
 ## Configuration
 
-All settings are provided via system properties (see `Constants.PodmanComposeConfig`):
+All settings are provided via system properties (see `Constants.PodmanCompose`):
 
 - `podman.compose.cmd` (default: `podman-compose`)
 - `podman.cmd` (default: `podman`)
@@ -124,8 +124,8 @@ mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://lo
 
 - `src/main/resources/bybit-spot/`
     - `kline.1.json`, `kline.5.json`, `kline.15.json`, `kline.60.json`, `kline.240.json`, `kline.D.json`
-    - `tickers.json`, `publicTrade.json`
-    - `orderbook.1.json`, `orderbook.50.json`, `orderbook.200.json`, `orderbook.1000.json`
+    - `tickers.json`, `publicTrade.json`, `orderbook.1.json`, `orderbook.50.json`, `orderbook.200.json`, 
+    - `orderbook.1000.json`
 - `src/main/resources/podman/podman-compose.yml`
     - Runs `timescale/timescaledb:latest-pg17` as `crypto-scout-collector-db` on `5432`.
     - Loads init SQL from `src/main/resources/podman/script/init.sql` to bootstrap the `crypto_scout` schema and tables
@@ -136,8 +136,9 @@ mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://lo
 - `BybitMockData.get(...)` throws `IllegalStateException` if a fixture is not found and may propagate parsing
   exceptions.
 - `PodmanCompose.up()/down()` throw `IllegalStateException` on command failure or timeout.
-- Resource resolution is performed via `ClassLoader` and then resolved to a disk path; ensure your test runtime provides
-  resources on the filesystem (e.g., Maven places them under `target/test-classes`).
+- Resource loading: `BybitMockData` reads JSON fixtures from the classpath. `PodmanCompose` resolves `podman/` assets to
+  a real directory automatically: if they are on disk it uses them; if packaged in a JAR it extracts them to a temporary
+  folder. No manual resource copying is required.
 
 ## License
 

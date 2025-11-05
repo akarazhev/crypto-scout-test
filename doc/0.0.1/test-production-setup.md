@@ -25,6 +25,7 @@
     - `src/main/java/com/github/akarazhev/cryptoscout/test/Constants.java`
 - **Tests**:
     - `src/test/java/com/github/akarazhev/cryptoscout/test/BybitMockDataTest.java`
+    - `src/test/java/com/github/akarazhev/cryptoscout/test/PodmanComposeTest.java`
 - **Resources**:
     - `src/main/resources/bybit-spot/` – JSON fixtures for spot klines (1/5/15/60/240/1d), tickers, public trades, and
       order books (1/50/200/1000)
@@ -39,7 +40,7 @@
 - **Requirements**: Java 25, Maven 3.9+, Podman and `podman-compose` for DB lifecycle.
 - **Installation**: Added Maven dependency snippet and optional PostgreSQL driver note for tests.
 - **Usage**: Included Java examples for `BybitMockData.get(...)` and JUnit lifecycle with `PodmanCompose.up()/down()`.
-- **Configuration**: Documented all system properties and defaults from `Constants.PodmanComposeConfig`:
+- **Configuration**: Documented all system properties and defaults from `Constants.PodmanCompose`:
     - `podman.compose.cmd` (default: `podman-compose`)
     - `podman.cmd` (default: `podman`)
     - `test.db.jdbc.url` (default: `jdbc:postgresql://localhost:5432/crypto_scout`)
@@ -48,6 +49,9 @@
     - `podman.compose.up.timeout.min` (default: `3`)
     - `podman.compose.down.timeout.min` (default: `1`)
     - `podman.compose.ready.interval.sec` (default: `2`)
+- **Resource loading**: Clarified that `BybitMockData` reads fixtures from the classpath and `PodmanCompose`
+  automatically extracts the `podman/` assets to a temporary directory when packaged in a JAR; if resources are already
+  on disk during test runs (e.g., Maven), it uses them in place. No manual copying is required.
 - **Packaged Resources**: Listed all Bybit Spot fixtures and described the TimescaleDB compose service and bootstrap
   SQL.
 - **Error Handling**: Described failure modes (`IllegalStateException` on resource missing or command/timeout issues).
@@ -67,10 +71,10 @@
 
 ## Considerations
 
-- **Resource loading**: Fixtures and compose files are loaded via the classloader and then resolved to disk paths.
-  Ensure the test runtime provides these resources on the filesystem (typical with Maven during test runs). If
-  packaging/consuming as a JAR in another project, verify resource availability on disk or adjust build/runtime
-  accordingly.
+- **Resource loading**: `BybitMockData` reads JSON fixtures directly from the classpath. `PodmanCompose` resolves
+  compose assets via the classpath and will auto-extract the `podman/` directory to a temporary location if the
+  resources are packaged in a JAR; when resources are available on disk (typical during Maven test runs), it uses them
+  directly. No manual copying is necessary.
 - **PostgreSQL driver**: Required at test runtime when using `PodmanCompose` for JDBC readiness checks. Declared as
   optional in this library to avoid forcing it on consumers; add it to your test scope.
 
@@ -81,7 +85,7 @@
 
 ## Verification checklist
 
-- **Constants mapped to README**: Verified all property keys and defaults from `Constants.PodmanComposeConfig` are
+- **Constants mapped to README**: Verified all property keys and defaults from `Constants.PodmanCompose` are
   documented.
 - **Resource inventory**: Verified filenames and locations for Bybit Spot fixtures and compose assets.
 - **Examples compile conceptually**: Code snippets reflect actual class names and signatures in `BybitMockData` and
@@ -91,3 +95,5 @@
 
 - Updated `README.md` with production-ready documentation covering features, installation, configuration, usage,
   resources, error handling, and acknowledgements.
+- Clarified resource-loading behavior in README and this report; corrected reference to `Constants.PodmanCompose`.
+- Added `PodmanComposeTest.java` to files reviewed to reflect integration test lifecycle coverage.

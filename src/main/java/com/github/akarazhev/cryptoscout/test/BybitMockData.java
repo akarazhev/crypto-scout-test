@@ -28,7 +28,7 @@ import java.util.Map;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.ERR_FILE_NOT_FOUND_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.JSON_EXTENSION;
-import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.PATH_SEPARATOR;
+import static com.github.akarazhev.cryptoscout.test.Constants.PATH_SEPARATOR;
 import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.SOURCE_LINEAR;
 import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.SOURCE_SPOT;
 

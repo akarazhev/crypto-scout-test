@@ -84,7 +84,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.READ
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.UP_CMD;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.UP_TIMEOUT_MIN_DEFAULT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.UP_TIMEOUT_MIN_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RESOURCE_PATH_SEPARATOR;
+import static com.github.akarazhev.cryptoscout.test.Constants.PATH_SEPARATOR;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PROTOCOL_FILE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.TEMP_DIR_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.SCRIPT_DIR_NAME;
@@ -107,7 +107,7 @@ public final class PodmanCompose {
             Duration.ofSeconds(Long.getLong(READY_INTERVAL_SEC_PROP, READY_INTERVAL_SEC_DEFAULT));
 
     static {
-        final var resourcePath = COMPOSE_FILE_LOCATION + RESOURCE_PATH_SEPARATOR + COMPOSE_FILE_NAME;
+        final var resourcePath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + COMPOSE_FILE_NAME;
         final var resourceUrl = PodmanCompose.class.getClassLoader().getResource(resourcePath);
         if (resourceUrl == null) {
             throw new IllegalStateException(ERR_RESOURCE_NOT_FOUND + resourcePath);
@@ -264,11 +264,11 @@ public final class PodmanCompose {
             Files.createDirectories(scriptDir);
 
             // Copy required resources from classpath
-            copyClasspathFile(COMPOSE_FILE_LOCATION + RESOURCE_PATH_SEPARATOR + COMPOSE_FILE_NAME,
+            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + COMPOSE_FILE_NAME,
                     podmanTargetDir.resolve(COMPOSE_FILE_NAME));
             // Optional script; copy if present
-            final var scriptPath = COMPOSE_FILE_LOCATION + RESOURCE_PATH_SEPARATOR + SCRIPT_DIR_NAME +
-                    RESOURCE_PATH_SEPARATOR + INIT_SCRIPT_NAME;
+            final var scriptPath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + SCRIPT_DIR_NAME +
+                    PATH_SEPARATOR + INIT_SCRIPT_NAME;
             try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(scriptPath)) {
                 if (is != null) {
                     Files.copy(is, scriptDir.resolve(INIT_SCRIPT_NAME), StandardCopyOption.REPLACE_EXISTING);

@@ -29,6 +29,9 @@ final class Constants {
         throw new UnsupportedOperationException();
     }
 
+    // Common path separator for resource paths
+    static final String PATH_SEPARATOR = "/";
+
     final static class BybitMockData {
         private BybitMockData() {
             throw new UnsupportedOperationException();
@@ -52,8 +55,6 @@ final class Constants {
         static final String ORDER_BOOK_1000 = "orderbook.1000";
         // File extension
         static final String JSON_EXTENSION = ".json";
-        // Path separator
-        static final String PATH_SEPARATOR = "/";
         // Error messages
         static final String ERR_FILE_NOT_FOUND_PREFIX = "File not found: ";
     }
@@ -107,7 +108,6 @@ final class Constants {
         static final long PS_TIMEOUT_SEC = 15L;
         // Misc
         static final String LINE_SPLIT_REGEX = "\\R";
-        static final String RESOURCE_PATH_SEPARATOR = "/";
         // Numeric boundaries
         static final long MIN_SECONDS = 1L;
         static final long MIN_MILLIS = 1L;

@@ -27,9 +27,8 @@ package com.github.akarazhev.cryptoscout.test;
 import com.dslplatform.json.DslJson;
 import com.dslplatform.json.runtime.Settings;
 
-import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 final class JsonUtils {
@@ -44,8 +43,7 @@ final class JsonUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static Map<String, Object> json2Map(final String json) throws IOException {
-        final var bytes = json.getBytes(StandardCharsets.UTF_8);
-        return DSL_JSON.deserialize(Map.class, new ByteArrayInputStream(bytes));
+    public static Map<String, Object> json2Map(final InputStream is) throws IOException {
+        return DSL_JSON.deserialize(Map.class, is);
     }
 }

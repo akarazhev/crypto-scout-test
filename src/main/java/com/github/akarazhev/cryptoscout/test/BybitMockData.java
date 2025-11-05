@@ -24,12 +24,8 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 
-import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.ERR_FILE_NOT_FOUND_ON_DISK_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.ERR_FILE_NOT_FOUND_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.JSON_EXTENSION;
 import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.SOURCE_LINEAR;
@@ -73,7 +69,7 @@ public final class BybitMockData {
         }
 
         public String getPath(final Source source) {
-            return source.source + File.separator + type + JSON_EXTENSION;
+            return source.source + "/" + type + JSON_EXTENSION;
         }
     }
 
@@ -82,16 +78,12 @@ public final class BybitMockData {
     }
 
     public static Map<String, Object> get(final Source source, final Type type) throws Exception {
-        final var file = PodmanCompose.class.getClassLoader().getResource(type.getPath(source));
-        if (file == null) {
-            throw new IllegalStateException(ERR_FILE_NOT_FOUND_PREFIX + type.getPath(source));
-        }
+        try (final var is = BybitMockData.class.getClassLoader().getResourceAsStream(type.getPath(source))) {
+            if (is == null) {
+                throw new IllegalStateException(ERR_FILE_NOT_FOUND_PREFIX + type.getPath(source));
+            }
 
-        final var diskFile = Paths.get(file.toURI());
-        if (!Files.exists(diskFile)) {
-            throw new IllegalStateException(ERR_FILE_NOT_FOUND_ON_DISK_PREFIX + diskFile);
+            return JsonUtils.json2Map(is);
         }
-
-        return JsonUtils.json2Map(new String(Files.readAllBytes(diskFile)));
     }
 }

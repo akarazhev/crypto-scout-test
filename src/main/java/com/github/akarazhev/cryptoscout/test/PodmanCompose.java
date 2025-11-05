@@ -25,13 +25,13 @@
 package com.github.akarazhev.cryptoscout.test;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Duration;
@@ -101,21 +101,26 @@ public final class PodmanCompose {
             Duration.ofSeconds(Long.getLong(READY_INTERVAL_SEC_PROP, READY_INTERVAL_SEC_DEFAULT));
 
     static {
-        final var resourcePath = COMPOSE_FILE_LOCATION + File.separator + COMPOSE_FILE_NAME;
+        final var resourcePath = COMPOSE_FILE_LOCATION + "/" + COMPOSE_FILE_NAME;
         final var resourceUrl = PodmanCompose.class.getClassLoader().getResource(resourcePath);
         if (resourceUrl == null) {
             throw new IllegalStateException(ERR_RESOURCE_NOT_FOUND + resourcePath);
         }
 
         try {
-            final var composeFile = Paths.get(resourceUrl.toURI());
-            if (!Files.exists(composeFile)) {
-                throw new IllegalStateException(ERR_COMPOSE_FILE_NOT_FOUND + composeFile);
-            }
+            if ("file".equalsIgnoreCase(resourceUrl.getProtocol())) {
+                final var composeFile = Paths.get(resourceUrl.toURI());
+                if (!Files.exists(composeFile)) {
+                    throw new IllegalStateException(ERR_COMPOSE_FILE_NOT_FOUND + composeFile);
+                }
 
-            COMPOSE_DIR = composeFile.getParent();
-            if (COMPOSE_DIR == null || !Files.isDirectory(COMPOSE_DIR)) {
-                throw new IllegalStateException(ERR_COMPOSE_DIR_INVALID + COMPOSE_DIR);
+                COMPOSE_DIR = composeFile.getParent();
+                if (COMPOSE_DIR == null || !Files.isDirectory(COMPOSE_DIR)) {
+                    throw new IllegalStateException(ERR_COMPOSE_DIR_INVALID + COMPOSE_DIR);
+                }
+            } else {
+                // Resource is inside a JAR; extract the whole 'podman' directory to a temp location
+                COMPOSE_DIR = extractPodmanDirToTemp();
             }
         } catch (final URISyntaxException e) {
             throw new IllegalStateException(ERR_COMPOSE_URI_RESOLVE, e);
@@ -241,6 +246,42 @@ public final class PodmanCompose {
             }
 
             throw new IllegalStateException(ERR_RUN_CMD_PREFIX + String.join(" ", command), e);
+        }
+    }
+
+    private static Path extractPodmanDirToTemp() {
+        try {
+            // Create temp podman directory
+            final var tempRoot = Files.createTempDirectory("crypto-scout-podman-");
+            final var podmanTargetDir = tempRoot.resolve(COMPOSE_FILE_LOCATION);
+            final var scriptDir = podmanTargetDir.resolve("script");
+            Files.createDirectories(scriptDir);
+
+            // Copy required resources from classpath
+            copyClasspathFile(COMPOSE_FILE_LOCATION + "/" + COMPOSE_FILE_NAME,
+                    podmanTargetDir.resolve(COMPOSE_FILE_NAME));
+            // Optional script; copy if present
+            final var scriptPath = COMPOSE_FILE_LOCATION + "/script/init.sql";
+            try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(scriptPath)) {
+                if (is != null) {
+                    Files.copy(is, scriptDir.resolve("init.sql"), StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+
+            return podmanTargetDir;
+        } catch (final Exception e) {
+            throw new IllegalStateException("Failed to extract podman resources", e);
+        }
+    }
+
+    private static void copyClasspathFile(final String classpath, final Path target) throws IOException {
+        try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(classpath)) {
+            if (is == null) {
+                throw new IllegalStateException(ERR_RESOURCE_NOT_FOUND + classpath);
+            }
+
+            Files.createDirectories(target.getParent());
+            Files.copy(is, target, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 

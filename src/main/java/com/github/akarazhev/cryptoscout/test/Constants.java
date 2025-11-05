@@ -54,7 +54,6 @@ final class Constants {
         static final String JSON_EXTENSION = ".json";
         // Error messages
         static final String ERR_FILE_NOT_FOUND_PREFIX = "File not found: ";
-        static final String ERR_FILE_NOT_FOUND_ON_DISK_PREFIX = "File not found on disk: ";
     }
 
     final static class PodmanCompose {

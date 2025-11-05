@@ -39,42 +39,83 @@ import java.util.concurrent.TimeUnit;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.COMPOSE_FILE_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_CONTAINER_NAME;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.READY_INTERVAL_SEC;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.READY_INTERVAL_SEC_VAL;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_HEALTH_QUERY;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_JDBC_URL_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_JDBC_URL_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_PASSWORD_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_PASSWORD_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_USER_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_USER_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DETACHED_ARG;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DOWN_CMD;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DOWN_TIMEOUT_MIN_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DOWN_TIMEOUT_MIN_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_CMD_FAILED_MIDDLE;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_CMD_FAILED_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_CMD_TIMEOUT_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_COMPOSE_DIR_INVALID;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_COMPOSE_FILE_NOT_FOUND;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_COMPOSE_URI_RESOLVE;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_CONTAINER_STILL_PRESENT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_DB_NOT_READY_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_DB_NOT_READY_SUFFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_OUTPUT_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_PARTIAL_OUTPUT_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_RESOURCE_NOT_FOUND;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.ERR_RUN_CMD_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.FILE_ARG;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.LINE_SPLIT_REGEX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.MIN_MILLIS;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.MIN_SECONDS;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.OUTPUT_THREAD_NAME;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PODMAN_CMD_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PODMAN_CMD_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PODMAN_COMPOSE_CMD_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PODMAN_COMPOSE_CMD_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PS_ALL_ARG;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PS_CMD;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PS_FORMAT_ARG;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PS_NAMES_TEMPLATE;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.PS_TIMEOUT_SEC;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.READY_INTERVAL_SEC_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.READY_INTERVAL_SEC_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.UP_CMD;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.UP_TIMEOUT_MIN_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.UP_TIMEOUT_MIN_PROP;
 
 public final class PodmanCompose {
-    private static final String PODMAN_COMPOSE_CMD = System.getProperty("podman.compose.cmd", "podman-compose");
-    private static final String PODMAN_CMD = System.getProperty("podman.cmd", "podman");
+    private static final String PODMAN_COMPOSE_CMD =
+            System.getProperty(PODMAN_COMPOSE_CMD_PROP, PODMAN_COMPOSE_CMD_DEFAULT);
+    private static final String PODMAN_CMD = System.getProperty(PODMAN_CMD_PROP, PODMAN_CMD_DEFAULT);
     private static final Path COMPOSE_DIR;
-    private static final String JDBC_URL =
-            System.getProperty("test.db.jdbc.url", "jdbc:postgresql://localhost:5432/crypto_scout");
-    private static final String DB_USER = System.getProperty("test.db.user", "crypto_scout_db");
-    private static final String DB_PASSWORD = System.getProperty("test.db.password", "crypto_scout_db");
+    private static final String JDBC_URL = System.getProperty(DB_JDBC_URL_PROP, DB_JDBC_URL_DEFAULT);
+    private static final String DB_USER = System.getProperty(DB_USER_PROP, DB_USER_DEFAULT);
+    private static final String DB_PASSWORD = System.getProperty(DB_PASSWORD_PROP, DB_PASSWORD_DEFAULT);
     private static final Duration UP_TIMEOUT =
-            Duration.ofMinutes(Long.getLong("podman.compose.up.timeout.min", 3L));
+            Duration.ofMinutes(Long.getLong(UP_TIMEOUT_MIN_PROP, UP_TIMEOUT_MIN_DEFAULT));
     private static final Duration DOWN_TIMEOUT =
-            Duration.ofMinutes(Long.getLong("podman.compose.down.timeout.min", 1L));
-    private static final Duration READY_RETRY_INTERVAL = Duration.ofSeconds(Long.getLong(READY_INTERVAL_SEC,
-            READY_INTERVAL_SEC_VAL));
+            Duration.ofMinutes(Long.getLong(DOWN_TIMEOUT_MIN_PROP, DOWN_TIMEOUT_MIN_DEFAULT));
+    private static final Duration READY_RETRY_INTERVAL =
+            Duration.ofSeconds(Long.getLong(READY_INTERVAL_SEC_PROP, READY_INTERVAL_SEC_DEFAULT));
 
     static {
         final var resourceUrl = PodmanCompose.class.getClassLoader().getResource(COMPOSE_FILE_NAME);
         if (resourceUrl == null) {
-            throw new IllegalStateException("Resource not found: " + COMPOSE_FILE_NAME);
+            throw new IllegalStateException(ERR_RESOURCE_NOT_FOUND + COMPOSE_FILE_NAME);
         }
 
         try {
             final var composeFile = Paths.get(resourceUrl.toURI());
             if (!Files.exists(composeFile)) {
-                throw new IllegalStateException("Compose file not found on disk: " + composeFile);
+                throw new IllegalStateException(ERR_COMPOSE_FILE_NOT_FOUND + composeFile);
             }
 
             COMPOSE_DIR = composeFile.getParent();
             if (COMPOSE_DIR == null || !Files.isDirectory(COMPOSE_DIR)) {
-                throw new IllegalStateException("Compose directory is invalid: " + COMPOSE_DIR);
+                throw new IllegalStateException(ERR_COMPOSE_DIR_INVALID + COMPOSE_DIR);
             }
         } catch (final URISyntaxException e) {
-            throw new IllegalStateException("Failed to resolve compose file URI", e);
+            throw new IllegalStateException(ERR_COMPOSE_URI_RESOLVE, e);
         }
     }
 
@@ -84,21 +125,21 @@ public final class PodmanCompose {
 
     public static void up() {
         // Start containers
-        runCommand(COMPOSE_DIR, UP_TIMEOUT, PODMAN_COMPOSE_CMD, "-f", COMPOSE_FILE_NAME, "up", "-d");
+        runCommand(COMPOSE_DIR, UP_TIMEOUT, PODMAN_COMPOSE_CMD, FILE_ARG, COMPOSE_FILE_NAME, UP_CMD, DETACHED_ARG);
         // Wait for DB readiness
         waitForDatabaseReady(UP_TIMEOUT);
     }
 
     public static void down() {
         // Stop and remove containers
-        runCommand(COMPOSE_DIR, DOWN_TIMEOUT, PODMAN_COMPOSE_CMD, "-f", COMPOSE_FILE_NAME, "down");
+        runCommand(COMPOSE_DIR, DOWN_TIMEOUT, PODMAN_COMPOSE_CMD, FILE_ARG, COMPOSE_FILE_NAME, DOWN_CMD);
         // Wait until DB container is removed
         waitForContainerRemoval(DB_CONTAINER_NAME, DOWN_TIMEOUT);
     }
 
     private static void waitForDatabaseReady(final Duration timeout) {
         final var deadline = System.nanoTime() + timeout.toNanos();
-        final var loginTimeoutSec = (int) Math.max(1L, READY_RETRY_INTERVAL.getSeconds());
+        final var loginTimeoutSec = (int) Math.max(MIN_SECONDS, READY_RETRY_INTERVAL.getSeconds());
         DriverManager.setLoginTimeout(loginTimeoutSec);
 
         while (System.nanoTime() < deadline) {
@@ -109,13 +150,13 @@ public final class PodmanCompose {
             sleep(READY_RETRY_INTERVAL);
         }
 
-        throw new IllegalStateException("Database was not ready within " + timeout.toSeconds() + " seconds");
+        throw new IllegalStateException(ERR_DB_NOT_READY_PREFIX + timeout.toSeconds() + ERR_DB_NOT_READY_SUFFIX);
     }
 
     private static boolean canConnect() {
         try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
              final var st = conn.createStatement();
-             final var rs = st.executeQuery("SELECT 1")) {
+             final var rs = st.executeQuery(DB_HEALTH_QUERY)) {
             return rs.next();
         } catch (final SQLException e) {
             return false;
@@ -132,13 +173,13 @@ public final class PodmanCompose {
             sleep(READY_RETRY_INTERVAL);
         }
 
-        throw new IllegalStateException("Container still present after timeout: " + containerName);
+        throw new IllegalStateException(ERR_CONTAINER_STILL_PRESENT + containerName);
     }
 
     private static boolean isContainerPresent(final String containerName) {
-        final var out = runAndCapture(COMPOSE_DIR, Duration.ofSeconds(15), PODMAN_CMD,
-                "ps", "-a", "--format", "{{.Names}}");
-        final var lines = out.split("\\R");
+        final var out = runAndCapture(COMPOSE_DIR, Duration.ofSeconds(PS_TIMEOUT_SEC), PODMAN_CMD,
+                PS_CMD, PS_ALL_ARG, PS_FORMAT_ARG, PS_NAMES_TEMPLATE);
+        final var lines = out.split(LINE_SPLIT_REGEX);
         for (final String line : lines) {
             if (containerName.equals(line.trim())) {
                 return true;
@@ -173,21 +214,21 @@ public final class PodmanCompose {
 
                 } catch (final IOException ignored) {
                 }
-            }, "podman-compose-output");
+            }, OUTPUT_THREAD_NAME);
             reader.setDaemon(true);
             reader.start();
 
             final var finished = p.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
             if (!finished) {
                 p.destroyForcibly();
-                throw new IllegalStateException("Command timed out: " + String.join(" ", cmd) +
-                        "\nPartial output:\n" + out);
+                throw new IllegalStateException(ERR_CMD_TIMEOUT_PREFIX + String.join(" ", cmd) +
+                        ERR_PARTIAL_OUTPUT_PREFIX + out);
             }
 
             final var exit = p.exitValue();
             if (exit != 0) {
-                throw new IllegalStateException("Command failed (" + exit + "): " + String.join(" ", cmd) +
-                        "\nOutput:\n" + out);
+                throw new IllegalStateException(ERR_CMD_FAILED_PREFIX + exit + ERR_CMD_FAILED_MIDDLE +
+                        String.join(" ", cmd) + ERR_OUTPUT_PREFIX + out);
             }
 
             return out.toString();
@@ -196,13 +237,13 @@ public final class PodmanCompose {
                 Thread.currentThread().interrupt();
             }
 
-            throw new IllegalStateException("Failed to run command: " + String.join(" ", command), e);
+            throw new IllegalStateException(ERR_RUN_CMD_PREFIX + String.join(" ", command), e);
         }
     }
 
     private static void sleep(final Duration duration) {
         try {
-            Thread.sleep(Math.max(1L, duration.toMillis()));
+            Thread.sleep(Math.max(MIN_MILLIS, duration.toMillis()));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }

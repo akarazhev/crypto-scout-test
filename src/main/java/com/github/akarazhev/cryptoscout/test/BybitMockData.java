@@ -29,10 +29,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.ERR_FILE_NOT_FOUND_ON_DISK_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.ERR_FILE_NOT_FOUND_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.JSON_EXTENSION;
+import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.SOURCE_LINEAR;
+import static com.github.akarazhev.cryptoscout.test.Constants.BybitMockData.SOURCE_SPOT;
+
 public final class BybitMockData {
 
     public enum Source {
-        SPOT("bybit-spot"), LINEAR("bybit-linear");
+        SPOT(SOURCE_SPOT),
+        LINEAR(SOURCE_LINEAR);
 
         private final String source;
 
@@ -43,21 +50,21 @@ public final class BybitMockData {
 
     public enum Type {
         // Klines
-        KLINE_1("kline.1"),
-        KLINE_5("kline.5"),
-        KLINE_15("kline.15"),
-        KLINE_60("kline.60"),
-        KLINE_240("kline.240"),
-        KLINE_D("kline.D"),
+        KLINE_1(Constants.BybitMockData.KLINE_1),
+        KLINE_5(Constants.BybitMockData.KLINE_5),
+        KLINE_15(Constants.BybitMockData.KLINE_15),
+        KLINE_60(Constants.BybitMockData.KLINE_60),
+        KLINE_240(Constants.BybitMockData.KLINE_240),
+        KLINE_D(Constants.BybitMockData.KLINE_D),
         // Ticker
-        TICKERS("tickers"),
+        TICKERS(Constants.BybitMockData.TICKERS),
         // Public trade
-        PUBLIC_TRADE("publicTrade"),
+        PUBLIC_TRADE(Constants.BybitMockData.PUBLIC_TRADE),
         // Order books
-        ORDER_BOOK_1("orderbook.1"),
-        ORDER_BOOK_50("orderbook.50"),
-        ORDER_BOOK_200("orderbook.200"),
-        ORDER_BOOK_1000("orderbook.1000");
+        ORDER_BOOK_1(Constants.BybitMockData.ORDER_BOOK_1),
+        ORDER_BOOK_50(Constants.BybitMockData.ORDER_BOOK_50),
+        ORDER_BOOK_200(Constants.BybitMockData.ORDER_BOOK_200),
+        ORDER_BOOK_1000(Constants.BybitMockData.ORDER_BOOK_1000);
 
         private final String type;
 
@@ -66,7 +73,7 @@ public final class BybitMockData {
         }
 
         public String getPath(final Source source) {
-            return source.source + File.separator + type + ".json";
+            return source.source + File.separator + type + JSON_EXTENSION;
         }
     }
 
@@ -77,12 +84,12 @@ public final class BybitMockData {
     public static Map<String, Object> get(final Source source, final Type type) throws Exception {
         final var file = PodmanCompose.class.getClassLoader().getResource(type.getPath(source));
         if (file == null) {
-            throw new IllegalStateException("File not found: " + type.getPath(source));
+            throw new IllegalStateException(ERR_FILE_NOT_FOUND_PREFIX + type.getPath(source));
         }
 
         final var diskFile = Paths.get(file.toURI());
         if (!Files.exists(diskFile)) {
-            throw new IllegalStateException("File not found on disk: " + diskFile);
+            throw new IllegalStateException(ERR_FILE_NOT_FOUND_ON_DISK_PREFIX + diskFile);
         }
 
         return JsonUtils.json2Map(new String(Files.readAllBytes(diskFile)));

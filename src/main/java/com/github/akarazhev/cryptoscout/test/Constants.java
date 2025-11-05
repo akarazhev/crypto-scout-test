@@ -29,10 +29,39 @@ final class Constants {
         throw new UnsupportedOperationException();
     }
 
-    final static class PodmanComposeConfig {
-        private PodmanComposeConfig() {
+    final static class BybitMockData {
+        private BybitMockData() {
             throw new UnsupportedOperationException();
         }
+
+        // Source directories
+        static final String SOURCE_SPOT = "bybit-spot";
+        static final String SOURCE_LINEAR = "bybit-linear";
+        // Stream types
+        static final String KLINE_1 = "kline.1";
+        static final String KLINE_5 = "kline.5";
+        static final String KLINE_15 = "kline.15";
+        static final String KLINE_60 = "kline.60";
+        static final String KLINE_240 = "kline.240";
+        static final String KLINE_D = "kline.D";
+        static final String TICKERS = "tickers";
+        static final String PUBLIC_TRADE = "publicTrade";
+        static final String ORDER_BOOK_1 = "orderbook.1";
+        static final String ORDER_BOOK_50 = "orderbook.50";
+        static final String ORDER_BOOK_200 = "orderbook.200";
+        static final String ORDER_BOOK_1000 = "orderbook.1000";
+        // File extension
+        static final String JSON_EXTENSION = ".json";
+        // Error messages
+        static final String ERR_FILE_NOT_FOUND_PREFIX = "File not found: ";
+        static final String ERR_FILE_NOT_FOUND_ON_DISK_PREFIX = "File not found on disk: ";
+    }
+
+    final static class PodmanCompose {
+        private PodmanCompose() {
+            throw new UnsupportedOperationException();
+        }
+
         // Default podman values
         static final String COMPOSE_FILE_LOCATION = "podman";
         static final String COMPOSE_FILE_NAME = "podman-compose.yml";

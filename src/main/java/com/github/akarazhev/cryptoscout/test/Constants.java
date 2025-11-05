@@ -34,6 +34,7 @@ final class Constants {
             throw new UnsupportedOperationException();
         }
         // Default podman values
+        static final String COMPOSE_FILE_LOCATION = "podman";
         static final String COMPOSE_FILE_NAME = "podman-compose.yml";
         static final String DB_CONTAINER_NAME = "crypto-scout-collector-db";
         // System property keys

@@ -25,6 +25,7 @@
 package com.github.akarazhev.cryptoscout.test;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
@@ -37,6 +38,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.COMPOSE_FILE_LOCATION;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.COMPOSE_FILE_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_CONTAINER_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanComposeConfig.DB_HEALTH_QUERY;
@@ -99,9 +101,10 @@ public final class PodmanCompose {
             Duration.ofSeconds(Long.getLong(READY_INTERVAL_SEC_PROP, READY_INTERVAL_SEC_DEFAULT));
 
     static {
-        final var resourceUrl = PodmanCompose.class.getClassLoader().getResource(COMPOSE_FILE_NAME);
+        final var resourcePath = COMPOSE_FILE_LOCATION + File.separator + COMPOSE_FILE_NAME;
+        final var resourceUrl = PodmanCompose.class.getClassLoader().getResource(resourcePath);
         if (resourceUrl == null) {
-            throw new IllegalStateException(ERR_RESOURCE_NOT_FOUND + COMPOSE_FILE_NAME);
+            throw new IllegalStateException(ERR_RESOURCE_NOT_FOUND + resourcePath);
         }
 
         try {

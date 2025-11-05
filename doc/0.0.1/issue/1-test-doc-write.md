@@ -1,7 +1,7 @@
-# Issue 1: Document of the `crypto-scout-test` production ready service
+# Issue 1: Write documentation of the `crypto-scout-test` production ready library
 
 The `crypto-scout-test` project has been implemented to provide mock data and to manage of podman compose service for
-testing. So let's update professional documentation of the `crypto-scout-test` project that it is ready for production.
+testing. So let's write professional documentation of the `crypto-scout-test` project that it is ready for production.
 
 ## Roles
 
@@ -11,6 +11,7 @@ Take the following roles:
 
 ## Conditions
 
+- Mention that the project has been written with AI-driven tools.
 - Use the best practices and patterns.
 - Do not hallucinate.
 

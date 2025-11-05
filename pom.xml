@@ -34,13 +34,20 @@
         <maven.compiler.release>25</maven.compiler.release>
         <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
-        <amqp-client.version>5.26.0</amqp-client.version>
+        <dsl-json.version>2.0.2</dsl-json.version>
         <stream-client.version>1.2.0</stream-client.version>
+        <amqp-client.version>5.26.0</amqp-client.version>
         <postgresql.version>42.7.8</postgresql.version>
         <hikari.version>7.0.2</hikari.version>
         <junit-jupiter.version>5.13.4</junit-jupiter.version>
     </properties>
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.dslplatform/dsl-json -->
+        <dependency>
+            <groupId>com.dslplatform</groupId>
+            <artifactId>dsl-json</artifactId>
+            <version>${dsl-json.version}</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/com.rabbitmq/stream-client -->
         <dependency>
             <groupId>com.rabbitmq</groupId>

@@ -29,95 +29,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-final class MockDataTest {
-
-    @Test
-    void shouldSpotKline1DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldSpotKline5DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_5);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldSpotKline15DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_15);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldSpotKline60DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_60);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldSpotKline240DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_240);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldSpotKlineDDataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_D);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldSpotTickersDataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.TICKERS);
-        assertNotNull(data);
-        assertEquals(5, data.size());
-    }
-
-    @Test
-    void shouldSpotPublicTradeDataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.PUBLIC_TRADE);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldSpotOrderBook1DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.ORDER_BOOK_1);
-        assertNotNull(data);
-        assertEquals(5, data.size());
-    }
-
-    @Test
-    void shouldSpotOrderBook50DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.ORDER_BOOK_50);
-        assertNotNull(data);
-        assertEquals(5, data.size());
-    }
-
-    @Test
-    void shouldSpotOrderBook200DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.ORDER_BOOK_200);
-        assertNotNull(data);
-        assertEquals(5, data.size());
-    }
-
-    @Test
-    void shouldSpotOrderBook1000DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.ORDER_BOOK_1000);
-        assertNotNull(data);
-        assertEquals(5, data.size());
-    }
+final class MockBybitLinearDataTest {
 
     @Test
     void shouldLinearKline1DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
+        final var data = MockData.get(MockData.Source.BYBIT_LINEAR, MockData.Type.KLINE_1);
         assertNotNull(data);
         assertEquals(4, data.size());
     }

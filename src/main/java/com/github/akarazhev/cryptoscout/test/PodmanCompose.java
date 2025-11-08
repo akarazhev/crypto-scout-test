@@ -317,12 +317,12 @@ public final class PodmanCompose {
             copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + COMPOSE_FILE_NAME,
                     podmanTargetDir.resolve(COMPOSE_FILE_NAME));
             // Copy RabbitMQ resources
-            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR + RABBITMQ_ENABLED_PLUGINS,
-                    rabbitDir.resolve(RABBITMQ_ENABLED_PLUGINS));
-            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR + RABBITMQ_CONF_NAME,
-                    rabbitDir.resolve(RABBITMQ_CONF_NAME));
-            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR + RABBITMQ_DEFINITIONS_NAME,
-                    rabbitDir.resolve(RABBITMQ_DEFINITIONS_NAME));
+            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR +
+                            RABBITMQ_ENABLED_PLUGINS, rabbitDir.resolve(RABBITMQ_ENABLED_PLUGINS));
+            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR +
+                            RABBITMQ_CONF_NAME, rabbitDir.resolve(RABBITMQ_CONF_NAME));
+            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR +
+                            RABBITMQ_DEFINITIONS_NAME, rabbitDir.resolve(RABBITMQ_DEFINITIONS_NAME));
             // Optional script; copy if present
             final var scriptPath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + SCRIPT_DIR_NAME +
                     PATH_SEPARATOR + INIT_SCRIPT_NAME;

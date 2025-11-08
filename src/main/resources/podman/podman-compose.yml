@@ -82,3 +82,43 @@ services:
       - track_functions=pl
     restart: unless-stopped
     stop_grace_period: 1m
+
+  crypto-scout-mq:
+    image: rabbitmq:4.1.4-management
+    container_name: crypto-scout-mq
+    hostname: crypto_scout_mq
+    ports:
+      - "5672:5672"   # AMQP protocol
+      - "127.0.0.1:15672:15672" # Management UI (loopback only)
+      - "5552:5552"   # Stream protocol (required for RabbitMQ streams)
+      - "127.0.0.1:15692:15692" # Prometheus metrics (loopback only)
+    volumes:
+      - "./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro"
+      - "./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro"
+      - "./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro"
+    environment:
+      TZ: UTC
+      RABBITMQ_DEFAULT_USER: crypto_scout_mq
+      RABBITMQ_DEFAULT_PASS: crypto_scout_mq
+    cpus: "2.0"
+    mem_limit: "1g"
+    mem_reservation: "512m"
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
+    init: true
+    pids_limit: 1024
+    stop_signal: SIGTERM
+    tmpfs:
+      - /tmp:rw,size=64m,mode=1777,nodev,nosuid
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    stop_grace_period: 1m

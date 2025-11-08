@@ -78,6 +78,11 @@ final class Constants {
         static final String DB_JDBC_URL_PROP = "test.db.jdbc.url";
         static final String DB_USER_PROP = "test.db.user";
         static final String DB_PASSWORD_PROP = "test.db.password";
+        static final String MQ_HOST_PROP = "test.mq.host";
+        static final String MQ_PORT_PROP = "test.mq.port";
+        static final String MQ_USER_PROP = "test.mq.user";
+        static final String MQ_PASSWORD_PROP = "test.mq.password";
+        static final String MQ_STREAM_PROP = "test.mq.stream";
         static final String UP_TIMEOUT_MIN_PROP = "podman.compose.up.timeout.min";
         static final String DOWN_TIMEOUT_MIN_PROP = "podman.compose.down.timeout.min";
         // Default values for system properties
@@ -89,6 +94,12 @@ final class Constants {
         static final long UP_TIMEOUT_MIN_DEFAULT = 3L;
         static final long READY_INTERVAL_SEC_DEFAULT = 2L;
         static final long DOWN_TIMEOUT_MIN_DEFAULT = 1L;
+        // Default values for system properties
+        static final String MQ_HOST_DEFAULT = "localhost";
+        static final int MQ_PORT_DEFAULT = 5672;
+        static final String MQ_USER_DEFAULT = "crypto_scout_mq";
+        static final String MQ_PASSWORD_DEFAULT = "crypto_scout_mq";
+        static final String MQ_STREAM_DEFAULT = "bybit-crypto-stream";
         // DB health check
         static final String DB_HEALTH_QUERY = "SELECT 1";
         // Thread names
@@ -129,5 +140,7 @@ final class Constants {
         static final String ERR_OUTPUT_PREFIX = "\nOutput:\n";
         static final String ERR_RUN_CMD_PREFIX = "Failed to run command: ";
         static final String ERR_EXTRACT_RESOURCES = "Failed to extract podman resources";
+        static final String ERR_MQ_NOT_READY_PREFIX = "MQ was not ready within ";
+        static final String ERR_MQ_NOT_READY_SUFFIX = " seconds";
     }
 }

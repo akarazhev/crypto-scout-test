@@ -38,6 +38,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+import com.rabbitmq.stream.Environment;
+
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMPOSE_FILE_LOCATION;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMPOSE_FILE_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_CONTAINER_NAME;
@@ -61,6 +63,8 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_CONTAINER_STILL_PRESENT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_DB_NOT_READY_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_DB_NOT_READY_SUFFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_MQ_NOT_READY_PREFIX;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_MQ_NOT_READY_SUFFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_OUTPUT_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_PARTIAL_OUTPUT_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_RESOURCE_NOT_FOUND;
@@ -69,6 +73,16 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.FILE
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.LINE_SPLIT_REGEX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MIN_MILLIS;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MIN_SECONDS;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_STREAM_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_STREAM_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER_PROP;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.OUTPUT_THREAD_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_CMD_DEFAULT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_CMD_PROP;
@@ -99,6 +113,11 @@ public final class PodmanCompose {
     private static final String JDBC_URL = System.getProperty(DB_JDBC_URL_PROP, DB_JDBC_URL_DEFAULT);
     private static final String DB_USER = System.getProperty(DB_USER_PROP, DB_USER_DEFAULT);
     private static final String DB_PASSWORD = System.getProperty(DB_PASSWORD_PROP, DB_PASSWORD_DEFAULT);
+    private static final String MQ_HOST = System.getProperty(MQ_HOST_PROP, MQ_HOST_DEFAULT);
+    private static final int MQ_PORT = Integer.parseInt(System.getProperty(MQ_PORT_PROP, Integer.toString(MQ_PORT_DEFAULT)));
+    private static final String MQ_USER = System.getProperty(MQ_USER_PROP, MQ_USER_DEFAULT);
+    private static final String MQ_PASSWORD = System.getProperty(MQ_PASSWORD_PROP, MQ_PASSWORD_DEFAULT);
+    private static final String MQ_STREAM = System.getProperty(MQ_STREAM_PROP, MQ_STREAM_DEFAULT);
     private static final Duration UP_TIMEOUT =
             Duration.ofMinutes(Long.getLong(UP_TIMEOUT_MIN_PROP, UP_TIMEOUT_MIN_DEFAULT));
     private static final Duration DOWN_TIMEOUT =
@@ -142,6 +161,8 @@ public final class PodmanCompose {
         runCommand(COMPOSE_DIR, UP_TIMEOUT, PODMAN_COMPOSE_CMD, FILE_ARG, COMPOSE_FILE_NAME, UP_CMD, DETACHED_ARG);
         // Wait for DB readiness
         waitForDatabaseReady(UP_TIMEOUT);
+        // Wait for MQ readiness
+        waitForMqReady(UP_TIMEOUT);
     }
 
     public static void down() {
@@ -157,7 +178,7 @@ public final class PodmanCompose {
         DriverManager.setLoginTimeout(loginTimeoutSec);
 
         while (System.nanoTime() < deadline) {
-            if (canConnect()) {
+            if (canConnectToDb()) {
                 return;
             }
 
@@ -167,12 +188,35 @@ public final class PodmanCompose {
         throw new IllegalStateException(ERR_DB_NOT_READY_PREFIX + timeout.toSeconds() + ERR_DB_NOT_READY_SUFFIX);
     }
 
-    private static boolean canConnect() {
+    private static void waitForMqReady(final Duration timeout) {
+        final var deadline = System.nanoTime() + timeout.toNanos();
+
+        while (System.nanoTime() < deadline) {
+            if (canConnectToMq()) {
+                return;
+            }
+
+            sleep(READY_RETRY_INTERVAL);
+        }
+
+        throw new IllegalStateException(ERR_MQ_NOT_READY_PREFIX + timeout.toSeconds() + ERR_MQ_NOT_READY_SUFFIX);
+    }
+
+    private static boolean canConnectToDb() {
         try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
              final var st = conn.createStatement();
              final var rs = st.executeQuery(DB_HEALTH_QUERY)) {
             return rs.next();
         } catch (final SQLException e) {
+            return false;
+        }
+    }
+
+    private static boolean canConnectToMq() {
+        try (final var environment = Environment.builder().host(MQ_HOST).port(MQ_PORT).username(MQ_USER).password(MQ_PASSWORD).build();
+             final var producer = environment.producerBuilder().name(MQ_STREAM).stream(MQ_STREAM).build()) {
+            return true;
+        } catch (final Exception e) {
             return false;
         }
     }

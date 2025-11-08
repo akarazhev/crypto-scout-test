@@ -1,0 +1,209 @@
+{
+  "rabbit_version": "4.1.4",
+  "rabbitmq_version": "4.1.4",
+  "product_name": "RabbitMQ",
+  "product_version": "4.1.4",
+  "users": [],
+  "vhosts": [
+    {
+      "name": "/",
+      "description": "Default virtual host",
+      "tags": [],
+      "metadata": {
+        "description": "Default virtual host",
+        "tags": []
+      }
+    }
+  ],
+  "permissions": [],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "stream-retention",
+      "pattern": ".*-stream$",
+      "definition": {
+        "max-length-bytes": 2000000000,
+        "max-age": "1D",
+        "stream-max-segment-size-bytes": 100000000
+      },
+      "priority": 0,
+      "apply-to": "queues"
+    }
+  ],
+  "queues": [
+    {
+      "name": "bybit-crypto-stream",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length-bytes": 2000000000,
+        "x-max-age": "1D",
+        "x-queue-type": "stream",
+        "x-stream-max-segment-size-bytes": 100000000
+      }
+    },
+    {
+      "name": "bybit-ta-crypto-stream",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length-bytes": 2000000000,
+        "x-max-age": "1D",
+        "x-queue-type": "stream",
+        "x-stream-max-segment-size-bytes": 100000000
+      }
+    },
+    {
+      "name": "bybit-parser-stream",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length-bytes": 2000000000,
+        "x-max-age": "1D",
+        "x-queue-type": "stream",
+        "x-stream-max-segment-size-bytes": 100000000
+      }
+    },
+    {
+      "name": "collector-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length": 2500,
+        "x-message-ttl": 21600000,
+        "x-queue-mode": "lazy",
+        "x-overflow": "reject-publish"
+      }
+    },
+    {
+      "name": "chatbot-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length": 2500,
+        "x-message-ttl": 21600000,
+        "x-queue-mode": "lazy",
+        "x-overflow": "reject-publish"
+      }
+    },
+    {
+      "name": "analyst-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length": 2500,
+        "x-message-ttl": 21600000,
+        "x-queue-mode": "lazy",
+        "x-overflow": "reject-publish"
+      }
+    },
+    {
+      "name": "cmc-parser-stream",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-max-length-bytes": 2000000000,
+        "x-max-age": "1D",
+        "x-queue-type": "stream",
+        "x-stream-max-segment-size-bytes": 100000000
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "parser-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "bybit-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "crypto-scout-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "crypto-scout-exchange",
+      "vhost": "/",
+      "destination": "collector-queue",
+      "destination_type": "queue",
+      "routing_key": "collector",
+      "arguments": {}
+    },
+    {
+      "source": "crypto-scout-exchange",
+      "vhost": "/",
+      "destination": "chatbot-queue",
+      "destination_type": "queue",
+      "routing_key": "chatbot",
+      "arguments": {}
+    },
+    {
+      "source": "crypto-scout-exchange",
+      "vhost": "/",
+      "destination": "analyst-queue",
+      "destination_type": "queue",
+      "routing_key": "analyst",
+      "arguments": {}
+    },
+    {
+      "source": "bybit-exchange",
+      "vhost": "/",
+      "destination": "bybit-crypto-stream",
+      "destination_type": "queue",
+      "routing_key": "bybit",
+      "arguments": {}
+    },
+    {
+      "source": "bybit-exchange",
+      "vhost": "/",
+      "destination": "bybit-ta-crypto-stream",
+      "destination_type": "queue",
+      "routing_key": "bybit-ta",
+      "arguments": {}
+    },
+    {
+      "source": "parser-exchange",
+      "vhost": "/",
+      "destination": "bybit-parser-stream",
+      "destination_type": "queue",
+      "routing_key": "bybit-parser",
+      "arguments": {}
+    },
+    {
+      "source": "parser-exchange",
+      "vhost": "/",
+      "destination": "cmc-parser-stream",
+      "destination_type": "queue",
+      "routing_key": "cmc-parser",
+      "arguments": {}
+    }
+  ]
+}

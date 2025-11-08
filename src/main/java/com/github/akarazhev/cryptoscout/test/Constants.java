@@ -96,7 +96,7 @@ final class Constants {
         static final long DOWN_TIMEOUT_MIN_DEFAULT = 1L;
         // Default values for system properties
         static final String MQ_HOST_DEFAULT = "localhost";
-        static final int MQ_PORT_DEFAULT = 5672;
+        static final int MQ_PORT_DEFAULT = 5552;
         static final String MQ_USER_DEFAULT = "crypto_scout_mq";
         static final String MQ_PASSWORD_DEFAULT = "crypto_scout_mq";
         static final String MQ_STREAM_DEFAULT = "bybit-crypto-stream";
@@ -107,6 +107,10 @@ final class Constants {
         // Podman resource files
         static final String SCRIPT_DIR_NAME = "script";
         static final String INIT_SCRIPT_NAME = "init.sql";
+        static final String RABBITMQ_DIR_NAME = "rabbitmq";
+        static final String RABBITMQ_ENABLED_PLUGINS = "enabled_plugins";
+        static final String RABBITMQ_CONF_NAME = "rabbitmq.conf";
+        static final String RABBITMQ_DEFINITIONS_NAME = "definitions.json";
         static final String TEMP_DIR_PREFIX = "crypto-scout-podman-";
         static final String PROTOCOL_FILE = "file";
         // Podman command args

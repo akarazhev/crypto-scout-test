@@ -104,6 +104,10 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.TEMP
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.SCRIPT_DIR_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.INIT_SCRIPT_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_EXTRACT_RESOURCES;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_DIR_NAME;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_ENABLED_PLUGINS;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_CONF_NAME;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_DEFINITIONS_NAME;
 
 public final class PodmanCompose {
     private static final String PODMAN_COMPOSE_CMD =
@@ -305,11 +309,20 @@ public final class PodmanCompose {
             final var tempRoot = Files.createTempDirectory(TEMP_DIR_PREFIX);
             final var podmanTargetDir = tempRoot.resolve(COMPOSE_FILE_LOCATION);
             final var scriptDir = podmanTargetDir.resolve(SCRIPT_DIR_NAME);
+            final var rabbitDir = podmanTargetDir.resolve(RABBITMQ_DIR_NAME);
             Files.createDirectories(scriptDir);
+            Files.createDirectories(rabbitDir);
 
             // Copy required resources from classpath
             copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + COMPOSE_FILE_NAME,
                     podmanTargetDir.resolve(COMPOSE_FILE_NAME));
+            // Copy RabbitMQ resources
+            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR + RABBITMQ_ENABLED_PLUGINS,
+                    rabbitDir.resolve(RABBITMQ_ENABLED_PLUGINS));
+            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR + RABBITMQ_CONF_NAME,
+                    rabbitDir.resolve(RABBITMQ_CONF_NAME));
+            copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR + RABBITMQ_DEFINITIONS_NAME,
+                    rabbitDir.resolve(RABBITMQ_DEFINITIONS_NAME));
             // Optional script; copy if present
             final var scriptPath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + SCRIPT_DIR_NAME +
                     PATH_SEPARATOR + INIT_SCRIPT_NAME;

@@ -39,6 +39,8 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import com.rabbitmq.stream.Environment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_PASSWORD;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_USER;
@@ -97,6 +99,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABB
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.UP_TIMEOUT;
 
 public final class PodmanCompose {
+    private static final Logger LOGGER = LoggerFactory.getLogger(PodmanCompose.class);
     private static final Path COMPOSE_DIR;
 
     static {
@@ -180,6 +183,7 @@ public final class PodmanCompose {
         try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
              final var st = conn.createStatement();
              final var rs = st.executeQuery(SELECT_ONE)) {
+            LOGGER.info("Connected to DB: {}", conn.getClientInfo());
             return rs.next();
         } catch (final SQLException e) {
             return false;
@@ -197,6 +201,8 @@ public final class PodmanCompose {
                      .name(MQ_STREAM)
                      .stream(MQ_STREAM)
                      .build()) {
+            LOGGER.info("Connected to RabbitMQ: {}", environment);
+            LOGGER.info("Connected to RabbitMQ producer: {}", producer);
             return true;
         } catch (final Exception e) {
             return false;
@@ -233,7 +239,7 @@ public final class PodmanCompose {
         final var output = runAndCapture(dir, timeout, command);
         // best-effort to show output on success in debug scenarios
         if (!output.isEmpty()) {
-            System.out.println(output);
+            LOGGER.info(output);
         }
     }
 

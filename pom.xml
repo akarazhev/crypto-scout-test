@@ -40,6 +40,18 @@
             <artifactId>dsl-json</artifactId>
             <version>${dsl-json.version}</version>
         </dependency>
+        <!-- JUnit Jupiter for this module's tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+        </dependency>
+        <!-- RabbitMQ stream client needed at runtime by PodmanCompose; optional to avoid forcing it on consumers -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>stream-client</artifactId>
+            <version>${stream-client.version}</version>
+        </dependency>
         <!-- JDBC driver needed at runtime by PodmanCompose; optional to avoid forcing it on consumers -->
         <dependency>
             <groupId>org.postgresql</groupId>
@@ -47,20 +59,6 @@
             <version>${postgresql.version}</version>
             <scope>runtime</scope>
             <optional>true</optional>
-        </dependency>
-        <!-- RabbitMQ stream client needed at runtime by PodmanCompose; optional to avoid forcing it on consumers -->
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>stream-client</artifactId>
-            <version>${stream-client.version}</version>
-<!--            <scope>runtime</scope>-->
-        </dependency>
-        <!-- JUnit Jupiter for this module's tests -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit-jupiter.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

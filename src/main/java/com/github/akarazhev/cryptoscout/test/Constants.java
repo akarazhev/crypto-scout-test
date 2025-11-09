@@ -24,6 +24,8 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
+import java.time.Duration;
+
 final class Constants {
     private Constants() {
         throw new UnsupportedOperationException();
@@ -31,6 +33,20 @@ final class Constants {
 
     // Common path separator for resource paths
     static final String PATH_SEPARATOR = "/";
+
+    final static class DB {
+        private DB() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final String JDBC_URL = System.getProperty("test.db.jdbc.url",
+                "jdbc:postgresql://localhost:5432/crypto_scout");
+        static final String DB_USER = System.getProperty("test.db.user", "crypto_scout_db");
+        static final String DB_PASSWORD = System.getProperty("test.db.password", "crypto_scout_db");
+        static final String SELECT_COUNT = "SELECT COUNT(*) FROM %s";
+        static final String SELECT_ONE = "SELECT 1";
+        static final int FIRST_ROW = 1;
+    }
 
     final static class MockData {
         private MockData() {
@@ -71,37 +87,20 @@ final class Constants {
         static final String COMPOSE_FILE_LOCATION = "podman";
         static final String COMPOSE_FILE_NAME = "podman-compose.yml";
         static final String DB_CONTAINER_NAME = "crypto-scout-collector-db";
-        // System property keys
-        static final String READY_INTERVAL_SEC_PROP = "podman.compose.ready.interval.sec";
-        static final String PODMAN_COMPOSE_CMD_PROP = "podman.compose.cmd";
-        static final String PODMAN_CMD_PROP = "podman.cmd";
-        static final String DB_JDBC_URL_PROP = "test.db.jdbc.url";
-        static final String DB_USER_PROP = "test.db.user";
-        static final String DB_PASSWORD_PROP = "test.db.password";
-        static final String MQ_HOST_PROP = "test.mq.host";
-        static final String MQ_PORT_PROP = "test.mq.port";
-        static final String MQ_USER_PROP = "test.mq.user";
-        static final String MQ_PASSWORD_PROP = "test.mq.password";
-        static final String MQ_STREAM_PROP = "test.mq.stream";
-        static final String UP_TIMEOUT_MIN_PROP = "podman.compose.up.timeout.min";
-        static final String DOWN_TIMEOUT_MIN_PROP = "podman.compose.down.timeout.min";
-        // Default values for system properties
-        static final String PODMAN_COMPOSE_CMD_DEFAULT = "podman-compose";
-        static final String PODMAN_CMD_DEFAULT = "podman";
-        static final String DB_JDBC_URL_DEFAULT = "jdbc:postgresql://localhost:5432/crypto_scout";
-        static final String DB_USER_DEFAULT = "crypto_scout_db";
-        static final String DB_PASSWORD_DEFAULT = "crypto_scout_db";
-        static final long UP_TIMEOUT_MIN_DEFAULT = 3L;
-        static final long READY_INTERVAL_SEC_DEFAULT = 2L;
-        static final long DOWN_TIMEOUT_MIN_DEFAULT = 1L;
-        // Default values for system properties
-        static final String MQ_HOST_DEFAULT = "localhost";
-        static final int MQ_PORT_DEFAULT = 5552;
-        static final String MQ_USER_DEFAULT = "crypto_scout_mq";
-        static final String MQ_PASSWORD_DEFAULT = "crypto_scout_mq";
-        static final String MQ_STREAM_DEFAULT = "bybit-crypto-stream";
-        // DB health check
-        static final String DB_HEALTH_QUERY = "SELECT 1";
+        //
+        static final String PODMAN_COMPOSE_CMD = System.getProperty("podman.compose.cmd", "podman-compose");
+        static final String PODMAN_CMD = System.getProperty("podman.cmd", "podman");
+        static final String MQ_HOST = System.getProperty("test.mq.host", "localhost");
+        static final int MQ_PORT = Integer.parseInt(System.getProperty("test.mq.port", Integer.toString(5552)));
+        static final String MQ_USER = System.getProperty("test.mq.user", "crypto_scout_mq");
+        static final String MQ_PASSWORD = System.getProperty("test.mq.password", "crypto_scout_mq");
+        static final String MQ_STREAM = System.getProperty("test.mq.stream", "bybit-crypto-stream");
+        static final Duration UP_TIMEOUT = Duration.ofMinutes(Long.getLong("podman.compose.up.timeout.min",
+                3L));
+        static final Duration DOWN_TIMEOUT = Duration.ofMinutes(Long.getLong("podman.compose.down.timeout.min",
+                1L));
+        static final Duration READY_RETRY_INTERVAL = Duration.ofSeconds(Long.getLong("podman.compose.ready.interval.sec",
+                2L));
         // Thread names
         static final String OUTPUT_THREAD_NAME = "podman-compose-output";
         // Podman resource files
@@ -146,5 +145,6 @@ final class Constants {
         static final String ERR_EXTRACT_RESOURCES = "Failed to extract podman resources";
         static final String ERR_MQ_NOT_READY_PREFIX = "MQ was not ready within ";
         static final String ERR_MQ_NOT_READY_SUFFIX = " seconds";
+        static final String ERR_TABLE_ROW_COUNT = "Unexpected row count for table: ";
     }
 }

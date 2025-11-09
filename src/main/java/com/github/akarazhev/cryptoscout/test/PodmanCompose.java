@@ -40,20 +40,16 @@ import java.util.concurrent.TimeUnit;
 
 import com.rabbitmq.stream.Environment;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_PASSWORD;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_USER;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_URL;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.SELECT_ONE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMPOSE_FILE_LOCATION;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMPOSE_FILE_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_CONTAINER_NAME;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_HEALTH_QUERY;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_JDBC_URL_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_JDBC_URL_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_PASSWORD_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_PASSWORD_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_USER_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_USER_PROP;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DETACHED_ARG;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DOWN_CMD;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DOWN_TIMEOUT_MIN_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DOWN_TIMEOUT_MIN_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DOWN_TIMEOUT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_CMD_FAILED_MIDDLE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_CMD_FAILED_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_CMD_TIMEOUT_PREFIX;
@@ -73,31 +69,21 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.FILE
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.LINE_SPLIT_REGEX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MIN_MILLIS;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MIN_SECONDS;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_STREAM_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_STREAM_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_STREAM;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.OUTPUT_THREAD_NAME;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_CMD_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_CMD_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_COMPOSE_CMD_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_COMPOSE_CMD_PROP;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_CMD;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_COMPOSE_CMD;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PS_ALL_ARG;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PS_CMD;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PS_FORMAT_ARG;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PS_NAMES_TEMPLATE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PS_TIMEOUT_SEC;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.READY_INTERVAL_SEC_PROP;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.READY_INTERVAL_SEC_DEFAULT;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.READY_RETRY_INTERVAL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.UP_CMD;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.UP_TIMEOUT_MIN_DEFAULT;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.UP_TIMEOUT_MIN_PROP;
 import static com.github.akarazhev.cryptoscout.test.Constants.PATH_SEPARATOR;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PROTOCOL_FILE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.TEMP_DIR_PREFIX;
@@ -108,26 +94,10 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABB
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_ENABLED_PLUGINS;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_CONF_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_DEFINITIONS_NAME;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.UP_TIMEOUT;
 
 public final class PodmanCompose {
-    private static final String PODMAN_COMPOSE_CMD =
-            System.getProperty(PODMAN_COMPOSE_CMD_PROP, PODMAN_COMPOSE_CMD_DEFAULT);
-    private static final String PODMAN_CMD = System.getProperty(PODMAN_CMD_PROP, PODMAN_CMD_DEFAULT);
     private static final Path COMPOSE_DIR;
-    private static final String JDBC_URL = System.getProperty(DB_JDBC_URL_PROP, DB_JDBC_URL_DEFAULT);
-    private static final String DB_USER = System.getProperty(DB_USER_PROP, DB_USER_DEFAULT);
-    private static final String DB_PASSWORD = System.getProperty(DB_PASSWORD_PROP, DB_PASSWORD_DEFAULT);
-    private static final String MQ_HOST = System.getProperty(MQ_HOST_PROP, MQ_HOST_DEFAULT);
-    private static final int MQ_PORT = Integer.parseInt(System.getProperty(MQ_PORT_PROP, Integer.toString(MQ_PORT_DEFAULT)));
-    private static final String MQ_USER = System.getProperty(MQ_USER_PROP, MQ_USER_DEFAULT);
-    private static final String MQ_PASSWORD = System.getProperty(MQ_PASSWORD_PROP, MQ_PASSWORD_DEFAULT);
-    private static final String MQ_STREAM = System.getProperty(MQ_STREAM_PROP, MQ_STREAM_DEFAULT);
-    private static final Duration UP_TIMEOUT =
-            Duration.ofMinutes(Long.getLong(UP_TIMEOUT_MIN_PROP, UP_TIMEOUT_MIN_DEFAULT));
-    private static final Duration DOWN_TIMEOUT =
-            Duration.ofMinutes(Long.getLong(DOWN_TIMEOUT_MIN_PROP, DOWN_TIMEOUT_MIN_DEFAULT));
-    private static final Duration READY_RETRY_INTERVAL =
-            Duration.ofSeconds(Long.getLong(READY_INTERVAL_SEC_PROP, READY_INTERVAL_SEC_DEFAULT));
 
     static {
         final var resourcePath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + COMPOSE_FILE_NAME;
@@ -209,7 +179,7 @@ public final class PodmanCompose {
     private static boolean canConnectToDb() {
         try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
              final var st = conn.createStatement();
-             final var rs = st.executeQuery(DB_HEALTH_QUERY)) {
+             final var rs = st.executeQuery(SELECT_ONE)) {
             return rs.next();
         } catch (final SQLException e) {
             return false;
@@ -217,8 +187,16 @@ public final class PodmanCompose {
     }
 
     private static boolean canConnectToMq() {
-        try (final var environment = Environment.builder().host(MQ_HOST).port(MQ_PORT).username(MQ_USER).password(MQ_PASSWORD).build();
-             final var producer = environment.producerBuilder().name(MQ_STREAM).stream(MQ_STREAM).build()) {
+        try (final var environment = Environment.builder()
+                .host(MQ_HOST)
+                .port(MQ_PORT)
+                .username(MQ_USER)
+                .password(MQ_PASSWORD)
+                .build();
+             final var producer = environment.producerBuilder()
+                     .name(MQ_STREAM)
+                     .stream(MQ_STREAM)
+                     .build()) {
             return true;
         } catch (final Exception e) {
             return false;
@@ -239,8 +217,8 @@ public final class PodmanCompose {
     }
 
     private static boolean isContainerPresent(final String containerName) {
-        final var out = runAndCapture(COMPOSE_DIR, Duration.ofSeconds(PS_TIMEOUT_SEC), PODMAN_CMD,
-                PS_CMD, PS_ALL_ARG, PS_FORMAT_ARG, PS_NAMES_TEMPLATE);
+        final var out = runAndCapture(COMPOSE_DIR, Duration.ofSeconds(PS_TIMEOUT_SEC), PODMAN_CMD, PS_CMD, PS_ALL_ARG,
+                PS_FORMAT_ARG, PS_NAMES_TEMPLATE);
         final var lines = out.split(LINE_SPLIT_REGEX);
         for (final String line : lines) {
             if (containerName.equals(line.trim())) {
@@ -318,11 +296,11 @@ public final class PodmanCompose {
                     podmanTargetDir.resolve(COMPOSE_FILE_NAME));
             // Copy RabbitMQ resources
             copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR +
-                            RABBITMQ_ENABLED_PLUGINS, rabbitDir.resolve(RABBITMQ_ENABLED_PLUGINS));
+                    RABBITMQ_ENABLED_PLUGINS, rabbitDir.resolve(RABBITMQ_ENABLED_PLUGINS));
             copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR +
-                            RABBITMQ_CONF_NAME, rabbitDir.resolve(RABBITMQ_CONF_NAME));
+                    RABBITMQ_CONF_NAME, rabbitDir.resolve(RABBITMQ_CONF_NAME));
             copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR +
-                            RABBITMQ_DEFINITIONS_NAME, rabbitDir.resolve(RABBITMQ_DEFINITIONS_NAME));
+                    RABBITMQ_DEFINITIONS_NAME, rabbitDir.resolve(RABBITMQ_DEFINITIONS_NAME));
             // Optional script; copy if present
             final var scriptPath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + SCRIPT_DIR_NAME +
                     PATH_SEPARATOR + INIT_SCRIPT_NAME;

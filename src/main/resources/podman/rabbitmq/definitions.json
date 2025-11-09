@@ -3,6 +3,16 @@
   "rabbitmq_version": "4.1.4",
   "product_name": "RabbitMQ",
   "product_version": "4.1.4",
+  "users": [
+    {
+      "name": "crypto_scout_mq",
+      "password_hash": "2xB5uNpCTDH0DPZxWUn5miYLbwQde5QKkx+gKKElY7msw2f8",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ]
+    }
+  ],
   "vhosts": [
     {
       "name": "/",

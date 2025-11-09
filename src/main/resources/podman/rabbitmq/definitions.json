@@ -3,7 +3,6 @@
   "rabbitmq_version": "4.1.4",
   "product_name": "RabbitMQ",
   "product_version": "4.1.4",
-  "users": [],
   "vhosts": [
     {
       "name": "/",
@@ -15,10 +14,6 @@
       }
     }
   ],
-  "permissions": [],
-  "topic_permissions": [],
-  "parameters": [],
-  "global_parameters": [],
   "policies": [
     {
       "vhost": "/",

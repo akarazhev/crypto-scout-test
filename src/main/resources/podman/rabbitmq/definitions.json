@@ -17,11 +17,19 @@
     {
       "name": "/",
       "description": "Default virtual host",
-      "tags": [],
       "metadata": {
         "description": "Default virtual host",
-        "tags": []
+        "default_queue_type": "classic"
       }
+    }
+  ],
+  "permissions": [
+    {
+      "user": "crypto_scout_mq",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
     }
   ],
   "policies": [

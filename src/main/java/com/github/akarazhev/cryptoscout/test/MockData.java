@@ -24,6 +24,8 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
+import com.github.akarazhev.jcryptolib.util.JsonUtils;
+
 import java.util.Map;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.MockData.ERR_FILE_NOT_FOUND_PREFIX;

@@ -30,7 +30,6 @@ import com.rabbitmq.stream.Environment;
 import com.rabbitmq.stream.Producer;
 import io.activej.async.service.ReactiveService;
 import io.activej.promise.Promise;
-import io.activej.promise.SettablePromise;
 import io.activej.reactor.AbstractReactive;
 import io.activej.reactor.nio.NioReactor;
 import org.slf4j.Logger;
@@ -89,26 +88,16 @@ public final class StreamTestPublisher extends AbstractReactive implements React
     }
 
     public Promise<?> publish(final Payload<Map<String, Object>> payload) {
-        final var settablePromise = new SettablePromise<Void>();
-        try {
-            final var message = producer.messageBuilder()
-                    .addData(JsonUtils.object2Bytes(payload))
-                    .build();
-            producer.send(message, confirmationStatus ->
-                    reactor.execute(() -> {
-                        if (confirmationStatus.isConfirmed()) {
-                            settablePromise.set(null);
-                        } else {
-                            settablePromise.setException(new RuntimeException("Stream publish not confirmed: " +
-                                    confirmationStatus));
-                        }
-                    })
-            );
-        } catch (final Exception ex) {
-            LOGGER.error("Failed to publish payload to stream: {}", ex.getMessage(), ex);
-            settablePromise.setException(ex);
-        }
-
-        return settablePromise;
+        return Promise.ofBlocking(executor, () -> {
+            try {
+                final var message = producer.messageBuilder()
+                        .addData(JsonUtils.object2Bytes(payload))
+                        .build();
+                producer.send(message, _ -> {
+                });
+            } catch (final Exception ex) {
+                LOGGER.error("Failed to publish payload to stream: {}", ex.getMessage(), ex);
+            }
+        });
     }
 }

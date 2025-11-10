@@ -24,32 +24,67 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
+import com.rabbitmq.stream.Consumer;
+import com.rabbitmq.stream.Environment;
+import com.rabbitmq.stream.MessageHandler;
+import com.rabbitmq.stream.OffsetSpecification;
 import io.activej.async.service.ReactiveService;
 import io.activej.promise.Promise;
 import io.activej.reactor.AbstractReactive;
 import io.activej.reactor.nio.NioReactor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executor;
 
 public final class StreamTestConsumer extends AbstractReactive implements ReactiveService {
+    private final static Logger LOGGER = LoggerFactory.getLogger(StreamTestConsumer.class);
     private final Executor executor;
+    private final Environment environment;
+    private final String stream;
+    private final MessageHandler messageHandler;
+    private volatile Consumer consumer;
 
-    public static StreamTestConsumer create(final NioReactor reactor, final Executor executor) {
-        return new StreamTestConsumer(reactor, executor);
+    public static StreamTestConsumer create(final NioReactor reactor, final Executor executor,
+                                            final Environment environment, final String stream,
+                                            final MessageHandler messageHandler) {
+        return new StreamTestConsumer(reactor, executor, environment, stream, messageHandler);
     }
 
-    private StreamTestConsumer(final NioReactor reactor, final Executor executor) {
+    private StreamTestConsumer(final NioReactor reactor, final Executor executor, final Environment environment,
+                               final String stream, final MessageHandler messageHandler) {
         super(reactor);
         this.executor = executor;
+        this.environment = environment;
+        this.stream = stream;
+        this.messageHandler = messageHandler;
     }
 
     @Override
     public Promise<?> start() {
-        return null;
+        return Promise.ofBlocking(executor, () -> {
+            consumer = environment.consumerBuilder()
+                    .name(stream)
+                    .stream(stream)
+                    .offset(OffsetSpecification.first())
+                    .manualTrackingStrategy().
+                    builder()
+                    .messageHandler(messageHandler)
+                    .build();
+        });
     }
 
     @Override
     public Promise<?> stop() {
-        return null;
+        return Promise.ofBlocking(executor, () -> {
+            try {
+                if (consumer != null) {
+                    consumer.close();
+                    consumer = null;
+                }
+            } catch (final Exception ex) {
+                LOGGER.warn("Error closing stream consumer", ex);
+            }
+        });
     }
 }

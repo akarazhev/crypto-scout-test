@@ -34,6 +34,15 @@ final class Constants {
     // Common path separator for resource paths
     static final String PATH_SEPARATOR = "/";
 
+    final static class Stream {
+        private Stream() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final String BYBIT_CRYPTO_STREAM = "bybit-crypto-stream";
+        static final int SLEEP_TIME = 5;
+    }
+
     final static class DB {
         private DB() {
             throw new UnsupportedOperationException();

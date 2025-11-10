@@ -24,17 +24,21 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
+import com.github.akarazhev.jcryptolib.stream.Payload;
+import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import com.rabbitmq.stream.Consumer;
 import com.rabbitmq.stream.Environment;
-import com.rabbitmq.stream.MessageHandler;
 import com.rabbitmq.stream.OffsetSpecification;
 import io.activej.async.service.ReactiveService;
 import io.activej.promise.Promise;
+import io.activej.promise.SettablePromise;
 import io.activej.reactor.AbstractReactive;
 import io.activej.reactor.nio.NioReactor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.Executor;
 
 public final class StreamTestConsumer extends AbstractReactive implements ReactiveService {
@@ -42,24 +46,23 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
     private final Executor executor;
     private final Environment environment;
     private final String stream;
-    private final MessageHandler messageHandler;
+    private final SettablePromise<Payload<Map<String, Object>>> result = new SettablePromise<>();
     private volatile Consumer consumer;
 
     public static StreamTestConsumer create(final NioReactor reactor, final Executor executor,
-                                            final Environment environment, final String stream,
-                                            final MessageHandler messageHandler) {
-        return new StreamTestConsumer(reactor, executor, environment, stream, messageHandler);
+                                            final Environment environment, final String stream) {
+        return new StreamTestConsumer(reactor, executor, environment, stream);
     }
 
     private StreamTestConsumer(final NioReactor reactor, final Executor executor, final Environment environment,
-                               final String stream, final MessageHandler messageHandler) {
+                               final String stream) {
         super(reactor);
         this.executor = executor;
         this.environment = environment;
         this.stream = stream;
-        this.messageHandler = messageHandler;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Promise<?> start() {
         return Promise.ofBlocking(executor, () -> {
@@ -69,9 +72,19 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
                     .offset(OffsetSpecification.first())
                     .manualTrackingStrategy().
                     builder()
-                    .messageHandler(messageHandler)
+                    .messageHandler((_, message) -> {
+                        try {
+                            result.set(JsonUtils.bytes2Object(message.getBodyAsBinary(), Payload.class));
+                        } catch (final IOException e) {
+                            result.setException(e);
+                        }
+                    })
                     .build();
         });
+    }
+
+    public Promise<?> getResult() {
+        return result;
     }
 
     @Override

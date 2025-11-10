@@ -36,7 +36,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-final class Assertions {
+public final class Assertions {
 
     public static void assertTableCount(final String table, final long expected) throws SQLException {
         try (final var c = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);

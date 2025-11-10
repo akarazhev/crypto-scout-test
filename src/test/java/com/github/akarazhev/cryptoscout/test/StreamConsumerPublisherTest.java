@@ -67,6 +67,7 @@ final class StreamConsumerPublisherTest {
                 .build();
         publisher = StreamTestPublisher.create(reactor, executor, environment, BYBIT_CRYPTO_STREAM);
         publisher.start();
+        Thread.sleep(SLEEP_TIME);
         consumer = StreamTestConsumer.create(reactor, executor, environment, BYBIT_CRYPTO_STREAM);
         consumer.start();
         Thread.sleep(SLEEP_TIME);

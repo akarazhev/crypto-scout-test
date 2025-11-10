@@ -31,14 +31,14 @@ import io.activej.reactor.nio.NioReactor;
 
 import java.util.concurrent.Executor;
 
-public final class QueueTestConsumer extends AbstractReactive implements ReactiveService {
+public final class AmqpTestConsumer extends AbstractReactive implements ReactiveService {
     private final Executor executor;
 
-    public static QueueTestConsumer create(final NioReactor reactor, final Executor executor) {
-        return new QueueTestConsumer(reactor, executor);
+    public static AmqpTestConsumer create(final NioReactor reactor, final Executor executor) {
+        return new AmqpTestConsumer(reactor, executor);
     }
 
-    private QueueTestConsumer(final NioReactor reactor, final Executor executor) {
+    private AmqpTestConsumer(final NioReactor reactor, final Executor executor) {
         super(reactor);
         this.executor = executor;
     }

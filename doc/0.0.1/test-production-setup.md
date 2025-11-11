@@ -48,6 +48,7 @@
 - **Requirements**: Java 25, Maven 3.9+, Podman and `podman-compose` for DB/MQ lifecycle.
 - **Installation**: Added Maven dependency snippet and optional PostgreSQL driver note for tests.
 - **Usage**: Included Java examples for `MockData.get(...)` and JUnit lifecycle with `PodmanCompose.up()/down()`.
+- **Streams utilities**: Documented `StreamTestPublisher` and `StreamTestConsumer` for RabbitMQ Streams-based tests.
 - **Configuration**: Documented all system properties and defaults from `Constants.PodmanCompose`:
     - `podman.compose.cmd` (default: `podman-compose`)
     - `podman.cmd` (default: `podman`)
@@ -66,6 +67,10 @@
   SQL.
 - **Error Handling**: Described failure modes (`IllegalStateException` on resource missing or command/timeout issues).
 - **AI-driven note and License**: Clearly stated AI-driven authorship and MIT license.
+- **Gradle snippet**: Added `testImplementation("com.github.akarazhev.cryptoscout:crypto-scout-test:0.0.1")`.
+- **Quickstart**: Added build/install/test commands and guidance for calling `PodmanCompose.up()/down()`.
+- **RabbitMQ Management UI**: Documented URL and credentials mapping to `test.mq.*` properties.
+- **CI/CD and Troubleshooting**: Added runner prerequisites, timeout tuning, and common fixes.
 
 ## Podman Compose service summary
 
@@ -95,14 +100,15 @@
   assets via the classpath and will auto-extract the `podman/` directory (including RabbitMQ configs) to a temporary
   location if the resources are packaged in a JAR; when resources are available on disk (typical during Maven test
   runs), it uses them directly.
-- **PostgreSQL driver**: Required at test runtime when using `PodmanCompose` for JDBC readiness checks. Declared as
-  optional in this library to avoid forcing it on consumers; add it to your test scope.
+- **PostgreSQL driver**: Required at test runtime when using `PodmanCompose` for JDBC readiness checks. It is declared
+  as a dependency of this library (see `pom.xml`). If a consumer excludes it or needs a different version, they should
+  add `org.postgresql:postgresql` to their test scope explicitly.
 - **RabbitMQ Streams**: Uses port `5552`. Credentials/user/stream name are configurable via `test.mq.*` properties.
 
 ## Next steps (optional)
 
-- Add Gradle examples alongside Maven snippets.
-- Add usage example for `StreamTestPublisher`/`StreamTestConsumer` against the RabbitMQ Streams service.
+- Add a README section with a minimal Streams round-trip example (publisher/consumer) and lifecycle notes.
+- Provide a sample CI workflow (GitHub Actions) that installs Podman and runs tests with `PodmanCompose` enabled.
 
 ## Verification checklist
 
@@ -112,11 +118,13 @@
   and RabbitMQ assets.
 - **Examples compile conceptually**: Code snippets reflect actual class names and signatures in `MockData` and
   `PodmanCompose`.
+- **Streams utilities**: Verified documentation references `StreamTestPublisher` and `StreamTestConsumer` accurately.
 
 ## Change log
 
 - Updated `README.md` with production-ready documentation covering features, installation, configuration (DB + MQ),
-  usage, resources, error handling, and acknowledgements.
+  usage, resources, error handling, Streams utilities, Gradle snippet, Quickstart, RabbitMQ Management UI, CI/CD,
+  and Troubleshooting.
 - Clarified resource-loading behavior in README and this report; corrected reference to `Constants.PodmanCompose`.
-- Updated files reviewed to reflect actual classes and tests; added RabbitMQ service details and MQ configuration to the
-  report.
+- Updated files reviewed to reflect actual classes and tests; added RabbitMQ service details and MQ configuration.
+- Fixed PostgreSQL driver note to reflect that the driver is included by default in this library.

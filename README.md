@@ -20,11 +20,16 @@ fail-fast errors, clear defaults, and repeatable test setup.
       `BYBIT_TA_LINEAR`.
     - Supported types (`MockData.Type`):
       `FGI`, `LPL`, `KLINE_1`, `KLINE_5`, `KLINE_15`, `KLINE_60`, `KLINE_240`, `KLINE_D`,
-      `TICKERS`, `PUBLIC_TRADE`, `ORDER_BOOK_1`, `ORDER_BOOK_50`, `ORDER_BOOK_200`, `ORDER_BOOK_1000`, `ALL_LIQUDATION`.
+      `TICKERS`, `PUBLIC_TRADE`, `ORDER_BOOK_1`, `ORDER_BOOK_50`, `ORDER_BOOK_200`, `ORDER_BOOK_1000`,
+      `ALL_LIQUIDATION`.
 - **Podman Compose manager** (`com.github.akarazhev.cryptoscout.test.PodmanCompose`)
     - `up()` starts the services defined in `src/main/resources/podman/podman-compose.yml` and waits until they are
       ready: TimescaleDB (PostgreSQL) and RabbitMQ (with Streams enabled).
     - `down()` stops and removes the containers and waits until they are gone.
+- **RabbitMQ Streams test utilities** (`com.github.akarazhev.cryptoscout.test.StreamTestPublisher`,
+  `com.github.akarazhev.cryptoscout.test.StreamTestConsumer`)
+    - Lightweight helpers to publish/consume JSON payloads during integration tests.
+    - Built on `com.rabbitmq:stream-client` and intended to work with the Streams service started by `PodmanCompose`.
 - **Robust defaults and configurability** via system properties (see Configuration).
 
 ## Requirements
@@ -37,8 +42,6 @@ fail-fast errors, clear defaults, and repeatable test setup.
     - Note: Using a spaced command like `podman compose` is not supported directly; prefer a single binary name/path.
 
 ## Installation
-
-Install the library to your local Maven repository:
 
 ```bash
 mvn -q -DskipTests install
@@ -56,8 +59,22 @@ Add as a test dependency in your project:
 </dependency>
 ```
 
+Gradle (Kotlin):
+
+```kotlin
+testImplementation("com.github.akarazhev.cryptoscout:crypto-scout-test:0.0.1")
+```
+
 Note: The PostgreSQL JDBC driver is declared as a dependency of this library (see `pom.xml`). If you exclude it or need
 to pin a different version, add `org.postgresql:postgresql` to your test scope explicitly.
+
+## Quickstart
+
+- **Build and install**: `mvn -q -DskipTests install`
+- **Enable services in tests**: call `PodmanCompose.up()` in a JUnit `@BeforeAll`, and `PodmanCompose.down()` in
+  `@AfterAll`.
+- **Run tests**: `mvn -q -Dpodman.compose.up.timeout.min=5 test`
+- **Override ports/credentials if needed** via system properties (see Configuration).
 
 ## Usage
 
@@ -120,6 +137,12 @@ Example:
 mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://localhost:5432/crypto_scout test
 ```
 
+## RabbitMQ management UI
+
+- **URL**: http://127.0.0.1:15672
+- **Credentials**: use `test.mq.user` / `test.mq.password` (defaults: `crypto_scout_mq` / `crypto_scout_mq`).
+- **Streams**: Stream protocol on `localhost:5552` (configurable via `test.mq.port`).
+
 ## Packaged resources
 
 - `src/main/resources/bybit-spot/`
@@ -154,6 +177,23 @@ mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://lo
 - Resource loading: `MockData` reads JSON fixtures from the classpath. `PodmanCompose` resolves `podman/` assets to
   a real directory automatically: if they are on disk it uses them; if packaged in a JAR it extracts them to a temporary
   folder. No manual resource copying is required.
+
+## CI/CD
+
+- Ensure Podman and `podman-compose` are available on the runner. If the binary name differs, set
+  `-Dpodman.compose.cmd=/path/to/podman-compose`.
+- The library waits for DB and MQ readiness; adjust timeouts with `-Dpodman.compose.up.timeout.min` when runners are
+  slow.
+- To skip environment startup in certain jobs, avoid calling `PodmanCompose.up()` or guard it behind a Maven/Gradle
+  profile.
+
+## Troubleshooting
+
+- **Command not found**: Set `-Dpodman.compose.cmd` or `-Dpodman.cmd` to absolute paths.
+- **Streams not reachable**: Verify port `5552` is free and not blocked by firewall; confirm `rabbitmq.conf` advertises
+  `localhost`.
+- **DB not reachable**: Confirm `jdbc:postgresql://localhost:5432/crypto_scout` and credentials (`crypto_scout_db` /
+  `crypto_scout_db`).
 
 ## License
 

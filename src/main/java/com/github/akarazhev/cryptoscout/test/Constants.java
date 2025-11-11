@@ -55,6 +55,7 @@ final class Constants {
         static final String SELECT_COUNT = "SELECT COUNT(*) FROM %s";
         static final String SELECT_ONE = "SELECT 1";
         static final int FIRST_ROW = 1;
+        static final String CMC_FGI = "crypto_scout.cmc_fgi";
     }
 
     final static class MockData {

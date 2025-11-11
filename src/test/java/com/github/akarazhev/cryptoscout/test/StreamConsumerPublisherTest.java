@@ -43,7 +43,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_P
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
 import static com.github.akarazhev.cryptoscout.test.Constants.Stream.BYBIT_CRYPTO_STREAM;
-import static com.github.akarazhev.cryptoscout.test.Constants.Stream.CONNECTION_ESTABLESHED_MS;
+import static com.github.akarazhev.cryptoscout.test.Constants.Stream.CONNECTION_ESTABLISHED_MS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -67,10 +67,10 @@ final class StreamConsumerPublisherTest {
                 .build();
         publisher = StreamTestPublisher.create(reactor, executor, environment, BYBIT_CRYPTO_STREAM);
         publisher.start();
-        Thread.sleep(CONNECTION_ESTABLESHED_MS);
+        Thread.sleep(CONNECTION_ESTABLISHED_MS);
         consumer = StreamTestConsumer.create(reactor, executor, environment, BYBIT_CRYPTO_STREAM);
         consumer.start();
-        Thread.sleep(CONNECTION_ESTABLESHED_MS);
+        Thread.sleep(CONNECTION_ESTABLISHED_MS);
     }
 
     @Test

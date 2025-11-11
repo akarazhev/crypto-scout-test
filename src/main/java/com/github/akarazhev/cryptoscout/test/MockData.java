@@ -50,6 +50,10 @@ public final class MockData {
     }
 
     public enum Type {
+        // Bybit parser
+        LPL(Constants.MockData.LPL),
+        // CMC parser
+        FGI(Constants.MockData.FGI),
         // Klines
         KLINE_1(Constants.MockData.KLINE_1),
         KLINE_5(Constants.MockData.KLINE_5),

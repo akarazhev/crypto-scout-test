@@ -70,6 +70,8 @@ final class Constants {
         static final String BYBIT_LINEAR = "bybit-linear";
         static final String BYBIT_TA_LINEAR = "bybit-ta-linear";
         // Stream types
+        static final String FGI = "cmc_fgi";
+        static final String LPL = "bybit_lpl";
         static final String KLINE_1 = "kline.1";
         static final String KLINE_5 = "kline.5";
         static final String KLINE_15 = "kline.15";

@@ -43,7 +43,6 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_P
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
 import static com.github.akarazhev.cryptoscout.test.Constants.Stream.BYBIT_CRYPTO_STREAM;
-import static com.github.akarazhev.cryptoscout.test.Constants.Stream.CONNECTION_ESTABLISHED_MS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -55,7 +54,7 @@ final class StreamConsumerPublisherTest {
     private static StreamTestConsumer consumer;
 
     @BeforeAll
-    static void setup() throws InterruptedException {
+    static void setup() {
         PodmanCompose.up();
         executor = Executors.newVirtualThreadPerTaskExecutor();
         reactor = Eventloop.builder().withCurrentThread().build();
@@ -66,18 +65,15 @@ final class StreamConsumerPublisherTest {
                 .password(MQ_PASSWORD)
                 .build();
         publisher = StreamTestPublisher.create(reactor, executor, environment, BYBIT_CRYPTO_STREAM);
-        publisher.start();
-        Thread.sleep(CONNECTION_ESTABLISHED_MS);
         consumer = StreamTestConsumer.create(reactor, executor, environment, BYBIT_CRYPTO_STREAM);
-        consumer.start();
-        Thread.sleep(CONNECTION_ESTABLISHED_MS);
+        TestUtils.await(publisher.start(), consumer.start());
     }
 
     @Test
     void testPublishConsume() {
         final Map<String, Object> data = Map.of("key", "value");
         publisher.publish(Payload.of(Provider.BYBIT, Source.PM, data));
-        @SuppressWarnings("unchecked") final var result = (Payload<Map<String, Object>>) TestUtils.await(consumer.getResult());
+        final var result = TestUtils.await(consumer.getResult());
         assertNotNull(result);
         assertEquals(Provider.BYBIT, result.getProvider());
         assertEquals(Source.PM, result.getSource());

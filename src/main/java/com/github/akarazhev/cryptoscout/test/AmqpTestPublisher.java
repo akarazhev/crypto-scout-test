@@ -67,7 +67,7 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
     }
 
     @Override
-    public Promise<?> start() {
+    public Promise<Void> start() {
         return Promise.ofBlocking(executor, () -> {
             try {
                 connection = connectionFactory.newConnection(PUBLISHER_CLIENT_NAME);
@@ -83,7 +83,7 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
     }
 
     @Override
-    public Promise<?> stop() {
+    public Promise<Void> stop() {
         return Promise.ofBlocking(executor, () -> {
             try {
                 if (channel != null) {
@@ -105,7 +105,7 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
         });
     }
 
-    public Promise<?> publish(final Payload<Map<String, Object>> payload) {
+    public Promise<Void> publish(final Payload<Map<String, Object>> payload) {
         return Promise.ofBlocking(executor, () -> {
             if (channel == null || !channel.isOpen()) {
                 throw new IllegalStateException("AMQP channel is not open. Call start() before publish().");

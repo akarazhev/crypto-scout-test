@@ -70,7 +70,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
     }
 
     @Override
-    public Promise<?> start() {
+    public Promise<Void> start() {
         return Promise.ofBlocking(executor, () -> {
             try {
                 connection = connectionFactory.newConnection(CONSUMER_CLIENT_NAME);
@@ -112,12 +112,12 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
         });
     }
 
-    public Promise<?> getResult() {
+    public Promise<Payload<Map<String, Object>>> getResult() {
         return result;
     }
 
     @Override
-    public Promise<?> stop() {
+    public Promise<Void> stop() {
         return Promise.ofBlocking(executor, () -> {
             try {
                 if (channel != null) {

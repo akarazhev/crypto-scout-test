@@ -42,7 +42,6 @@ import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.DEFAULT_QUEUE
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
-import static com.github.akarazhev.cryptoscout.test.Constants.Stream.CONNECTION_ESTABLISHED_MS;
 import static com.rabbitmq.client.ConnectionFactory.DEFAULT_AMQP_PORT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -54,7 +53,7 @@ final class AmqpConsumerPublisherTest {
     private static AmqpTestConsumer consumer;
 
     @BeforeAll
-    static void setup() throws InterruptedException {
+    static void setup() {
         PodmanCompose.up();
         executor = Executors.newVirtualThreadPerTaskExecutor();
         reactor = Eventloop.builder().withCurrentThread().build();
@@ -68,18 +67,15 @@ final class AmqpConsumerPublisherTest {
         factory.setRequestedHeartbeat(30);
 
         publisher = AmqpTestPublisher.create(reactor, executor, factory, DEFAULT_QUEUE);
-        publisher.start();
-        Thread.sleep(CONNECTION_ESTABLISHED_MS);
         consumer = AmqpTestConsumer.create(reactor, executor, factory, DEFAULT_QUEUE);
-        consumer.start();
-        Thread.sleep(CONNECTION_ESTABLISHED_MS);
+        TestUtils.await(publisher.start(), consumer.start());
     }
 
     @Test
     void testPublishConsume() {
         final Map<String, Object> data = Map.of("key", "value");
         publisher.publish(Payload.of(Provider.BYBIT, Source.PM, data));
-        @SuppressWarnings("unchecked") final var result = (Payload<Map<String, Object>>) TestUtils.await(consumer.getResult());
+        final var result = TestUtils.await(consumer.getResult());
         assertNotNull(result);
         assertEquals(Provider.BYBIT, result.getProvider());
         assertEquals(Source.PM, result.getSource());

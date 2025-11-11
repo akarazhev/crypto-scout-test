@@ -86,7 +86,9 @@ final class StreamConsumerPublisherTest {
 
     @AfterAll
     static void cleanup() {
-        reactor.post(() -> consumer.stop().whenComplete(() -> publisher.stop().whenComplete(() -> reactor.breakEventloop())));
+        reactor.post(() -> consumer.stop()
+                .whenComplete(() -> publisher.stop()
+                        .whenComplete(() -> reactor.breakEventloop())));
         reactor.run();
         environment.close();
         executor.shutdown();

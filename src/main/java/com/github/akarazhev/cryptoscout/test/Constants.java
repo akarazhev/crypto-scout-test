@@ -40,7 +40,7 @@ final class Constants {
         }
 
         static final String BYBIT_CRYPTO_STREAM = "bybit-crypto-stream";
-        static final int SLEEP_TIME = 10;
+        static final int CONNECTION_ESTABLESHED_MS = 50;
     }
 
     final static class DB {

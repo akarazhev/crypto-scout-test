@@ -14,7 +14,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./script/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./script/init.sql:/docker-entrypoint-initdb.d/00_init.sql:ro
       - ./script/bybit_spot_tables.sql:/docker-entrypoint-initdb.d/01_bybit_spot_tables.sql:ro
       - ./script/bybit_spot_tables.sql:/docker-entrypoint-initdb.d/02_bybit_ta_spot_tables.sql:ro
       - ./script/bybit_linear_tables.sql:/docker-entrypoint-initdb.d/03_bybit_linear_tables.sql:ro

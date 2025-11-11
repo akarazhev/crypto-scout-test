@@ -1,5 +1,4 @@
-# Issue 2: Implement `AssertBybitLinearTablesTest`, `AssertBybitParserTablesTest` , `AssertBybitSpotTablesTest`,
-`AssertBybitTaLinearTablesTest` , `AssertBybitTaSpotTablesTest` tests
+# Issue 2: Implement `AssertBybitLinearTablesTest`, `AssertBybitParserTablesTest` , `AssertBybitSpotTablesTest`, `AssertBybitTaLinearTablesTest` , `AssertBybitTaSpotTablesTest` tests
 
 In this `crypto-scout-test` project we are going to implement:
 

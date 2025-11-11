@@ -20,7 +20,7 @@ Take the following roles:
 
 - Use the best practices and design patterns.
 - Use the current technological stack, that's: `ActiveJ 6.0`, `Java 25`, `maven 3.9.1`, `podman 5.6.2`,
-  `podman-compose 1.5.0`, `timescale/timescaledb:latest-pg17`, `rabbitmq:4.1.4-management`, `JUnit 5.13.4`.
+  `podman-compose 1.5.0`, `timescale/timescaledb:latest-pg17`, `rabbitmq:4.1.4-management`, `JUnit 6.0.1`.
 - Rely on the `sample` section.
 - Implementation must be production ready.
 - Do not hallucinate.

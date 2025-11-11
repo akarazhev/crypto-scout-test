@@ -26,6 +26,15 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_PUBLIC_TRADE;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ORDER_BOOK_1;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ORDER_BOOK_50;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ORDER_BOOK_200;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ORDER_BOOK_1000;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ALL_LIQUDATION;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.ZERO_ROWS;
 
 final class AssertBybitTaLinearTablesTest {
 
@@ -37,5 +46,35 @@ final class AssertBybitTaLinearTablesTest {
     @AfterAll
     static void cleanup() {
         PodmanCompose.down();
+    }
+
+    @Test
+    void shouldBybitTaLinearPublicTradeTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_LINEAR_PUBLIC_TRADE, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaLinearOrderBook1TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_LINEAR_ORDER_BOOK_1, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaLinearOrderBook50TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_LINEAR_ORDER_BOOK_50, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaLinearOrderBook200TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_LINEAR_ORDER_BOOK_200, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaLinearOrderBook1000TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_LINEAR_ORDER_BOOK_1000, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaLinearAllLiqudationTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_LINEAR_ALL_LIQUDATION, ZERO_ROWS);
     }
 }

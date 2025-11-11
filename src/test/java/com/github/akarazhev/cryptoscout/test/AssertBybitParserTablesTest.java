@@ -26,6 +26,10 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LPL;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.ZERO_ROWS;
 
 final class AssertBybitParserTablesTest {
 
@@ -37,5 +41,10 @@ final class AssertBybitParserTablesTest {
     @AfterAll
     static void cleanup() {
         PodmanCompose.down();
+    }
+
+    @Test
+    void shouldBybitLplTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LPL, ZERO_ROWS);
     }
 }

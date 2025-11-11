@@ -26,6 +26,16 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_TICKERS;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_KLINE_1M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_KLINE_5M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_KLINE_15M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_KLINE_60M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_KLINE_240M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_KLINE_1D;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.ZERO_ROWS;
 
 final class AssertBybitSpotTablesTest {
 
@@ -37,5 +47,40 @@ final class AssertBybitSpotTablesTest {
     @AfterAll
     static void cleanup() {
         PodmanCompose.down();
+    }
+
+    @Test
+    void shouldBybitSpotTickersTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_TICKERS, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotKline1mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_KLINE_1M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotKline5mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_KLINE_5M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotKline15mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_KLINE_15M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotKline60mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_KLINE_60M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotKline240mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_KLINE_240M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotKline1dTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_KLINE_1D, ZERO_ROWS);
     }
 }

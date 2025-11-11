@@ -26,6 +26,14 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_SPOT_PUBLIC_TRADE;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_SPOT_ORDER_BOOK_1;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_SPOT_ORDER_BOOK_50;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_SPOT_ORDER_BOOK_200;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_SPOT_ORDER_BOOK_1000;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.ZERO_ROWS;
 
 final class AssertBybitTaSpotTablesTest {
 
@@ -37,5 +45,30 @@ final class AssertBybitTaSpotTablesTest {
     @AfterAll
     static void cleanup() {
         PodmanCompose.down();
+    }
+
+    @Test
+    void shouldBybitTaSpotPublicTradeTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_SPOT_PUBLIC_TRADE, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaSpotOrderBook1TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_SPOT_ORDER_BOOK_1, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaSpotOrderBook50TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_SPOT_ORDER_BOOK_50, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaSpotOrderBook200TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_SPOT_ORDER_BOOK_200, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitTaSpotOrderBook1000TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_SPOT_ORDER_BOOK_1000, ZERO_ROWS);
     }
 }

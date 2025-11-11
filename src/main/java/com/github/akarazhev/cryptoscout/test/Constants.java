@@ -54,8 +54,40 @@ final class Constants {
         static final String DB_PASSWORD = System.getProperty("test.db.password", "crypto_scout_db");
         static final String SELECT_COUNT = "SELECT COUNT(*) FROM %s";
         static final String SELECT_ONE = "SELECT 1";
+        static final int ZERO_ROWS = 0;
         static final int FIRST_ROW = 1;
         static final String CMC_FGI = "crypto_scout.cmc_fgi";
+        // Bybit parser
+        static final String BYBIT_LPL = "crypto_scout.bybit_lpl";
+        // Bybit spot
+        static final String BYBIT_SPOT_TICKERS = "crypto_scout.bybit_spot_tickers";
+        static final String BYBIT_SPOT_KLINE_1M = "crypto_scout.bybit_spot_kline_1m";
+        static final String BYBIT_SPOT_KLINE_5M = "crypto_scout.bybit_spot_kline_5m";
+        static final String BYBIT_SPOT_KLINE_15M = "crypto_scout.bybit_spot_kline_15m";
+        static final String BYBIT_SPOT_KLINE_60M = "crypto_scout.bybit_spot_kline_60m";
+        static final String BYBIT_SPOT_KLINE_240M = "crypto_scout.bybit_spot_kline_240m";
+        static final String BYBIT_SPOT_KLINE_1D = "crypto_scout.bybit_spot_kline_1d";
+        // Bybit linear
+        static final String BYBIT_LINEAR_TICKERS = "crypto_scout.bybit_linear_tickers";
+        static final String BYBIT_LINEAR_KLINE_1M = "crypto_scout.bybit_linear_kline_1m";
+        static final String BYBIT_LINEAR_KLINE_5M = "crypto_scout.bybit_linear_kline_5m";
+        static final String BYBIT_LINEAR_KLINE_15M = "crypto_scout.bybit_linear_kline_15m";
+        static final String BYBIT_LINEAR_KLINE_60M = "crypto_scout.bybit_linear_kline_60m";
+        static final String BYBIT_LINEAR_KLINE_240M = "crypto_scout.bybit_linear_kline_240m";
+        static final String BYBIT_LINEAR_KLINE_1D = "crypto_scout.bybit_linear_kline_1d";
+        // Bybit TA spot
+        static final String BYBIT_TA_SPOT_PUBLIC_TRADE = "crypto_scout.bybit_ta_spot_public_trade";
+        static final String BYBIT_TA_SPOT_ORDER_BOOK_1 = "crypto_scout.bybit_ta_spot_order_book_1";
+        static final String BYBIT_TA_SPOT_ORDER_BOOK_50 = "crypto_scout.bybit_ta_spot_order_book_50";
+        static final String BYBIT_TA_SPOT_ORDER_BOOK_200 = "crypto_scout.bybit_ta_spot_order_book_200";
+        static final String BYBIT_TA_SPOT_ORDER_BOOK_1000 = "crypto_scout.bybit_ta_spot_order_book_1000";
+        // Bybit TA linear
+        static final String BYBIT_TA_LINEAR_PUBLIC_TRADE = "crypto_scout.bybit_ta_linear_public_trade";
+        static final String BYBIT_TA_LINEAR_ORDER_BOOK_1 = "crypto_scout.bybit_ta_linear_order_book_1";
+        static final String BYBIT_TA_LINEAR_ORDER_BOOK_50 = "crypto_scout.bybit_ta_linear_order_book_50";
+        static final String BYBIT_TA_LINEAR_ORDER_BOOK_200 = "crypto_scout.bybit_ta_linear_order_book_200";
+        static final String BYBIT_TA_LINEAR_ORDER_BOOK_1000 = "crypto_scout.bybit_ta_linear_order_book_1000";
+        static final String BYBIT_TA_LINEAR_ALL_LIQUDATION = "crypto_scout.bybit_ta_linear_all_liqudation";
     }
 
     final static class MockData {

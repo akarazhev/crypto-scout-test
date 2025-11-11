@@ -26,6 +26,16 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_TICKERS;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_KLINE_1M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_KLINE_5M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_KLINE_15M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_KLINE_60M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_KLINE_240M;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_KLINE_1D;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.ZERO_ROWS;
 
 final class AssertBybitLinearTablesTest {
 
@@ -37,5 +47,40 @@ final class AssertBybitLinearTablesTest {
     @AfterAll
     static void cleanup() {
         PodmanCompose.down();
+    }
+
+    @Test
+    void shouldBybitLinearTickersTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_TICKERS, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearKline1mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_KLINE_1M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearKline5mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_KLINE_5M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearKline15mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_KLINE_15M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearKline6ZERO_ROWSmTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_KLINE_60M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearKline240mTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_KLINE_240M, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearKline1dTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_KLINE_1D, ZERO_ROWS);
     }
 }

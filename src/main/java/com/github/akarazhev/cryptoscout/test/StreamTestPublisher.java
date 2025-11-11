@@ -50,8 +50,8 @@ public final class StreamTestPublisher extends AbstractReactive implements React
         return new StreamTestPublisher(reactor, executor, environment, stream);
     }
 
-    private StreamTestPublisher(final NioReactor reactor, final Executor executor, final Environment environment,
-                                final String stream) {
+    private StreamTestPublisher(final NioReactor reactor, final Executor executor,
+                                final Environment environment, final String stream) {
         super(reactor);
         this.executor = executor;
         this.environment = environment;

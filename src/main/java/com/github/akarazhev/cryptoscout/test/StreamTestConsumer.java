@@ -54,8 +54,8 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
         return new StreamTestConsumer(reactor, executor, environment, stream);
     }
 
-    private StreamTestConsumer(final NioReactor reactor, final Executor executor, final Environment environment,
-                               final String stream) {
+    private StreamTestConsumer(final NioReactor reactor, final Executor executor,
+                               final Environment environment, final String stream) {
         super(reactor);
         this.executor = executor;
         this.environment = environment;

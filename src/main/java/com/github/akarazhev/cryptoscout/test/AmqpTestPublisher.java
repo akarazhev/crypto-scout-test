@@ -40,44 +40,24 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
-import static com.github.akarazhev.cryptoscout.test.Constants.MQ.DEFAULT_QUEUE;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
-import static com.rabbitmq.client.ConnectionFactory.DEFAULT_AMQP_PORT;
-
 public final class AmqpTestPublisher extends AbstractReactive implements ReactiveService {
     private final static Logger LOGGER = LoggerFactory.getLogger(AmqpTestPublisher.class);
     private final Executor executor;
-    private final String host;
-    private final int port;
-    private final String username;
-    private final String password;
+    private final ConnectionFactory connectionFactory;
     private final String queue;
     private volatile Connection connection;
     private volatile Channel channel;
 
-    public static AmqpTestPublisher create(final NioReactor reactor, final Executor executor) {
-        return new AmqpTestPublisher(reactor, executor, MQ_HOST, DEFAULT_AMQP_PORT, MQ_USER, MQ_PASSWORD, DEFAULT_QUEUE);
-    }
-
     public static AmqpTestPublisher create(final NioReactor reactor, final Executor executor,
-                                           final String host, final int port,
-                                           final String username, final String password,
-                                           final String queue) {
-        return new AmqpTestPublisher(reactor, executor, host, port, username, password, queue);
+                                           final ConnectionFactory connectionFactory, final String queue) {
+        return new AmqpTestPublisher(reactor, executor, connectionFactory, queue);
     }
 
     private AmqpTestPublisher(final NioReactor reactor, final Executor executor,
-                              final String host, final int port,
-                              final String username, final String password,
-                              final String queue) {
+                              final ConnectionFactory connectionFactory, final String queue) {
         super(reactor);
         this.executor = executor;
-        this.host = host;
-        this.port = port;
-        this.username = username;
-        this.password = password;
+        this.connectionFactory = connectionFactory;
         this.queue = queue;
     }
 
@@ -85,16 +65,7 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
     public Promise<?> start() {
         return Promise.ofBlocking(executor, () -> {
             try {
-                final var factory = new ConnectionFactory();
-                factory.setHost(host);
-                factory.setPort(port);
-                factory.setUsername(username);
-                factory.setPassword(password);
-                factory.setAutomaticRecoveryEnabled(true);
-                factory.setNetworkRecoveryInterval(5000);
-                factory.setRequestedHeartbeat(30);
-
-                connection = factory.newConnection("amqp-test-publisher");
+                connection = connectionFactory.newConnection("amqp-test-publisher");
                 channel = connection.createChannel();
                 channel.confirmSelect();
                 // Ensure the queue exists (will throw if it doesn't)

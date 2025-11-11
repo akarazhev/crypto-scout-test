@@ -15,14 +15,14 @@ Take the following roles:
 - Use the current technological stack, that's: `ActiveJ 6.0`, `Java 25`, `maven 3.9.1`, `podman 5.6.2`,
   `podman-compose 1.5.0`, `timescale/timescaledb:latest-pg17`, `JUnit 6.0.1`, `Amqp Client 5.27.1`.
 - Rely on the `sample` section. Use implementation of the `StreamTestConsumer` service as an example how to implement
-  the `AmqpTestConsumer` service that consumes messages from RabbitMQ queue.
+  the `AmqpTestConsumer` service that consumes messages from a RabbitMQ queue.
 - Implementation must be production ready.
 - Do not hallucinate.
 
 ## Tasks
 
 - As the `expert java engineer` review the current `AmqpTestConsumer.java` implementation in `crypto-scout-test` project
-  and update it by implementing all methods needed methods. The service should consume messages from RabbitMQ queue.
+  and update it by implementing all methods needed methods. The service should consume messages from a RabbitMQ queue.
 - As the `expert java engineer` recheck your proposal and make sure that they are correct and haven't missed any
   important points.
 

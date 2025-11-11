@@ -43,6 +43,14 @@ final class Constants {
         static final int CONNECTION_ESTABLISHED_MS = 200;
     }
 
+    final static class MQ {
+        private MQ() {
+            throw new UnsupportedOperationException();
+        }
+
+        static final String DEFAULT_QUEUE = "collector-queue";
+    }
+
     final static class DB {
         private DB() {
             throw new UnsupportedOperationException();

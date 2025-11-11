@@ -32,51 +32,44 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 final class MockBybitTaLinearDataTest {
 
     @Test
-    void shouldLinearKline1DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.KLINE_1);
+    void shouldLinearPublicTradeDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.PUBLIC_TRADE);
         assertNotNull(data);
         assertEquals(4, data.size());
     }
 
     @Test
-    void shouldLinearKline5DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.KLINE_5);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldLinearKline15DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.KLINE_15);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldLinearKline60DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.KLINE_60);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldLinearKline240DataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.KLINE_240);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldLinearKlineDDataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.KLINE_D);
-        assertNotNull(data);
-        assertEquals(4, data.size());
-    }
-
-    @Test
-    void shouldLinearTickersDataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.TICKERS);
+    void shouldLinearOrderBook1DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ORDER_BOOK_1);
         assertNotNull(data);
         assertEquals(5, data.size());
+    }
+
+    @Test
+    void shouldLinearOrderBook50DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ORDER_BOOK_50);
+        assertNotNull(data);
+        assertEquals(5, data.size());
+    }
+
+    @Test
+    void shouldLinearOrderBook200DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ORDER_BOOK_200);
+        assertNotNull(data);
+        assertEquals(5, data.size());
+    }
+
+    @Test
+    void shouldLinearOrderBook1000DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ORDER_BOOK_1000);
+        assertNotNull(data);
+        assertEquals(5, data.size());
+    }
+
+    @Test
+    void shouldLinearAllLiquidationDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ALL_LIQUIDATION);
+        assertNotNull(data);
+        assertEquals(4, data.size());
     }
 }

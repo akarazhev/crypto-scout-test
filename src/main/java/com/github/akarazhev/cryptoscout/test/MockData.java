@@ -35,10 +35,12 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PATH_SEPARATOR;
 public final class MockData {
 
     public enum Source {
-        CMC_PARSER(Constants.MockData.BYBIT_PARSER),
+        CMC_PARSER(Constants.MockData.CMC_PARSER),
         BYBIT_PARSER(Constants.MockData.BYBIT_PARSER),
         BYBIT_SPOT(Constants.MockData.BYBIT_SPOT),
-        BYBIT_LINEAR(Constants.MockData.BYBIT_LINEAR);
+        BYBIT_TA_SPOT(Constants.MockData.BYBIT_TA_SPOT),
+        BYBIT_LINEAR(Constants.MockData.BYBIT_LINEAR),
+        BYBIT_TA_LINEAR(Constants.MockData.BYBIT_TA_LINEAR);
 
         private final String source;
 

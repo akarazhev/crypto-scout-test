@@ -46,6 +46,12 @@ import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_PASSWORD;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_USER;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_URL;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.SELECT_ONE;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_LINEAR_TABLES_SQL;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_PARSER_TABLES_SQL;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_SPOT_TABLES_SQL;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_TA_LINEAR_TABLES_SQL;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_TA_SPOT_TABLES_SQL;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.CMC_PARSER_TABLES_SQL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMPOSE_FILE_LOCATION;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMPOSE_FILE_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_CONTAINER_NAME;
@@ -68,6 +74,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_RESOURCE_NOT_FOUND;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_RUN_CMD_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.FILE_ARG;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.INIT_SQL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.LINE_SPLIT_REGEX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MIN_MILLIS;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MIN_SECONDS;
@@ -90,7 +97,6 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PATH_SEPARATOR;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PROTOCOL_FILE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.TEMP_DIR_PREFIX;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.SCRIPT_DIR_NAME;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.INIT_SCRIPT_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_EXTRACT_RESOURCES;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_DIR_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.RABBITMQ_ENABLED_PLUGINS;
@@ -307,21 +313,34 @@ public final class PodmanCompose {
                     RABBITMQ_CONF_NAME, rabbitDir.resolve(RABBITMQ_CONF_NAME));
             copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR +
                     RABBITMQ_DEFINITIONS_NAME, rabbitDir.resolve(RABBITMQ_DEFINITIONS_NAME));
-            // Optional script; copy if present
-            final var scriptPath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + SCRIPT_DIR_NAME +
-                    PATH_SEPARATOR + INIT_SCRIPT_NAME;
-            try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(scriptPath)) {
-                if (is != null) {
-                    Files.copy(is, scriptDir.resolve(INIT_SCRIPT_NAME), StandardCopyOption.REPLACE_EXISTING);
-                }
-            }
-
+            // Optional script; copy if present init.sql
+            copyScript(scriptDir, INIT_SQL);
+            // Optional script; copy if present bybit_linear_tables.sql
+            copyScript(scriptDir, BYBIT_LINEAR_TABLES_SQL);
+            // Optional script; copy if present bybit_parser_tables
+            copyScript(scriptDir, BYBIT_PARSER_TABLES_SQL);
+            // Optional script; copy if present bybit_spot_tables.sql
+            copyScript(scriptDir, BYBIT_SPOT_TABLES_SQL);
+            // Optional script; copy if present bybit_ta_linear_tables.sql
+            copyScript(scriptDir, BYBIT_TA_LINEAR_TABLES_SQL);
+            // Optional script; copy if present bybit_ta_spot_tables.sql
+            copyScript(scriptDir, BYBIT_TA_SPOT_TABLES_SQL);
+            // Optional script; copy if present cmc_parser_tables.sql
+            copyScript(scriptDir, CMC_PARSER_TABLES_SQL);
             return podmanTargetDir;
         } catch (final Exception e) {
             throw new IllegalStateException(ERR_EXTRACT_RESOURCES, e);
         }
     }
 
+    private static void copyScript(final Path scriptDir, final String scriptName) throws IOException {
+        final var scriptPath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + SCRIPT_DIR_NAME + PATH_SEPARATOR + scriptName;
+        try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(scriptPath)) {
+            if (is != null) {
+                Files.copy(is, scriptDir.resolve(scriptName), StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+    }
     private static void copyClasspathFile(final String classpath, final Path target) throws IOException {
         try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(classpath)) {
             if (is == null) {

@@ -66,7 +66,9 @@ final class Constants {
         static final String CMC_PARSER = "cmc-parser";
         static final String BYBIT_PARSER = "bybit-parser";
         static final String BYBIT_SPOT = "bybit-spot";
+        static final String BYBIT_TA_SPOT = "bybit-ta-spot";
         static final String BYBIT_LINEAR = "bybit-linear";
+        static final String BYBIT_TA_LINEAR = "bybit-ta-linear";
         // Stream types
         static final String KLINE_1 = "kline.1";
         static final String KLINE_5 = "kline.5";
@@ -114,7 +116,13 @@ final class Constants {
         static final String OUTPUT_THREAD_NAME = "podman-compose-output";
         // Podman resource files
         static final String SCRIPT_DIR_NAME = "script";
-        static final String INIT_SCRIPT_NAME = "init.sql";
+        static final String INIT_SQL = "init.sql";
+        static final String BYBIT_LINEAR_TABLES_SQL = "bybit_linear_tables.sql";
+        static final String BYBIT_PARSER_TABLES_SQL = "bybit_parser_tables.sql";
+        static final String BYBIT_SPOT_TABLES_SQL = "bybit_spot_tables.sql";
+        static final String BYBIT_TA_LINEAR_TABLES_SQL = "bybit_ta_linear_tables.sql";
+        static final String BYBIT_TA_SPOT_TABLES_SQL = "bybit_ta_spot_tables.sql";
+        static final String CMC_PARSER_TABLES_SQL = "cmc_parser_tables.sql";
         static final String RABBITMQ_DIR_NAME = "rabbitmq";
         static final String RABBITMQ_ENABLED_PLUGINS = "enabled_plugins";
         static final String RABBITMQ_CONF_NAME = "rabbitmq.conf";

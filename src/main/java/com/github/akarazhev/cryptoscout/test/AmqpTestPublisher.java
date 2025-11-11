@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.CONTENT_TYPE_JSON;
-import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.DEFAULT_EXCHANGE;
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.DELIVERY_MODE_PERSISTENT;
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.PUBLISHER_CLIENT_NAME;
 
@@ -105,7 +104,8 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
         });
     }
 
-    public Promise<Void> publish(final Payload<Map<String, Object>> payload) {
+    public Promise<Void> publish(final String exchange, final String routingKey,
+                                 final Payload<Map<String, Object>> payload) {
         return Promise.ofBlocking(executor, () -> {
             if (channel == null || !channel.isOpen()) {
                 throw new IllegalStateException("AMQP channel is not open. Call start() before publish().");
@@ -117,8 +117,7 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
                         .contentType(CONTENT_TYPE_JSON)
                         .deliveryMode(DELIVERY_MODE_PERSISTENT)
                         .build();
-                // Publish to default exchange with routing key = queue name
-                channel.basicPublish(DEFAULT_EXCHANGE, queue, props, body);
+                channel.basicPublish(exchange, routingKey, props, body);
                 channel.waitForConfirmsOrDie();
             } catch (final Exception ex) {
                 LOGGER.error("Failed to publish payload to AMQP queue {}: {}", queue, ex.getMessage(), ex);

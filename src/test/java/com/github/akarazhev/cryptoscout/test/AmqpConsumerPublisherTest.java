@@ -38,7 +38,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.DEFAULT_QUEUE;
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.AMQP_COLLECTOR_QUEUE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
@@ -66,15 +66,15 @@ final class AmqpConsumerPublisherTest {
         factory.setNetworkRecoveryInterval(5000);
         factory.setRequestedHeartbeat(30);
 
-        publisher = AmqpTestPublisher.create(reactor, executor, factory, DEFAULT_QUEUE);
-        consumer = AmqpTestConsumer.create(reactor, executor, factory, DEFAULT_QUEUE);
+        publisher = AmqpTestPublisher.create(reactor, executor, factory, AMQP_COLLECTOR_QUEUE);
+        consumer = AmqpTestConsumer.create(reactor, executor, factory, AMQP_COLLECTOR_QUEUE);
         TestUtils.await(publisher.start(), consumer.start());
     }
 
     @Test
     void testPublishConsume() {
         final Map<String, Object> data = Map.of("key", "value");
-        publisher.publish(Payload.of(Provider.BYBIT, Source.PM, data));
+        publisher.publish("", AMQP_COLLECTOR_QUEUE, Payload.of(Provider.BYBIT, Source.PM, data));
         final var result = TestUtils.await(consumer.getResult());
         assertNotNull(result);
         assertEquals(Provider.BYBIT, result.getProvider());

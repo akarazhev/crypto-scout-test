@@ -27,6 +27,7 @@ package com.github.akarazhev.cryptoscout.test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -44,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_PASSWORD;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_USER;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_HOST;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_URL;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.SELECT_ONE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_LINEAR_TABLES_SQL;
@@ -186,32 +188,49 @@ public final class PodmanCompose {
     }
 
     private static boolean canConnectToDb() {
-        try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             final var st = conn.createStatement();
-             final var rs = st.executeQuery(SELECT_ONE)) {
-            LOGGER.info("Connected to DB: {}", conn.getClientInfo());
-            return rs.next();
-        } catch (final SQLException e) {
-            return false;
+        if (isReachable(JDBC_HOST, READY_RETRY_INTERVAL)) {
+            try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+                 final var st = conn.createStatement();
+                 final var rs = st.executeQuery(SELECT_ONE)) {
+                LOGGER.info("Connected to DB: {}", conn.getClientInfo());
+                return rs.next();
+            } catch (final SQLException e) {
+                return false;
+            }
         }
+
+        return false;
     }
 
     private static boolean canConnectToMq() {
-        try (final var environment = Environment.builder()
-                .host(MQ_HOST)
-                .port(MQ_PORT)
-                .username(MQ_USER)
-                .password(MQ_PASSWORD)
-                .build();
-             final var _ = environment.producerBuilder()
-                     .name(MQ_STREAM)
-                     .stream(MQ_STREAM)
-                     .build()) {
-            LOGGER.info("Connected to RabbitMQ: {}", environment);
-            return true;
-        } catch (final Exception e) {
-            return false;
+        if (isReachable(MQ_HOST, READY_RETRY_INTERVAL)) {
+            try (final var environment = Environment.builder()
+                    .host(MQ_HOST)
+                    .port(MQ_PORT)
+                    .username(MQ_USER)
+                    .password(MQ_PASSWORD)
+                    .build();
+                 final var _ = environment.producerBuilder()
+                         .name(MQ_STREAM)
+                         .stream(MQ_STREAM)
+                         .build()) {
+                LOGGER.info("Connected to RabbitMQ: {}", environment);
+                return true;
+            } catch (final Exception e) {
+                return false;
+            }
         }
+
+        return true;
+    }
+
+    private static boolean isReachable(final String host, final Duration duration) {
+        try {
+            return InetAddress.getByName(host).isReachable((int) duration.toMillis());
+        } catch (final IOException _) {
+        }
+
+        return false;
     }
 
     private static void waitForContainerRemoval(final String containerName, final Duration timeout) {
@@ -263,7 +282,7 @@ public final class PodmanCompose {
                         out.append(line).append(System.lineSeparator());
                     }
 
-                } catch (final IOException ignored) {
+                } catch (final IOException _) {
                 }
             }, OUTPUT_THREAD_NAME);
             reader.setDaemon(true);
@@ -340,6 +359,7 @@ public final class PodmanCompose {
             }
         }
     }
+
     private static void copyClasspathFile(final String classpath, final Path target) throws IOException {
         try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(classpath)) {
             if (is == null) {

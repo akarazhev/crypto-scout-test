@@ -60,8 +60,9 @@ final class Constants {
             throw new UnsupportedOperationException();
         }
 
+        static final String JDBC_HOST = "localhost";
         static final String JDBC_URL = System.getProperty("test.db.jdbc.url",
-                "jdbc:postgresql://localhost:5432/crypto_scout");
+                "jdbc:postgresql://" + JDBC_HOST + ":5432/crypto_scout");
         static final String DB_USER = System.getProperty("test.db.user", "crypto_scout_db");
         static final String DB_PASSWORD = System.getProperty("test.db.password", "crypto_scout_db");
         static final String SELECT_COUNT = "SELECT COUNT(*) FROM %s";

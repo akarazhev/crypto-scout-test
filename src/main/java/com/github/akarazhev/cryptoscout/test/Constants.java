@@ -40,7 +40,7 @@ final class Constants {
         }
 
         static final String BYBIT_CRYPTO_STREAM = "bybit-crypto-stream";
-        static final int CONNECTION_ESTABLISHED_MS = 100;
+        static final int CONNECTION_ESTABLISHED_MS = 10;
     }
 
     final static class DB {

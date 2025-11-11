@@ -26,6 +26,8 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.Test;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.FIVE_ROWS;
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.FOUR_ROWS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -35,48 +37,48 @@ final class MockBybitSpotDataTest {
     void shouldSpotKline1DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
         assertNotNull(data);
-        assertEquals(4, data.size());
+        assertEquals(FOUR_ROWS, data.size());
     }
 
     @Test
     void shouldSpotKline5DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_5);
         assertNotNull(data);
-        assertEquals(4, data.size());
+        assertEquals(FOUR_ROWS, data.size());
     }
 
     @Test
     void shouldSpotKline15DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_15);
         assertNotNull(data);
-        assertEquals(4, data.size());
+        assertEquals(FOUR_ROWS, data.size());
     }
 
     @Test
     void shouldSpotKline60DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_60);
         assertNotNull(data);
-        assertEquals(4, data.size());
+        assertEquals(FOUR_ROWS, data.size());
     }
 
     @Test
     void shouldSpotKline240DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_240);
         assertNotNull(data);
-        assertEquals(4, data.size());
+        assertEquals(FOUR_ROWS, data.size());
     }
 
     @Test
     void shouldSpotKlineDDataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_D);
         assertNotNull(data);
-        assertEquals(4, data.size());
+        assertEquals(FOUR_ROWS, data.size());
     }
 
     @Test
     void shouldSpotTickersDataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.TICKERS);
         assertNotNull(data);
-        assertEquals(5, data.size());
+        assertEquals(FIVE_ROWS, data.size());
     }
 }

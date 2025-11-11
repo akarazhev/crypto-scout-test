@@ -62,9 +62,6 @@ final class AmqpConsumerPublisherTest {
         factory.setPort(DEFAULT_AMQP_PORT);
         factory.setUsername(MQ_USER);
         factory.setPassword(MQ_PASSWORD);
-        factory.setAutomaticRecoveryEnabled(true);
-        factory.setNetworkRecoveryInterval(5000);
-        factory.setRequestedHeartbeat(30);
 
         publisher = AmqpTestPublisher.create(reactor, executor, factory, AMQP_COLLECTOR_QUEUE);
         consumer = AmqpTestConsumer.create(reactor, executor, factory, AMQP_COLLECTOR_QUEUE);

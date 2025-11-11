@@ -26,6 +26,8 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.Test;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.FIVE_ROWS;
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.FOUR_ROWS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -35,41 +37,41 @@ final class MockBybitTaLinearDataTest {
     void shouldLinearPublicTradeDataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.PUBLIC_TRADE);
         assertNotNull(data);
-        assertEquals(4, data.size());
+        assertEquals(FOUR_ROWS, data.size());
     }
 
     @Test
     void shouldLinearOrderBook1DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ORDER_BOOK_1);
         assertNotNull(data);
-        assertEquals(5, data.size());
+        assertEquals(FIVE_ROWS, data.size());
     }
 
     @Test
     void shouldLinearOrderBook50DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ORDER_BOOK_50);
         assertNotNull(data);
-        assertEquals(5, data.size());
+        assertEquals(FIVE_ROWS, data.size());
     }
 
     @Test
     void shouldLinearOrderBook200DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ORDER_BOOK_200);
         assertNotNull(data);
-        assertEquals(5, data.size());
+        assertEquals(FIVE_ROWS, data.size());
     }
 
     @Test
     void shouldLinearOrderBook1000DataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ORDER_BOOK_1000);
         assertNotNull(data);
-        assertEquals(5, data.size());
+        assertEquals(FIVE_ROWS, data.size());
     }
 
     @Test
     void shouldLinearAllLiquidationDataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_TA_LINEAR, MockData.Type.ALL_LIQUIDATION);
         assertNotNull(data);
-        assertEquals(4, data.size());
+        assertEquals(FOUR_ROWS, data.size());
     }
 }

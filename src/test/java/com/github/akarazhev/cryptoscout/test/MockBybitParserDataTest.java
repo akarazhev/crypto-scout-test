@@ -26,6 +26,7 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.Test;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.TWENTY_ONE_ROWS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -35,6 +36,6 @@ final class MockBybitParserDataTest {
     void shouldLplDataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_PARSER, MockData.Type.LPL);
         assertNotNull(data);
-        assertEquals(21, data.size());
+        assertEquals(TWENTY_ONE_ROWS, data.size());
     }
 }

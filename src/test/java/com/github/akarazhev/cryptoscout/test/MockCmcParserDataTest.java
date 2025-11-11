@@ -26,6 +26,7 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.Test;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.THREE_ROWS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -35,6 +36,6 @@ final class MockCmcParserDataTest {
     void shouldFgiDataReturnMap() throws Exception {
         final var data = MockData.get(MockData.Source.CMC_PARSER, MockData.Type.FGI);
         assertNotNull(data);
-        assertEquals(3, data.size());
+        assertEquals(THREE_ROWS, data.size());
     }
 }

@@ -107,6 +107,10 @@ final class Constants {
             throw new UnsupportedOperationException();
         }
 
+        static final int THREE_ROWS = 3;
+        static final int FOUR_ROWS = 4;
+        static final int FIVE_ROWS = 5;
+        static final int TWENTY_ONE_ROWS = 21;
         // Source directories
         static final String CMC_PARSER = "cmc-parser";
         static final String BYBIT_PARSER = "bybit-parser";

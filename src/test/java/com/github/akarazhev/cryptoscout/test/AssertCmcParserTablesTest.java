@@ -29,6 +29,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.CMC_FGI;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.ZERO_ROWS;
 
 final class AssertCmcParserTablesTest {
 
@@ -44,6 +45,6 @@ final class AssertCmcParserTablesTest {
 
     @Test
     void shouldCmcFgiTableCountReturnZero() throws Exception {
-        Assertions.assertTableCount(CMC_FGI, 0);
+        Assertions.assertTableCount(CMC_FGI, ZERO_ROWS);
     }
 }

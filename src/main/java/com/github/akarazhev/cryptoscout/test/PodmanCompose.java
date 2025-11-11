@@ -203,12 +203,11 @@ public final class PodmanCompose {
                 .username(MQ_USER)
                 .password(MQ_PASSWORD)
                 .build();
-             final var producer = environment.producerBuilder()
+             final var _ = environment.producerBuilder()
                      .name(MQ_STREAM)
                      .stream(MQ_STREAM)
                      .build()) {
             LOGGER.info("Connected to RabbitMQ: {}", environment);
-            LOGGER.info("Connected to RabbitMQ producer: {}", producer);
             return true;
         } catch (final Exception e) {
             return false;

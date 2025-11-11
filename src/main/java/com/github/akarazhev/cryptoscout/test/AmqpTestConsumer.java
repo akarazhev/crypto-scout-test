@@ -43,6 +43,9 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.CONSUMER_CLIENT_NAME;
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.PREFETCH_COUNT;
+
 public final class AmqpTestConsumer extends AbstractReactive implements ReactiveService {
     private final static Logger LOGGER = LoggerFactory.getLogger(AmqpTestConsumer.class);
     private final Executor executor;
@@ -70,9 +73,9 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
     public Promise<?> start() {
         return Promise.ofBlocking(executor, () -> {
             try {
-                connection = connectionFactory.newConnection("amqp-test-consumer");
+                connection = connectionFactory.newConnection(CONSUMER_CLIENT_NAME);
                 channel = connection.createChannel();
-                channel.basicQos(1);
+                channel.basicQos(PREFETCH_COUNT);
                 channel.queueDeclarePassive(queue);
 
                 final DeliverCallback deliver = (_, delivery) -> {

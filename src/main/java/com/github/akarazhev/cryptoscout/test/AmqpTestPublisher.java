@@ -40,6 +40,11 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.CONTENT_TYPE_JSON;
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.DEFAULT_EXCHANGE;
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.DELIVERY_MODE_PERSISTENT;
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.PUBLISHER_CLIENT_NAME;
+
 public final class AmqpTestPublisher extends AbstractReactive implements ReactiveService {
     private final static Logger LOGGER = LoggerFactory.getLogger(AmqpTestPublisher.class);
     private final Executor executor;
@@ -65,7 +70,7 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
     public Promise<?> start() {
         return Promise.ofBlocking(executor, () -> {
             try {
-                connection = connectionFactory.newConnection("amqp-test-publisher");
+                connection = connectionFactory.newConnection(PUBLISHER_CLIENT_NAME);
                 channel = connection.createChannel();
                 channel.confirmSelect();
                 // Ensure the queue exists (will throw if it doesn't)
@@ -109,11 +114,11 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
             try {
                 final var body = JsonUtils.object2Bytes(payload);
                 final var props = new AMQP.BasicProperties.Builder()
-                        .contentType("application/json")
-                        .deliveryMode(2) // persistent
+                        .contentType(CONTENT_TYPE_JSON)
+                        .deliveryMode(DELIVERY_MODE_PERSISTENT)
                         .build();
                 // Publish to default exchange with routing key = queue name
-                channel.basicPublish("", queue, props, body);
+                channel.basicPublish(DEFAULT_EXCHANGE, queue, props, body);
                 channel.waitForConfirmsOrDie();
             } catch (final Exception ex) {
                 LOGGER.error("Failed to publish payload to AMQP queue {}: {}", queue, ex.getMessage(), ex);

@@ -43,12 +43,18 @@ final class Constants {
         static final int CONNECTION_ESTABLISHED_MS = 200;
     }
 
-    final static class MQ {
-        private MQ() {
+    final static class Amqp {
+        private Amqp() {
             throw new UnsupportedOperationException();
         }
 
+        static final String CONSUMER_CLIENT_NAME = "amqp-test-consumer";
+        static final String PUBLISHER_CLIENT_NAME = "amqp-test-publisher";
         static final String DEFAULT_QUEUE = "collector-queue";
+        static final String CONTENT_TYPE_JSON = "application/json";
+        static final int DELIVERY_MODE_PERSISTENT = 2;
+        static final int PREFETCH_COUNT = 1;
+        static final String DEFAULT_EXCHANGE = "";
     }
 
     final static class DB {

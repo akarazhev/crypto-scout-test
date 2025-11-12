@@ -50,7 +50,7 @@ public class DBUtils {
         }
     }
 
-    static void dropTables(final DataSource dataSource, final String... tables) {
+    public static void dropTables(final DataSource dataSource, final String... tables) {
         try (final var conn = dataSource.getConnection();
              final var st = conn.createStatement()) {
             for (final var table : tables) {

@@ -68,7 +68,7 @@ public final class StreamTestPublisher extends AbstractReactive implements React
     }
 
     @Override
-    public Promise<?> start() {
+    public Promise<Void> start() {
         return Promise.ofBlocking(executor, () -> {
             try {
                 producer = environment.producerBuilder()
@@ -83,7 +83,7 @@ public final class StreamTestPublisher extends AbstractReactive implements React
     }
 
     @Override
-    public Promise<?> stop() {
+    public Promise<Void> stop() {
         return Promise.ofBlocking(executor, () -> {
             try {
                 if (producer != null) {
@@ -96,7 +96,7 @@ public final class StreamTestPublisher extends AbstractReactive implements React
         });
     }
 
-    public Promise<?> publish(final Payload<Map<String, Object>> payload) {
+    public Promise<Void> publish(final Payload<Map<String, Object>> payload) {
         return Promise.ofBlocking(executor, () -> {
             try {
                 final var message = producer.messageBuilder()

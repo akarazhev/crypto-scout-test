@@ -73,7 +73,7 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
 
     @SuppressWarnings("unchecked")
     @Override
-    public Promise<?> start() {
+    public Promise<Void> start() {
         return Promise.ofBlocking(executor, () -> {
             consumer = environment.consumerBuilder()
                     .name(stream)
@@ -92,12 +92,12 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
         });
     }
 
-    public Promise<?> getResult() {
+    public Promise<Payload<Map<String, Object>>> getResult() {
         return result;
     }
 
     @Override
-    public Promise<?> stop() {
+    public Promise<Void> stop() {
         return Promise.ofBlocking(executor, () -> {
             try {
                 if (consumer != null) {

@@ -33,7 +33,7 @@ import java.sql.SQLException;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_PASSWORD;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_USER;
-import static com.github.akarazhev.cryptoscout.test.Constants.DB.DROP_TABLE;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.DELETE_FROM_TABLE;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_URL;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.SELECT_ONE;
 
@@ -50,11 +50,11 @@ public class DBUtils {
         }
     }
 
-    public static void dropTables(final DataSource dataSource, final String... tables) {
+    public static void deleteFromTables(final DataSource dataSource, final String... tables) {
         try (final var conn = dataSource.getConnection();
              final var st = conn.createStatement()) {
             for (final var table : tables) {
-                st.execute(String.format(DROP_TABLE, table));
+                st.execute(String.format(DELETE_FROM_TABLE, table));
             }
         } catch (final SQLException e) {
             LOGGER.error("Failed to delete tables", e);

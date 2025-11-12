@@ -67,7 +67,7 @@ final class Constants {
         static final String DB_PASSWORD = System.getProperty("test.db.password", "crypto_scout_db");
         static final String SELECT_COUNT = "SELECT COUNT(*) FROM %s";
         static final String SELECT_ONE = "SELECT 1";
-        static final String DROP_TABLE = "DROP TABLE IF EXISTS %s";
+        static final String DELETE_FROM_TABLE = "DELETE FROM %s";
         static final int ZERO_ROWS = 0;
         static final int FIRST_ROW = 1;
         static final String CMC_FGI = "crypto_scout.cmc_fgi";

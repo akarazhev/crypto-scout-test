@@ -34,7 +34,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -43,11 +42,7 @@ import com.rabbitmq.stream.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_PASSWORD;
-import static com.github.akarazhev.cryptoscout.test.Constants.DB.DB_USER;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_HOST;
-import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_URL;
-import static com.github.akarazhev.cryptoscout.test.Constants.DB.SELECT_ONE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_LINEAR_TABLES_SQL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_PARSER_TABLES_SQL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_SPOT_TABLES_SQL;
@@ -188,18 +183,7 @@ public final class PodmanCompose {
     }
 
     private static boolean canConnectToDb() {
-        if (isReachable(JDBC_HOST, READY_RETRY_INTERVAL)) {
-            try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-                 final var st = conn.createStatement();
-                 final var rs = st.executeQuery(SELECT_ONE)) {
-                LOGGER.info("Connected to DB: {}", conn.getClientInfo());
-                return rs.next();
-            } catch (final SQLException e) {
-                return false;
-            }
-        }
-
-        return false;
+        return isReachable(JDBC_HOST, READY_RETRY_INTERVAL) && DBUtils.canConnect();
     }
 
     private static boolean canConnectToMq() {

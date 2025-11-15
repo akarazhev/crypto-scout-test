@@ -12,7 +12,7 @@
       "low": "102926.1",
       "volume": "8594.420301",
       "turnover": "901921989.25010702",
-      "confirm": false,
+      "confirm": true,
       "timestamp": 1762272025340
     }
   ],

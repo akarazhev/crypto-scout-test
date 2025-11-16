@@ -1,6 +1,6 @@
 {
   "topic": "orderbook.50.BTCUSDT",
-  "type": "delta",
+  "type": "snapshot",
   "ts": 1760121150043,
   "data": {
     "s": "BTCUSDT",

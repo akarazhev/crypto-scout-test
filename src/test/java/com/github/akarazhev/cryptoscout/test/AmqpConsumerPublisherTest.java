@@ -32,7 +32,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,7 +42,6 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_P
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
 import static com.rabbitmq.client.ConnectionFactory.DEFAULT_AMQP_PORT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 final class AmqpConsumerPublisherTest {
@@ -71,14 +69,14 @@ final class AmqpConsumerPublisherTest {
     @Test
     void testPublishConsume() {
         final Map<String, Object> data = Map.of("key", "value");
-        publisher.publish("", AMQP_COLLECTOR_QUEUE, Command.of(0, 0, List.of(data), 1));
+        publisher.publish("", AMQP_COLLECTOR_QUEUE, Command.of(0, 0, data, 0));
         final var command = TestUtils.await(consumer.getCommand());
         assertNotNull(command);
         assertEquals(0, command.id());
         assertEquals(0, command.from());
-        assertEquals(1, command.size());
-        assertFalse(command.value().isEmpty());
-        assertEquals(data, command.value().get(0));
+        assertEquals(0, command.size());
+        assertNotNull(command.value());
+        assertEquals(data, command.value());
     }
 
     @AfterAll

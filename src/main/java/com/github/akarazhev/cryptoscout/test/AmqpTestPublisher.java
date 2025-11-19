@@ -37,8 +37,6 @@ import io.activej.reactor.nio.NioReactor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.CONTENT_TYPE_JSON;
@@ -105,20 +103,18 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
         });
     }
 
-    public Promise<Void> publish(final String exchange, final String routingKey,
-                                 final Command<List<Map<String, Object>>> payload) {
+    public Promise<Void> publish(final String exchange, final String routingKey, final Command<?> command) {
         return Promise.ofBlocking(executor, () -> {
             if (channel == null || !channel.isOpen()) {
                 throw new IllegalStateException("AMQP channel is not open. Call start() before publish().");
             }
 
             try {
-                final var body = JsonUtils.object2Bytes(payload);
                 final var props = new AMQP.BasicProperties.Builder()
                         .contentType(CONTENT_TYPE_JSON)
                         .deliveryMode(DELIVERY_MODE_PERSISTENT)
                         .build();
-                channel.basicPublish(exchange, routingKey, props, body);
+                channel.basicPublish(exchange, routingKey, props, JsonUtils.object2Bytes(command));
                 channel.waitForConfirmsOrDie();
             } catch (final Exception ex) {
                 LOGGER.error("Failed to publish payload to AMQP queue {}: {}", queue, ex.getMessage(), ex);

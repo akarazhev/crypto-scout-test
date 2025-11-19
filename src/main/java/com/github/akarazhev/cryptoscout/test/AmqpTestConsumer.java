@@ -40,8 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executor;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.CONSUMER_CLIENT_NAME;
@@ -52,7 +50,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
     private final Executor executor;
     private final ConnectionFactory connectionFactory;
     private final String queue;
-    private final SettablePromise<Command<List<Map<String, Object>>>> command = new SettablePromise<>();
+    private final SettablePromise<Command<?>> command = new SettablePromise<>();
     private volatile Connection connection;
     private volatile Channel channel;
     private volatile String consumerTag;
@@ -81,9 +79,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
 
                 final DeliverCallback deliver = (_, delivery) -> {
                     try {
-                        @SuppressWarnings("unchecked") final var payload =
-                                (Command<List<Map<String, Object>>>) JsonUtils.bytes2Object(delivery.getBody(), Command.class);
-                        command.set(payload);
+                        command.set((Command<?>) JsonUtils.bytes2Object(delivery.getBody(), Command.class));
                         channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                     } catch (final Exception e) {
                         try {
@@ -113,7 +109,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
         });
     }
 
-    public Promise<Command<List<Map<String, Object>>>> getCommand() {
+    public Promise<Command<?>> getCommand() {
         return command;
     }
 

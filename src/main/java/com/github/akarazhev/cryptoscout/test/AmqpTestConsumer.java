@@ -24,7 +24,7 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
-import com.github.akarazhev.jcryptolib.stream.Payload;
+import com.github.akarazhev.jcryptolib.stream.Command;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import com.rabbitmq.client.CancelCallback;
 import com.rabbitmq.client.Connection;
@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -51,7 +52,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
     private final Executor executor;
     private final ConnectionFactory connectionFactory;
     private final String queue;
-    private final SettablePromise<Payload<Map<String, Object>>> result = new SettablePromise<>();
+    private final SettablePromise<Command<List<Map<String, Object>>>> command = new SettablePromise<>();
     private volatile Connection connection;
     private volatile Channel channel;
     private volatile String consumerTag;
@@ -81,8 +82,8 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
                 final DeliverCallback deliver = (_, delivery) -> {
                     try {
                         @SuppressWarnings("unchecked") final var payload =
-                                (Payload<Map<String, Object>>) JsonUtils.bytes2Object(delivery.getBody(), Payload.class);
-                        result.set(payload);
+                                (Command<List<Map<String, Object>>>) JsonUtils.bytes2Object(delivery.getBody(), Command.class);
+                        command.set(payload);
                         channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                     } catch (final Exception e) {
                         try {
@@ -91,7 +92,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
                             LOGGER.debug("Error cancelling AMQP consumer", ex);
                         }
 
-                        result.setException(e);
+                        command.setException(e);
                     } finally {
                         if (consumerTag != null && channel.isOpen()) {
                             try {
@@ -112,8 +113,8 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
         });
     }
 
-    public Promise<Payload<Map<String, Object>>> getResult() {
-        return result;
+    public Promise<Command<List<Map<String, Object>>>> getCommand() {
+        return command;
     }
 
     @Override

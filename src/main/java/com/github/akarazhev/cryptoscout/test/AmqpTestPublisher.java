@@ -24,7 +24,7 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
-import com.github.akarazhev.jcryptolib.stream.Payload;
+import com.github.akarazhev.jcryptolib.stream.Command;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
@@ -37,6 +37,7 @@ import io.activej.reactor.nio.NioReactor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
@@ -105,7 +106,7 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
     }
 
     public Promise<Void> publish(final String exchange, final String routingKey,
-                                 final Payload<Map<String, Object>> payload) {
+                                 final Command<List<Map<String, Object>>> payload) {
         return Promise.ofBlocking(executor, () -> {
             if (channel == null || !channel.isOpen()) {
                 throw new IllegalStateException("AMQP channel is not open. Call start() before publish().");

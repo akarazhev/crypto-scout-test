@@ -27,8 +27,12 @@ package com.github.akarazhev.cryptoscout.test;
 import org.junit.jupiter.api.Test;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.MockData.THREE_ROWS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.UPDATE_TIME;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE_CLASSIFICATION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class MockCmcParserDataTest {
 
@@ -37,5 +41,8 @@ final class MockCmcParserDataTest {
         final var data = MockData.get(MockData.Source.CMC_PARSER, MockData.Type.FGI);
         assertNotNull(data);
         assertEquals(THREE_ROWS, data.size());
+        assertTrue(data.containsKey(VALUE));
+        assertTrue(data.containsKey(UPDATE_TIME));
+        assertTrue(data.containsKey(VALUE_CLASSIFICATION));
     }
 }

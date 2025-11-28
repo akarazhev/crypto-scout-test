@@ -61,6 +61,7 @@ public final class MockData {
         KLINE_60(Constants.MockData.KLINE_60),
         KLINE_240(Constants.MockData.KLINE_240),
         KLINE_D(Constants.MockData.KLINE_D),
+        KLINE_W(Constants.MockData.KLINE_W),
         // Ticker
         TICKERS(Constants.MockData.TICKERS),
         // Public trade

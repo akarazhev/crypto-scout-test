@@ -89,4 +89,30 @@ final class MockCmcParserDataTest {
             assertTrue(value.containsKey(TIMESTAMP));
         }
     }
+
+    @Test
+    void shouldKline1wDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.CMC_PARSER, MockData.Type.KLINE_W);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+        assertTrue(data.containsKey(QUOTES));
+        final var quotes = (List<Map<String, Object>>) data.get(QUOTES);
+        assertFalse(quotes.isEmpty());
+        for (final var quote : quotes) {
+            assertTrue(quote.containsKey(TIME_OPEN));
+            assertTrue(quote.containsKey(TIME_CLOSE));
+            assertTrue(quote.containsKey(TIME_HIGH));
+            assertTrue(quote.containsKey(TIME_LOW));
+            assertTrue(quote.containsKey(QUOTE));
+            final var value = (Map<String, Object>) quote.get(QUOTE);
+            assertFalse(value.isEmpty());
+            assertTrue(value.containsKey(OPEN));
+            assertTrue(value.containsKey(CLOSE));
+            assertTrue(value.containsKey(HIGH));
+            assertTrue(value.containsKey(LOW));
+            assertTrue(value.containsKey(VOLUME));
+            assertTrue(value.containsKey(MARKET_CAP2));
+            assertTrue(value.containsKey(TIMESTAMP));
+        }
+    }
 }

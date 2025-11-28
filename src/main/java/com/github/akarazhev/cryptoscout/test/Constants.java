@@ -72,6 +72,7 @@ final class Constants {
         static final int FIRST_ROW = 1;
         static final String CMC_FGI = "crypto_scout.cmc_fgi";
         static final String CMC_KLINE_1D = "crypto_scout.cmc_kline_1d";
+        static final String CMC_KLINE_1W = "crypto_scout.cmc_kline_1w";
         // Bybit parser
         static final String BYBIT_LPL = "crypto_scout.bybit_lpl";
         // Bybit spot
@@ -130,6 +131,7 @@ final class Constants {
         static final String KLINE_60 = "kline.60";
         static final String KLINE_240 = "kline.240";
         static final String KLINE_D = "kline.D";
+        static final String KLINE_W = "kline.W";
         static final String TICKERS = "tickers";
         static final String PUBLIC_TRADE = "publicTrade";
         static final String ORDER_BOOK_1 = "orderbook.1";

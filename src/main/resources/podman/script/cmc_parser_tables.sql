@@ -54,3 +54,35 @@ alter table crypto_scout.cmc_kline_1d set (
 );
 
 select add_reorder_policy('crypto_scout.cmc_kline_1d', 'idx_cmc_kline_1d_timestamp');
+
+create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1w (
+    id BIGSERIAL,
+    symbol TEXT NOT NULL,
+    time_open TIMESTAMP WITH TIME ZONE NOT NULL,
+    time_close TIMESTAMP WITH TIME ZONE NOT NULL,
+    time_high TIMESTAMP WITH TIME ZONE NOT NULL,
+    time_low  TIMESTAMP WITH TIME ZONE NOT NULL,
+    open NUMERIC(20, 8) NOT NULL,
+    high NUMERIC(20, 8) NOT NULL,
+    low NUMERIC(20, 8) NOT NULL,
+    close NUMERIC(20, 8) NOT NULL,
+    volume NUMERIC(20, 8) NOT NULL,
+    market_cap NUMERIC(20, 8) NOT NULL,
+    circulating_supply NUMERIC(20, 8) NOT NULL,
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    CONSTRAINT cmc_kline_1w_pkey PRIMARY KEY (id, timestamp),
+    CONSTRAINT cmc_kline_1w_symbol_close_uniq UNIQUE (symbol, timestamp)
+);
+
+alter table crypto_scout.cmc_kline_1w OWNER TO crypto_scout_db;
+create index IF NOT EXISTS idx_cmc_kline_1w_timestamp ON crypto_scout.cmc_kline_1w(timestamp DESC);
+create index IF NOT EXISTS idx_cmc_kline_1w_symbol_timestamp ON crypto_scout.cmc_kline_1w(symbol, timestamp DESC);
+select public.create_hypertable('crypto_scout.cmc_kline_1w', 'timestamp', chunk_time_interval => INTERVAL '1 week', if_not_exists => TRUE);
+
+alter table crypto_scout.cmc_kline_1w set (
+    timescaledb.compress,
+    timescaledb.compress_segmentby = 'symbol',
+    timescaledb.compress_orderby = 'timestamp DESC, id DESC'
+);
+
+select add_reorder_policy('crypto_scout.cmc_kline_1w', 'idx_cmc_kline_1w_timestamp');

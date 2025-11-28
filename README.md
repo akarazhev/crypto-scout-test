@@ -159,7 +159,7 @@ mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://lo
 - `src/main/resources/cmc-parser/`
     - `fgi.json`
 - `src/main/resources/bybit-parser/`
-    - `bybit_lpl.json`
+    - `lpl.json`
 - `src/main/resources/podman/podman-compose.yml`
     - Services: TimescaleDB PG17 (`crypto-scout-collector-db`, port `5432`) and RabbitMQ 4.x (`crypto-scout-mq`, ports
       `5672`, `5552`, `15672`, `15692`).

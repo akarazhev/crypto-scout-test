@@ -35,7 +35,7 @@
     - `src/main/resources/bybit-ta-linear/` – JSON fixtures for order books (1/50/200/1000), public trades, all
       liquidations
     - `src/main/resources/cmc-parser/` – CMC Fear & Greed Index (`fgi.json`)
-    - `src/main/resources/bybit-parser/` – Bybit LPL (`bybit_lpl.json`)
+    - `src/main/resources/bybit-parser/` – Bybit LPL (`lpl.json`)
     - `src/main/resources/podman/podman-compose.yml` – TimescaleDB + RabbitMQ services with healthchecks and tuning
     - `src/main/resources/podman/script/` – SQL: `init.sql`, `bybit_spot_tables.sql`, `bybit_ta_spot_tables.sql`,
       `bybit_linear_tables.sql`, `bybit_ta_linear_tables.sql`, `cmc_parser_tables.sql`, `bybit_parser_tables.sql`

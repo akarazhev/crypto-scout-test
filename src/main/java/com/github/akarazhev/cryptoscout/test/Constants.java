@@ -71,6 +71,7 @@ final class Constants {
         static final int ZERO_ROWS = 0;
         static final int FIRST_ROW = 1;
         static final String CMC_FGI = "crypto_scout.cmc_fgi";
+        static final String CMC_KLINE_1D = "crypto_scout.cmc_kline_1d";
         // Bybit parser
         static final String BYBIT_LPL = "crypto_scout.bybit_lpl";
         // Bybit spot

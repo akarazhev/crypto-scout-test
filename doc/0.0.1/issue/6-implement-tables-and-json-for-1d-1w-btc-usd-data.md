@@ -33,7 +33,7 @@ Take the following roles:
   any important points.
 - As the `expert java engineer` implement the `1d` data in @kline_1d.json taking into account that it receives one row
   per request. Update the implementations @AssertCmcParserTablesTest.java, @MockCmcParserTablesTest.java to test changes.
-- As the `expert database engineer` double-check your proposal and make sure that they are correct and haven't missed
+- As the `expert java engineer` double-check your proposal and make sure that they are correct and haven't missed
   any important points.
 
 ## `BTC-USD` 1D data model in json

@@ -157,7 +157,7 @@ mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://lo
     - `orderbook.1.json`, `orderbook.50.json`, `orderbook.200.json`, `orderbook.1000.json`, `publicTrade.json`,
       `allLiquidation.json`
 - `src/main/resources/cmc-parser/`
-    - `cmc_fgi.json`
+    - `fgi.json`
 - `src/main/resources/bybit-parser/`
     - `bybit_lpl.json`
 - `src/main/resources/podman/podman-compose.yml`

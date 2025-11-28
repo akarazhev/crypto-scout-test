@@ -12,7 +12,7 @@ Take the following roles:
 
 ## Conditions
 
-- Change current implementations: @cmc_parser_tables.sql, @cmc_fgi.json, @AssertCmcParserTablesTest.java,
+- Change current implementations: @cmc_parser_tables.sql, @fgi.json, @AssertCmcParserTablesTest.java,
   @MockCmcParserTablesTest.java.
 - Rely on the section: `FGI` data model in json.
 - Double-check your proposal and make sure that they are correct and haven't missed any important points.
@@ -31,7 +31,7 @@ Take the following roles:
   row represents the data for the day, so it might be `365` rows per year. Adjust indexes and compressions.
 - As the `expert database engineer` double-check your proposal and make sure that they are correct and haven't missed
   any important points.
-- As the `expert java engineer` update the `FGI` json data in @cmc_fgi.json taking into account that it receives one row
+- As the `expert java engineer` update the `FGI` json data in @fgi.json taking into account that it receives one row
   per request.
 - As the `expert database engineer` double-check your proposal and make sure that they are correct and haven't missed
   any important points.

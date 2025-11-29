@@ -23,6 +23,11 @@ alter table crypto_scout.cmc_fgi set (
 );
 select add_reorder_policy('crypto_scout.cmc_fgi', 'idx_cmc_fgi_update_time');
 
+-- =========================
+-- KLINE TABLES (1d/1w)
+-- Schema is identical across intervals.
+-- =========================
+
 create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1d (
     id BIGSERIAL,
     symbol TEXT NOT NULL,
@@ -45,7 +50,7 @@ create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1d (
 alter table crypto_scout.cmc_kline_1d OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_cmc_kline_1d_timestamp ON crypto_scout.cmc_kline_1d(timestamp DESC);
 create index IF NOT EXISTS idx_cmc_kline_1d_symbol_timestamp ON crypto_scout.cmc_kline_1d(symbol, timestamp DESC);
-select public.create_hypertable('crypto_scout.cmc_kline_1d', 'timestamp', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
+select public.create_hypertable('crypto_scout.cmc_kline_1d', 'timestamp', chunk_time_interval => INTERVAL '2 years', if_not_exists => TRUE);
 
 alter table crypto_scout.cmc_kline_1d set (
     timescaledb.compress,
@@ -77,7 +82,7 @@ create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1w (
 alter table crypto_scout.cmc_kline_1w OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_cmc_kline_1w_timestamp ON crypto_scout.cmc_kline_1w(timestamp DESC);
 create index IF NOT EXISTS idx_cmc_kline_1w_symbol_timestamp ON crypto_scout.cmc_kline_1w(symbol, timestamp DESC);
-select public.create_hypertable('crypto_scout.cmc_kline_1w', 'timestamp', chunk_time_interval => INTERVAL '1 week', if_not_exists => TRUE);
+select public.create_hypertable('crypto_scout.cmc_kline_1w', 'timestamp', chunk_time_interval => INTERVAL '5 years', if_not_exists => TRUE);
 
 alter table crypto_scout.cmc_kline_1w set (
     timescaledb.compress,

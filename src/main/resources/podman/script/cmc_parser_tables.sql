@@ -35,8 +35,8 @@ create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1d (
     low NUMERIC(20, 10) NOT NULL,
     close NUMERIC(20, 10) NOT NULL,
     volume NUMERIC(20, 10) NOT NULL,
-    market_cap NUMERIC(20, 10) NOT NULL,
-    circulating_supply NUMERIC(20, 10) NOT NULL,
+    market_cap NUMERIC(26, 10) NOT NULL,
+    circulating_supply NUMERIC(28, 10) NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     CONSTRAINT cmc_kline_1d_pkey PRIMARY KEY (id, timestamp),
     CONSTRAINT cmc_kline_1d_symbol_close_uniq UNIQUE (symbol, timestamp)

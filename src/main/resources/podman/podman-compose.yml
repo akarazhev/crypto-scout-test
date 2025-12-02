@@ -13,7 +13,7 @@ services:
         soft: 262144
         hard: 262144
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - ./script/init.sql:/docker-entrypoint-initdb.d/00_init.sql:ro
       - ./script/bybit_spot_tables.sql:/docker-entrypoint-initdb.d/01_bybit_spot_tables.sql:ro
@@ -90,9 +90,9 @@ services:
     container_name: crypto-scout-mq
     hostname: crypto_scout_mq
     ports:
-      - "5672:5672"   # AMQP protocol
+      - "127.0.0.1:5672:5672"   # AMQP protocol
       - "127.0.0.1:15672:15672" # Management UI (loopback only)
-      - "5552:5552"   # Stream protocol (required for RabbitMQ streams)
+      - "127.0.0.1:5552:5552"   # Stream protocol (required for RabbitMQ streams)
       - "127.0.0.1:15692:15692" # Prometheus metrics (loopback only)
     volumes:
       - "./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro"

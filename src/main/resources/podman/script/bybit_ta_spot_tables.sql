@@ -13,7 +13,7 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_public_trade (
     taker_side TEXT NOT NULL CHECK (taker_side IN ('Buy','Sell')),
     is_block_trade BOOLEAN NOT NULL,
     is_rpi BOOLEAN NOT NULL,
-    CONSTRAINT bybit_ta_spot_public_trade_pkey PRIMARY KEY (id, trade_time)
+    CONSTRAINT bybit_ta_spot_public_trade_pkey PRIMARY KEY (symbol, trade_time, id)
 );
 alter table crypto_scout.bybit_ta_spot_public_trade OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_public_trade_trade_time ON crypto_scout.bybit_ta_spot_public_trade(trade_time DESC);
@@ -41,7 +41,7 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_1 (
     side TEXT NOT NULL CHECK (side IN ('bid','ask')),
     price DOUBLE PRECISION NOT NULL,
     size DOUBLE PRECISION NOT NULL,
-    CONSTRAINT bybit_ta_spot_order_book_1_pkey PRIMARY KEY (id, engine_time)
+    CONSTRAINT bybit_ta_spot_order_book_1_pkey PRIMARY KEY (symbol, engine_time, id)
 );
 alter table crypto_scout.bybit_ta_spot_order_book_1 OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_engine_time ON crypto_scout.bybit_ta_spot_order_book_1(engine_time DESC);
@@ -57,7 +57,7 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_50 (
     side TEXT NOT NULL CHECK (side IN ('bid','ask')),
     price DOUBLE PRECISION NOT NULL,
     size DOUBLE PRECISION NOT NULL,
-    CONSTRAINT bybit_ta_spot_order_book_50_pkey PRIMARY KEY (id, engine_time)
+    CONSTRAINT bybit_ta_spot_order_book_50_pkey PRIMARY KEY (symbol, engine_time, id)
 );
 alter table crypto_scout.bybit_ta_spot_order_book_50 OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_engine_time ON crypto_scout.bybit_ta_spot_order_book_50(engine_time DESC);
@@ -73,7 +73,7 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_200 (
     side TEXT NOT NULL CHECK (side IN ('bid','ask')),
     price DOUBLE PRECISION NOT NULL,
     size DOUBLE PRECISION NOT NULL,
-    CONSTRAINT bybit_ta_spot_order_book_200_pkey PRIMARY KEY (id, engine_time)
+    CONSTRAINT bybit_ta_spot_order_book_200_pkey PRIMARY KEY (symbol, engine_time, id)
 );
 alter table crypto_scout.bybit_ta_spot_order_book_200 OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_engine_time ON crypto_scout.bybit_ta_spot_order_book_200(engine_time DESC);
@@ -89,7 +89,7 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_1000 (
     side TEXT NOT NULL CHECK (side IN ('bid','ask')),
     price DOUBLE PRECISION NOT NULL,
     size DOUBLE PRECISION NOT NULL,
-    CONSTRAINT bybit_ta_spot_order_book_1000_pkey PRIMARY KEY (id, engine_time)
+    CONSTRAINT bybit_ta_spot_order_book_1000_pkey PRIMARY KEY (symbol, engine_time, id)
 );
 alter table crypto_scout.bybit_ta_spot_order_book_1000 OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_engine_time ON crypto_scout.bybit_ta_spot_order_book_1000(engine_time DESC);

@@ -103,7 +103,7 @@ final class Constants {
         static final String BYBIT_TA_LINEAR_ORDER_BOOK_50 = "crypto_scout.bybit_ta_linear_order_book_50";
         static final String BYBIT_TA_LINEAR_ORDER_BOOK_200 = "crypto_scout.bybit_ta_linear_order_book_200";
         static final String BYBIT_TA_LINEAR_ORDER_BOOK_1000 = "crypto_scout.bybit_ta_linear_order_book_1000";
-        static final String BYBIT_TA_LINEAR_ALL_LIQUDATION = "crypto_scout.bybit_ta_linear_all_liqudation";
+        static final String BYBIT_TA_LINEAR_ALL_LIQUIDATION = "crypto_scout.bybit_ta_linear_all_liquidation";
     }
 
     final static class MockData {

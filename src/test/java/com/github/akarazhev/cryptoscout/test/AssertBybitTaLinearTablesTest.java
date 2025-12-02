@@ -33,7 +33,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ORDER_BOOK_50;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ORDER_BOOK_200;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ORDER_BOOK_1000;
-import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ALL_LIQUDATION;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_TA_LINEAR_ALL_LIQUIDATION;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.ZERO_ROWS;
 
 final class AssertBybitTaLinearTablesTest {
@@ -74,7 +74,7 @@ final class AssertBybitTaLinearTablesTest {
     }
 
     @Test
-    void shouldBybitTaLinearAllLiqudationTableCountReturnZero() throws Exception {
-        Assertions.assertTableCount(BYBIT_TA_LINEAR_ALL_LIQUDATION, ZERO_ROWS);
+    void shouldBybitTaLinearAllLiquidationTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_TA_LINEAR_ALL_LIQUIDATION, ZERO_ROWS);
     }
 }

@@ -12,6 +12,7 @@ create TABLE IF NOT EXISTS crypto_scout.cmc_fgi (
 );
 
 alter table crypto_scout.cmc_fgi OWNER TO crypto_scout_db;
+create index IF NOT EXISTS idx_cmc_fgi_update_time ON crypto_scout.cmc_fgi(update_time DESC);
 select public.create_hypertable('crypto_scout.cmc_fgi', 'update_time', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
 
 alter table crypto_scout.cmc_fgi set (
@@ -19,6 +20,7 @@ alter table crypto_scout.cmc_fgi set (
     timescaledb.compress_orderby = 'update_time DESC'
 );
 select public.add_compression_policy('crypto_scout.cmc_fgi', INTERVAL '35 days');
+select public.add_reorder_policy('crypto_scout.cmc_fgi', 'idx_cmc_fgi_update_time');
 
 -- =========================
 -- KLINE TABLES (1d/1w)

@@ -26,9 +26,9 @@ alter table crypto_scout.bybit_ta_linear_public_trade set (
     timescaledb.compress_segmentby = 'symbol',
     timescaledb.compress_orderby = 'trade_time DESC, id DESC'
 );
-select add_compression_policy('crypto_scout.bybit_ta_linear_public_trade', interval '14 days');
-select add_reorder_policy('crypto_scout.bybit_ta_linear_public_trade', 'idx_bybit_ta_linear_public_trade_symbol_time');
-select add_retention_policy('crypto_scout.bybit_ta_linear_public_trade', interval '365 days');
+select public.add_compression_policy('crypto_scout.bybit_ta_linear_public_trade', interval '14 days');
+select public.add_reorder_policy('crypto_scout.bybit_ta_linear_public_trade', 'idx_bybit_ta_linear_public_trade_symbol_time');
+select public.add_retention_policy('crypto_scout.bybit_ta_linear_public_trade', interval '365 days');
 
 -- =========================
 -- TA ORDER BOOKS (1/50/200/1000)
@@ -122,22 +122,22 @@ alter table crypto_scout.bybit_ta_linear_order_book_1000 set (
 );
 
 -- Compression policies for order book tables
-select add_compression_policy('crypto_scout.bybit_ta_linear_order_book_1', interval '14 days');
-select add_compression_policy('crypto_scout.bybit_ta_linear_order_book_50', interval '14 days');
-select add_compression_policy('crypto_scout.bybit_ta_linear_order_book_200', interval '14 days');
-select add_compression_policy('crypto_scout.bybit_ta_linear_order_book_1000', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_ta_linear_order_book_1', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_ta_linear_order_book_50', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_ta_linear_order_book_200', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_ta_linear_order_book_1000', interval '14 days');
 
 -- Reorder policies for order book tables
-select add_reorder_policy('crypto_scout.bybit_ta_linear_order_book_1', 'idx_bybit_ta_linear_order_book_1_symbol_side_engine_time');
-select add_reorder_policy('crypto_scout.bybit_ta_linear_order_book_50', 'idx_bybit_ta_linear_order_book_50_symbol_side_engine_time');
-select add_reorder_policy('crypto_scout.bybit_ta_linear_order_book_200', 'idx_bybit_ta_linear_order_book_200_symbol_side_engine_time');
-select add_reorder_policy('crypto_scout.bybit_ta_linear_order_book_1000', 'idx_bybit_ta_linear_order_book_1000_symbol_side_engine_time');
+select public.add_reorder_policy('crypto_scout.bybit_ta_linear_order_book_1', 'idx_bybit_ta_linear_order_book_1_symbol_side_engine_time');
+select public.add_reorder_policy('crypto_scout.bybit_ta_linear_order_book_50', 'idx_bybit_ta_linear_order_book_50_symbol_side_engine_time');
+select public.add_reorder_policy('crypto_scout.bybit_ta_linear_order_book_200', 'idx_bybit_ta_linear_order_book_200_symbol_side_engine_time');
+select public.add_reorder_policy('crypto_scout.bybit_ta_linear_order_book_1000', 'idx_bybit_ta_linear_order_book_1000_symbol_side_engine_time');
 
 -- Retention policies for order book tables
-select add_retention_policy('crypto_scout.bybit_ta_linear_order_book_1', interval '365 days');
-select add_retention_policy('crypto_scout.bybit_ta_linear_order_book_50', interval '365 days');
-select add_retention_policy('crypto_scout.bybit_ta_linear_order_book_200', interval '365 days');
-select add_retention_policy('crypto_scout.bybit_ta_linear_order_book_1000', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_ta_linear_order_book_1', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_ta_linear_order_book_50', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_ta_linear_order_book_200', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_ta_linear_order_book_1000', interval '365 days');
 
 -- =========================
 -- TA ALL LIQUIDATION (normalized)
@@ -162,6 +162,6 @@ alter table crypto_scout.bybit_ta_linear_all_liquidation set (
     timescaledb.compress_segmentby = 'symbol, position_side',
     timescaledb.compress_orderby = 'event_time DESC, id DESC'
 );
-select add_compression_policy('crypto_scout.bybit_ta_linear_all_liquidation', interval '14 days');
-select add_reorder_policy('crypto_scout.bybit_ta_linear_all_liquidation', 'idx_bybit_ta_linear_all_liquidation_symbol_time');
-select add_retention_policy('crypto_scout.bybit_ta_linear_all_liquidation', interval '365 days');
+select public.add_compression_policy('crypto_scout.bybit_ta_linear_all_liquidation', interval '14 days');
+select public.add_reorder_policy('crypto_scout.bybit_ta_linear_all_liquidation', 'idx_bybit_ta_linear_all_liquidation_symbol_time');
+select public.add_retention_policy('crypto_scout.bybit_ta_linear_all_liquidation', interval '365 days');

@@ -47,9 +47,9 @@ alter table crypto_scout.bybit_linear_tickers set (
     timescaledb.compress_segmentby = 'symbol',
     timescaledb.compress_orderby = 'timestamp DESC'
 );
-select add_compression_policy('crypto_scout.bybit_linear_tickers', interval '1 month');
-select add_reorder_policy('crypto_scout.bybit_linear_tickers', 'bybit_linear_tickers_pkey');
-select add_retention_policy('crypto_scout.bybit_linear_tickers', interval '365 days');
+select public.add_compression_policy('crypto_scout.bybit_linear_tickers', interval '1 month');
+select public.add_reorder_policy('crypto_scout.bybit_linear_tickers', 'bybit_linear_tickers_pkey');
+select public.add_retention_policy('crypto_scout.bybit_linear_tickers', interval '365 days');
 
 -- =========================
 -- KLINE TABLES (1m/5m/15m/60m/240m/1d)
@@ -185,25 +185,25 @@ alter table crypto_scout.bybit_linear_kline_1d set (
 );
 
 -- Compression policies for kline tables
-select add_compression_policy('crypto_scout.bybit_linear_kline_1m', interval '14 days');
-select add_compression_policy('crypto_scout.bybit_linear_kline_5m', interval '14 days');
-select add_compression_policy('crypto_scout.bybit_linear_kline_15m', interval '14 days');
-select add_compression_policy('crypto_scout.bybit_linear_kline_60m', interval '14 days');
-select add_compression_policy('crypto_scout.bybit_linear_kline_240m', interval '14 days');
-select add_compression_policy('crypto_scout.bybit_linear_kline_1d', interval '1 month');
+select public.add_compression_policy('crypto_scout.bybit_linear_kline_1m', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_linear_kline_5m', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_linear_kline_15m', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_linear_kline_60m', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_linear_kline_240m', interval '14 days');
+select public.add_compression_policy('crypto_scout.bybit_linear_kline_1d', interval '1 month');
 
 -- Reorder policies for kline tables
-select add_reorder_policy('crypto_scout.bybit_linear_kline_1m', 'bybit_linear_kline_1m_pkey');
-select add_reorder_policy('crypto_scout.bybit_linear_kline_5m', 'bybit_linear_kline_5m_pkey');
-select add_reorder_policy('crypto_scout.bybit_linear_kline_15m', 'bybit_linear_kline_15m_pkey');
-select add_reorder_policy('crypto_scout.bybit_linear_kline_60m', 'bybit_linear_kline_60m_pkey');
-select add_reorder_policy('crypto_scout.bybit_linear_kline_240m', 'bybit_linear_kline_240m_pkey');
-select add_reorder_policy('crypto_scout.bybit_linear_kline_1d', 'bybit_linear_kline_1d_pkey');
+select public.add_reorder_policy('crypto_scout.bybit_linear_kline_1m', 'bybit_linear_kline_1m_pkey');
+select public.add_reorder_policy('crypto_scout.bybit_linear_kline_5m', 'bybit_linear_kline_5m_pkey');
+select public.add_reorder_policy('crypto_scout.bybit_linear_kline_15m', 'bybit_linear_kline_15m_pkey');
+select public.add_reorder_policy('crypto_scout.bybit_linear_kline_60m', 'bybit_linear_kline_60m_pkey');
+select public.add_reorder_policy('crypto_scout.bybit_linear_kline_240m', 'bybit_linear_kline_240m_pkey');
+select public.add_reorder_policy('crypto_scout.bybit_linear_kline_1d', 'bybit_linear_kline_1d_pkey');
 
 -- Retention policies for kline tables
-select add_retention_policy('crypto_scout.bybit_linear_kline_1m', interval '365 days');
-select add_retention_policy('crypto_scout.bybit_linear_kline_5m', interval '365 days');
-select add_retention_policy('crypto_scout.bybit_linear_kline_15m', interval '365 days');
-select add_retention_policy('crypto_scout.bybit_linear_kline_60m', interval '365 days');
-select add_retention_policy('crypto_scout.bybit_linear_kline_240m', interval '365 days');
-select add_retention_policy('crypto_scout.bybit_linear_kline_1d', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_linear_kline_1m', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_linear_kline_5m', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_linear_kline_15m', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_linear_kline_60m', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_linear_kline_240m', interval '365 days');
+select public.add_retention_policy('crypto_scout.bybit_linear_kline_1d', interval '365 days');

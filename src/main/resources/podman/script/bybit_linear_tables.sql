@@ -199,11 +199,11 @@ alter table crypto_scout.bybit_linear_kline_1d set (
 );
 
 -- Compression policies for kline tables
-select add_compression_policy('crypto_scout.bybit_linear_kline_1m', interval '1 month');
-select add_compression_policy('crypto_scout.bybit_linear_kline_5m', interval '1 month');
-select add_compression_policy('crypto_scout.bybit_linear_kline_15m', interval '1 month');
-select add_compression_policy('crypto_scout.bybit_linear_kline_60m', interval '1 month');
-select add_compression_policy('crypto_scout.bybit_linear_kline_240m', interval '1 month');
+select add_compression_policy('crypto_scout.bybit_linear_kline_1m', interval '14 days');
+select add_compression_policy('crypto_scout.bybit_linear_kline_5m', interval '14 days');
+select add_compression_policy('crypto_scout.bybit_linear_kline_15m', interval '14 days');
+select add_compression_policy('crypto_scout.bybit_linear_kline_60m', interval '14 days');
+select add_compression_policy('crypto_scout.bybit_linear_kline_240m', interval '14 days');
 select add_compression_policy('crypto_scout.bybit_linear_kline_1d', interval '1 month');
 
 -- Reorder policies for kline tables

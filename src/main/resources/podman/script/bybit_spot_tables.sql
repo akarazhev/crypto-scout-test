@@ -24,6 +24,7 @@ alter table crypto_scout.bybit_spot_tickers set (
     timescaledb.compress_segmentby = 'symbol',
     timescaledb.compress_orderby = 'timestamp DESC'
 );
+create index IF NOT EXISTS idx_bybit_spot_tickers_symbol_time ON crypto_scout.bybit_spot_tickers(symbol, timestamp DESC);
 select public.add_compression_policy('crypto_scout.bybit_spot_tickers', interval '1 month');
 select public.add_reorder_policy('crypto_scout.bybit_spot_tickers', 'idx_bybit_spot_tickers_symbol_time');
 select public.add_retention_policy('crypto_scout.bybit_spot_tickers', interval '365 days');

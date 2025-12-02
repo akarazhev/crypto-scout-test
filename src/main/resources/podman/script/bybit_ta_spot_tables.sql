@@ -18,7 +18,7 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_public_trade (
 alter table crypto_scout.bybit_ta_spot_public_trade OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_public_trade_trade_time ON crypto_scout.bybit_ta_spot_public_trade(trade_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_public_trade_symbol_time ON crypto_scout.bybit_ta_spot_public_trade(symbol, trade_time DESC);
-select public.create_hypertable('crypto_scout.bybit_ta_spot_public_trade', 'trade_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
+select public.create_hypertable('crypto_scout.bybit_ta_spot_public_trade', 'trade_time', chunk_time_interval => INTERVAL '6 hours', if_not_exists => TRUE);
 
 alter table crypto_scout.bybit_ta_spot_public_trade set (
     timescaledb.compress,
@@ -48,7 +48,7 @@ create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_engine_time ON crypto_
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_symbol_time ON crypto_scout.bybit_ta_spot_order_book_1(symbol, engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_symbol_side_price ON crypto_scout.bybit_ta_spot_order_book_1(symbol, side, price);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_symbol_side_engine_time ON crypto_scout.bybit_ta_spot_order_book_1(symbol, side, engine_time DESC);
-select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_1', 'engine_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
+select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_1', 'engine_time', chunk_time_interval => INTERVAL '6 hours', if_not_exists => TRUE);
 
 create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_50 (
     id BIGSERIAL,
@@ -64,7 +64,7 @@ create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_engine_time ON crypto
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_symbol_time ON crypto_scout.bybit_ta_spot_order_book_50(symbol, engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_symbol_side_price ON crypto_scout.bybit_ta_spot_order_book_50(symbol, side, price);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_symbol_side_engine_time ON crypto_scout.bybit_ta_spot_order_book_50(symbol, side, engine_time DESC);
-select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_50', 'engine_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
+select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_50', 'engine_time', chunk_time_interval => INTERVAL '6 hours', if_not_exists => TRUE);
 
 create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_200 (
     id BIGSERIAL,
@@ -80,7 +80,7 @@ create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_engine_time ON crypt
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_symbol_time ON crypto_scout.bybit_ta_spot_order_book_200(symbol, engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_symbol_side_price ON crypto_scout.bybit_ta_spot_order_book_200(symbol, side, price);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_symbol_side_engine_time ON crypto_scout.bybit_ta_spot_order_book_200(symbol, side, engine_time DESC);
-select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_200', 'engine_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
+select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_200', 'engine_time', chunk_time_interval => INTERVAL '6 hours', if_not_exists => TRUE);
 
 create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_1000 (
     id BIGSERIAL,
@@ -96,7 +96,7 @@ create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_engine_time ON cryp
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_symbol_time ON crypto_scout.bybit_ta_spot_order_book_1000(symbol, engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_symbol_side_price ON crypto_scout.bybit_ta_spot_order_book_1000(symbol, side, price);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_symbol_side_engine_time ON crypto_scout.bybit_ta_spot_order_book_1000(symbol, side, engine_time DESC);
-select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_1000', 'engine_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
+select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_1000', 'engine_time', chunk_time_interval => INTERVAL '6 hours', if_not_exists => TRUE);
 
 -- Compression settings for order book tables
 alter table crypto_scout.bybit_ta_spot_order_book_1 set (

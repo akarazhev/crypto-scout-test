@@ -11,7 +11,7 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_ta_linear_public_trade (
     price DOUBLE PRECISION NOT NULL,
     size DOUBLE PRECISION NOT NULL,
     taker_side TEXT NOT NULL CHECK (taker_side IN ('Buy','Sell')),
-    tick_direction TEXT,
+    tick_direction TEXT CHECK (tick_direction IS NULL OR tick_direction IN ('PlusTick','MinusTick','ZeroPlusTick','ZeroMinusTick')),
     is_block_trade BOOLEAN NOT NULL,
     is_rpi BOOLEAN NOT NULL,
     CONSTRAINT bybit_ta_linear_public_trade_pkey PRIMARY KEY (id, trade_time)

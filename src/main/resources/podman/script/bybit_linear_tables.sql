@@ -7,7 +7,7 @@
 create TABLE IF NOT EXISTS crypto_scout.bybit_linear_tickers (
     symbol TEXT NOT NULL,
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
-    tick_direction TEXT,
+    tick_direction TEXT CHECK (tick_direction IS NULL OR tick_direction IN ('PlusTick','MinusTick','ZeroPlusTick','ZeroMinusTick')),
     price_24h_pcnt DOUBLE PRECISION,
     last_price DOUBLE PRECISION,
     prev_price_24h DOUBLE PRECISION,

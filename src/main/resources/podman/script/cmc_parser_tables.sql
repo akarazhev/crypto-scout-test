@@ -6,7 +6,7 @@
 
 create TABLE IF NOT EXISTS crypto_scout.cmc_fgi (
     value INTEGER NOT NULL,
-    value_classification TEXT NOT NULL,
+    value_classification TEXT NOT NULL CHECK (value_classification IN ('Extreme Fear','Fear','Neutral','Greed','Extreme Greed')),
     update_time TIMESTAMP WITH TIME ZONE NOT NULL,
     CONSTRAINT fgi_pkey PRIMARY KEY (update_time)
 );

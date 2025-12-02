@@ -26,7 +26,7 @@ alter table crypto_scout.bybit_ta_spot_public_trade set (
     timescaledb.compress_orderby = 'trade_time DESC, id DESC'
 );
 select add_compression_policy('crypto_scout.bybit_ta_spot_public_trade', interval '1 month');
-select add_reorder_policy('crypto_scout.bybit_ta_spot_public_trade', 'idx_bybit_ta_spot_public_trade_trade_time');
+select add_reorder_policy('crypto_scout.bybit_ta_spot_public_trade', 'idx_bybit_ta_spot_public_trade_symbol_time');
 select add_retention_policy('crypto_scout.bybit_ta_spot_public_trade', interval '365 days');
 
 -- =========================
@@ -47,6 +47,7 @@ alter table crypto_scout.bybit_ta_spot_order_book_1 OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_engine_time ON crypto_scout.bybit_ta_spot_order_book_1(engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_symbol_time ON crypto_scout.bybit_ta_spot_order_book_1(symbol, engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_symbol_side_price ON crypto_scout.bybit_ta_spot_order_book_1(symbol, side, price);
+create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1_symbol_side_engine_time ON crypto_scout.bybit_ta_spot_order_book_1(symbol, side, engine_time DESC);
 select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_1', 'engine_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
 
 create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_50 (
@@ -62,6 +63,7 @@ alter table crypto_scout.bybit_ta_spot_order_book_50 OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_engine_time ON crypto_scout.bybit_ta_spot_order_book_50(engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_symbol_time ON crypto_scout.bybit_ta_spot_order_book_50(symbol, engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_symbol_side_price ON crypto_scout.bybit_ta_spot_order_book_50(symbol, side, price);
+create index IF NOT EXISTS idx_bybit_ta_spot_order_book_50_symbol_side_engine_time ON crypto_scout.bybit_ta_spot_order_book_50(symbol, side, engine_time DESC);
 select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_50', 'engine_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
 
 create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_200 (
@@ -77,6 +79,7 @@ alter table crypto_scout.bybit_ta_spot_order_book_200 OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_engine_time ON crypto_scout.bybit_ta_spot_order_book_200(engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_symbol_time ON crypto_scout.bybit_ta_spot_order_book_200(symbol, engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_symbol_side_price ON crypto_scout.bybit_ta_spot_order_book_200(symbol, side, price);
+create index IF NOT EXISTS idx_bybit_ta_spot_order_book_200_symbol_side_engine_time ON crypto_scout.bybit_ta_spot_order_book_200(symbol, side, engine_time DESC);
 select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_200', 'engine_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
 
 create TABLE IF NOT EXISTS crypto_scout.bybit_ta_spot_order_book_1000 (
@@ -92,6 +95,7 @@ alter table crypto_scout.bybit_ta_spot_order_book_1000 OWNER TO crypto_scout_db;
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_engine_time ON crypto_scout.bybit_ta_spot_order_book_1000(engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_symbol_time ON crypto_scout.bybit_ta_spot_order_book_1000(symbol, engine_time DESC);
 create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_symbol_side_price ON crypto_scout.bybit_ta_spot_order_book_1000(symbol, side, price);
+create index IF NOT EXISTS idx_bybit_ta_spot_order_book_1000_symbol_side_engine_time ON crypto_scout.bybit_ta_spot_order_book_1000(symbol, side, engine_time DESC);
 select public.create_hypertable('crypto_scout.bybit_ta_spot_order_book_1000', 'engine_time', chunk_time_interval => INTERVAL '1 day', if_not_exists => TRUE);
 
 -- Compression settings for order book tables
@@ -123,10 +127,10 @@ select add_compression_policy('crypto_scout.bybit_ta_spot_order_book_200', inter
 select add_compression_policy('crypto_scout.bybit_ta_spot_order_book_1000', interval '1 month');
 
 -- Reorder policies for order book tables
-select add_reorder_policy('crypto_scout.bybit_ta_spot_order_book_1', 'idx_bybit_ta_spot_order_book_1_engine_time');
-select add_reorder_policy('crypto_scout.bybit_ta_spot_order_book_50', 'idx_bybit_ta_spot_order_book_50_engine_time');
-select add_reorder_policy('crypto_scout.bybit_ta_spot_order_book_200', 'idx_bybit_ta_spot_order_book_200_engine_time');
-select add_reorder_policy('crypto_scout.bybit_ta_spot_order_book_1000', 'idx_bybit_ta_spot_order_book_1000_engine_time');
+select add_reorder_policy('crypto_scout.bybit_ta_spot_order_book_1', 'idx_bybit_ta_spot_order_book_1_symbol_side_engine_time');
+select add_reorder_policy('crypto_scout.bybit_ta_spot_order_book_50', 'idx_bybit_ta_spot_order_book_50_symbol_side_engine_time');
+select add_reorder_policy('crypto_scout.bybit_ta_spot_order_book_200', 'idx_bybit_ta_spot_order_book_200_symbol_side_engine_time');
+select add_reorder_policy('crypto_scout.bybit_ta_spot_order_book_1000', 'idx_bybit_ta_spot_order_book_1000_symbol_side_engine_time');
 
 -- Retention policies for order book tables
 select add_retention_policy('crypto_scout.bybit_ta_spot_order_book_1', interval '365 days');

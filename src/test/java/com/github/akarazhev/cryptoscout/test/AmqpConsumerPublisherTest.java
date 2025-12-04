@@ -32,11 +32,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.AMQP_COLLECTOR_EXCHANGE;
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.AMQP_COLLECTOR_QUEUE;
+import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.AMQP_COLLECTOR_ROUTING_KEY;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_HOST;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
@@ -67,9 +68,10 @@ final class AmqpConsumerPublisherTest {
     }
 
     @Test
-    void testPublishConsume() {
-        final Map<String, Object> data = Map.of("key", "value");
-        publisher.publish("", AMQP_COLLECTOR_QUEUE, Command.of(0, 0, data, 0));
+    void testPublishConsume() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
+        assertNotNull(data);
+        publisher.publish(AMQP_COLLECTOR_EXCHANGE, AMQP_COLLECTOR_ROUTING_KEY, Command.of(0, 0, data, 0));
         final var command = TestUtils.await(consumer.getCommand());
         assertNotNull(command);
         assertEquals(0, command.id());

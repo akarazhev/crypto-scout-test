@@ -49,6 +49,8 @@ final class Constants {
 
         static final String CONSUMER_CLIENT_NAME = "amqp-test-consumer";
         static final String PUBLISHER_CLIENT_NAME = "amqp-test-publisher";
+        static final String AMQP_COLLECTOR_EXCHANGE = "crypto-scout-exchange";
+        static final String AMQP_COLLECTOR_ROUTING_KEY = "collector";
         static final String AMQP_COLLECTOR_QUEUE = "collector-queue";
         static final String CONTENT_TYPE_JSON = "application/json";
         static final int DELIVERY_MODE_PERSISTENT = 2;

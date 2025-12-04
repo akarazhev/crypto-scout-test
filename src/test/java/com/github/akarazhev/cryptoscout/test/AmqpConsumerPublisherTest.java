@@ -24,7 +24,7 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
-import com.github.akarazhev.jcryptolib.stream.Command;
+import com.github.akarazhev.jcryptolib.stream.Message;
 import com.rabbitmq.client.ConnectionFactory;
 import io.activej.eventloop.Eventloop;
 import io.activej.promise.TestUtils;
@@ -71,14 +71,29 @@ final class AmqpConsumerPublisherTest {
     void testPublishConsume() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
         assertNotNull(data);
-        publisher.publish(AMQP_COLLECTOR_EXCHANGE, AMQP_COLLECTOR_ROUTING_KEY, Command.of(0, 0, data, 0));
-        final var command = TestUtils.await(consumer.getCommand());
-        assertNotNull(command);
-        assertEquals(0, command.id());
-        assertEquals(0, command.from());
-        assertEquals(0, command.size());
-        assertNotNull(command.value());
-        assertEquals(data, command.value());
+        publisher.publish(AMQP_COLLECTOR_EXCHANGE, AMQP_COLLECTOR_ROUTING_KEY, Message.of(new Message.Command() {
+            @Override
+            public Type getType() {
+                return Type.REQUEST;
+            }
+
+            @Override
+            public String getSource() {
+                return "BYBIT_SPOT";
+            }
+
+            @Override
+            public String getMethod() {
+                return "KLINE_1";
+            }
+        }, data));
+        final var message = TestUtils.await(consumer.getMessage());
+        assertNotNull(message);
+        assertEquals(Message.Command.Type.REQUEST, message.command().getType());
+        assertEquals("BYBIT_SPOT", message.command().getSource());
+        assertEquals("KLINE_1", message.command().getMethod());
+        assertNotNull(message.value());
+        assertEquals(data, message.value());
     }
 
     @AfterAll

@@ -24,7 +24,7 @@
 
 package com.github.akarazhev.cryptoscout.test;
 
-import com.github.akarazhev.jcryptolib.stream.Command;
+import com.github.akarazhev.jcryptolib.stream.Message;
 import com.github.akarazhev.jcryptolib.util.JsonUtils;
 import com.rabbitmq.client.CancelCallback;
 import com.rabbitmq.client.Connection;
@@ -50,7 +50,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
     private final Executor executor;
     private final ConnectionFactory connectionFactory;
     private final String queue;
-    private final SettablePromise<Command<?>> command = new SettablePromise<>();
+    private final SettablePromise<Message<?>> message = new SettablePromise<>();
     private volatile Connection connection;
     private volatile Channel channel;
     private volatile String consumerTag;
@@ -79,7 +79,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
 
                 final DeliverCallback deliver = (_, delivery) -> {
                     try {
-                        command.set((Command<?>) JsonUtils.bytes2Object(delivery.getBody(), Command.class));
+                        message.set((Message<?>) JsonUtils.bytes2Object(delivery.getBody(), Message.class));
                         channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
                     } catch (final Exception e) {
                         try {
@@ -88,7 +88,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
                             LOGGER.debug("Error cancelling AMQP consumer", ex);
                         }
 
-                        command.setException(e);
+                        message.setException(e);
                     } finally {
                         if (consumerTag != null && channel.isOpen()) {
                             try {
@@ -109,8 +109,8 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
         });
     }
 
-    public Promise<Command<?>> getCommand() {
-        return command;
+    public Promise<Message<?>> getMessage() {
+        return message;
     }
 
     @Override

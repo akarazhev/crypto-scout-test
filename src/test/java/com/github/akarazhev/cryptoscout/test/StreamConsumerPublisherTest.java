@@ -70,8 +70,9 @@ final class StreamConsumerPublisherTest {
     }
 
     @Test
-    void testPublishConsume() {
-        final Map<String, Object> data = Map.of("key", "value");
+    void testPublishConsume() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
+        assertNotNull(data);
         publisher.publish(Payload.of(Provider.BYBIT, Source.PM, data));
         final var result = TestUtils.await(consumer.getResult());
         assertNotNull(result);

@@ -50,6 +50,8 @@ final class AmqpConsumerPublisherTest {
     private static Eventloop reactor;
     private static AmqpTestPublisher publisher;
     private static AmqpTestConsumer consumer;
+    private static final String SOURCE = "test-source";
+    private static final String METHOD = "test-method";
 
     @BeforeAll
     static void setup() {
@@ -71,27 +73,13 @@ final class AmqpConsumerPublisherTest {
     void testPublishConsume() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
         assertNotNull(data);
-        publisher.publish(AMQP_COLLECTOR_EXCHANGE, AMQP_COLLECTOR_ROUTING_KEY, Message.of(new Message.Command() {
-            @Override
-            public Type getType() {
-                return Type.REQUEST;
-            }
-
-            @Override
-            public String getSource() {
-                return "BYBIT_SPOT";
-            }
-
-            @Override
-            public String getMethod() {
-                return "KLINE_1";
-            }
-        }, data));
+        publisher.publish(AMQP_COLLECTOR_EXCHANGE, AMQP_COLLECTOR_ROUTING_KEY,
+                Message.of(Message.Command.of(Message.Type.REQUEST, SOURCE, METHOD), data));
         final var message = TestUtils.await(consumer.getMessage());
         assertNotNull(message);
-        assertEquals(Message.Command.Type.REQUEST, message.command().getType());
-        assertEquals("BYBIT_SPOT", message.command().getSource());
-        assertEquals("KLINE_1", message.command().getMethod());
+        assertEquals(Message.Type.REQUEST, message.command().type());
+        assertEquals(SOURCE, message.command().source());
+        assertEquals(METHOD, message.command().method());
         assertNotNull(message.value());
         assertEquals(data, message.value());
     }

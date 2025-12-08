@@ -66,15 +66,16 @@ final class AmqpConsumerPublisherTest {
 
         publisher = AmqpTestPublisher.create(reactor, executor, factory, AMQP_COLLECTOR_QUEUE);
         consumer = AmqpTestConsumer.create(reactor, executor, factory, AMQP_COLLECTOR_QUEUE);
-        TestUtils.await(publisher.start(), consumer.start());
+        TestUtils.await(publisher.start());
     }
 
     @Test
     void testPublishConsume() throws Exception {
         final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
         assertNotNull(data);
-        publisher.publish(AMQP_COLLECTOR_EXCHANGE, AMQP_COLLECTOR_ROUTING_KEY,
-                Message.of(Message.Command.of(Message.Type.REQUEST, SOURCE, METHOD), data));
+        TestUtils.await(publisher.publish(AMQP_COLLECTOR_EXCHANGE, AMQP_COLLECTOR_ROUTING_KEY,
+                        Message.of(Message.Command.of(Message.Type.REQUEST, SOURCE, METHOD), data))
+                .whenComplete(consumer::start));
         final var message = TestUtils.await(consumer.getMessage());
         assertNotNull(message);
         assertEquals(Message.Type.REQUEST, message.command().type());
@@ -82,6 +83,7 @@ final class AmqpConsumerPublisherTest {
         assertEquals(METHOD, message.command().method());
         assertNotNull(message.value());
         assertEquals(data, message.value());
+        TestUtils.await(consumer.stop());
     }
 
     @AfterAll

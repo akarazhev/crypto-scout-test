@@ -50,10 +50,10 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
     private final Executor executor;
     private final ConnectionFactory connectionFactory;
     private final String queue;
-    private final SettablePromise<Message<?>> message = new SettablePromise<>();
     private volatile Connection connection;
     private volatile Channel channel;
     private volatile String consumerTag;
+    private SettablePromise<Message<?>> message;
 
     public static AmqpTestConsumer create(final NioReactor reactor, final Executor executor,
                                           final ConnectionFactory connectionFactory, final String queue) {
@@ -76,6 +76,7 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
                 channel = connection.createChannel();
                 channel.basicQos(PREFETCH_COUNT);
                 channel.queueDeclarePassive(queue);
+                message = new SettablePromise<>();
 
                 final DeliverCallback deliver = (_, delivery) -> {
                     try {
@@ -141,6 +142,8 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
                 } catch (final Exception ex) {
                     LOGGER.warn("Error closing AMQP connection", ex);
                 }
+
+                message = null;
             }
         });
     }

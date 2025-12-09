@@ -28,6 +28,11 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_ORDER_BOOK_1;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_ORDER_BOOK_1000;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_ORDER_BOOK_200;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_ORDER_BOOK_50;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_PUBLIC_TRADE;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_TICKERS;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_KLINE_1M;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_SPOT_KLINE_5M;
@@ -82,5 +87,30 @@ final class AssertBybitSpotTablesTest {
     @Test
     void shouldBybitSpotKline1dTableCountReturnZero() throws Exception {
         Assertions.assertTableCount(BYBIT_SPOT_KLINE_1D, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotPublicTradeTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_PUBLIC_TRADE, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotOrderBook1TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_ORDER_BOOK_1, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotOrderBook50TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_ORDER_BOOK_50, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotOrderBook200TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_ORDER_BOOK_200, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitSpotOrderBook1000TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_SPOT_ORDER_BOOK_1000, ZERO_ROWS);
     }
 }

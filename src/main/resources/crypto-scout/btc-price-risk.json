@@ -1,0 +1,55 @@
+{
+  "timestamp": "2025-12-01:00:00.000Z",
+  "data": [
+    {
+      "risk": 0.0,
+      "price_if_price_risk": 50275,
+      "composite_risk": 50275
+    },
+    {
+      "risk": 0.1,
+      "price_if_price_risk": 60224,
+      "composite_risk": 60224
+    },
+    {
+      "risk": 0.2,
+      "price_if_price_risk": 72142,
+      "composite_risk": 72142
+    },
+    {
+      "risk": 0.3,
+      "price_if_price_risk": 86417,
+      "composite_risk": 86417
+    },
+    {
+      "risk": 0.4,
+      "price_if_price_risk": 103518,
+      "composite_risk": 103518
+    },
+    {
+      "risk": 0.5,
+      "price_if_price_risk": 124003,
+      "composite_risk": 124003
+    },
+    {
+      "risk": 0.6,
+      "price_if_price_risk": 148541,
+      "composite_risk": 148541
+    },
+    {
+      "risk": 0.7,
+      "price_if_price_risk": 177936,
+      "composite_risk": 177936
+    },
+    {
+      "risk": 0.8,
+      "price_if_price_risk": 213147,
+      "composite_risk": 213147
+    },
+    {
+      "risk": 0.9,
+      "price_if_price_risk": 255326,
+      "composite_risk": 255326
+    }
+  ]
+}

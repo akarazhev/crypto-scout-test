@@ -44,11 +44,8 @@ import org.slf4j.LoggerFactory;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_HOST;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_LINEAR_TABLES_SQL;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_PARSER_TABLES_SQL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_SPOT_TABLES_SQL;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_TA_LINEAR_TABLES_SQL;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_TA_SPOT_TABLES_SQL;
-import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.CMC_PARSER_TABLES_SQL;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.CRYPTO_SCOUT_TABLES_SQL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMPOSE_FILE_LOCATION;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMPOSE_FILE_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_CONTAINER_NAME;
@@ -315,20 +312,11 @@ public final class PodmanCompose {
                     RABBITMQ_CONF_NAME, rabbitDir.resolve(RABBITMQ_CONF_NAME));
             copyClasspathFile(COMPOSE_FILE_LOCATION + PATH_SEPARATOR + RABBITMQ_DIR_NAME + PATH_SEPARATOR +
                     RABBITMQ_DEFINITIONS_NAME, rabbitDir.resolve(RABBITMQ_DEFINITIONS_NAME));
-            // Optional script; copy if present init.sql
+            // Copy sql scripts
             copyScript(scriptDir, INIT_SQL);
-            // Optional script; copy if present bybit_linear_tables.sql
             copyScript(scriptDir, BYBIT_LINEAR_TABLES_SQL);
-            // Optional script; copy if present bybit_parser_tables
-            copyScript(scriptDir, BYBIT_PARSER_TABLES_SQL);
-            // Optional script; copy if present bybit_spot_tables.sql
             copyScript(scriptDir, BYBIT_SPOT_TABLES_SQL);
-            // Optional script; copy if present bybit_ta_linear_tables.sql
-            copyScript(scriptDir, BYBIT_TA_LINEAR_TABLES_SQL);
-            // Optional script; copy if present bybit_ta_spot_tables.sql
-            copyScript(scriptDir, BYBIT_TA_SPOT_TABLES_SQL);
-            // Optional script; copy if present cmc_parser_tables.sql
-            copyScript(scriptDir, CMC_PARSER_TABLES_SQL);
+            copyScript(scriptDir, CRYPTO_SCOUT_TABLES_SQL);
             return podmanTargetDir;
         } catch (final Exception e) {
             throw new IllegalStateException(ERR_EXTRACT_RESOURCES, e);

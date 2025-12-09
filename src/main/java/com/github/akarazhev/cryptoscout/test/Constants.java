@@ -39,7 +39,7 @@ final class Constants {
             throw new UnsupportedOperationException();
         }
 
-        static final String BYBIT_CRYPTO_STREAM = "bybit-crypto-stream";
+        static final String BYBIT_STREAM = "bybit-stream";
     }
 
     final static class Amqp {
@@ -72,10 +72,10 @@ final class Constants {
         static final String DELETE_FROM_TABLE = "DELETE FROM %s";
         static final int ZERO_ROWS = 0;
         static final int FIRST_ROW = 1;
+        // Crypto scout
         static final String CMC_FGI = "crypto_scout.cmc_fgi";
         static final String CMC_KLINE_1D = "crypto_scout.cmc_kline_1d";
         static final String CMC_KLINE_1W = "crypto_scout.cmc_kline_1w";
-        // Bybit parser
         static final String BYBIT_LPL = "crypto_scout.bybit_lpl";
         // Bybit spot
         static final String BYBIT_SPOT_TICKERS = "crypto_scout.bybit_spot_tickers";
@@ -85,6 +85,11 @@ final class Constants {
         static final String BYBIT_SPOT_KLINE_60M = "crypto_scout.bybit_spot_kline_60m";
         static final String BYBIT_SPOT_KLINE_240M = "crypto_scout.bybit_spot_kline_240m";
         static final String BYBIT_SPOT_KLINE_1D = "crypto_scout.bybit_spot_kline_1d";
+        static final String BYBIT_SPOT_PUBLIC_TRADE = "crypto_scout.bybit_spot_public_trade";
+        static final String BYBIT_SPOT_ORDER_BOOK_1 = "crypto_scout.bybit_spot_order_book_1";
+        static final String BYBIT_SPOT_ORDER_BOOK_50 = "crypto_scout.bybit_spot_order_book_50";
+        static final String BYBIT_SPOT_ORDER_BOOK_200 = "crypto_scout.bybit_spot_order_book_200";
+        static final String BYBIT_SPOT_ORDER_BOOK_1000 = "crypto_scout.bybit_spot_order_book_1000";
         // Bybit linear
         static final String BYBIT_LINEAR_TICKERS = "crypto_scout.bybit_linear_tickers";
         static final String BYBIT_LINEAR_KLINE_1M = "crypto_scout.bybit_linear_kline_1m";
@@ -93,19 +98,12 @@ final class Constants {
         static final String BYBIT_LINEAR_KLINE_60M = "crypto_scout.bybit_linear_kline_60m";
         static final String BYBIT_LINEAR_KLINE_240M = "crypto_scout.bybit_linear_kline_240m";
         static final String BYBIT_LINEAR_KLINE_1D = "crypto_scout.bybit_linear_kline_1d";
-        // Bybit TA spot
-        static final String BYBIT_TA_SPOT_PUBLIC_TRADE = "crypto_scout.bybit_ta_spot_public_trade";
-        static final String BYBIT_TA_SPOT_ORDER_BOOK_1 = "crypto_scout.bybit_ta_spot_order_book_1";
-        static final String BYBIT_TA_SPOT_ORDER_BOOK_50 = "crypto_scout.bybit_ta_spot_order_book_50";
-        static final String BYBIT_TA_SPOT_ORDER_BOOK_200 = "crypto_scout.bybit_ta_spot_order_book_200";
-        static final String BYBIT_TA_SPOT_ORDER_BOOK_1000 = "crypto_scout.bybit_ta_spot_order_book_1000";
-        // Bybit TA linear
-        static final String BYBIT_TA_LINEAR_PUBLIC_TRADE = "crypto_scout.bybit_ta_linear_public_trade";
-        static final String BYBIT_TA_LINEAR_ORDER_BOOK_1 = "crypto_scout.bybit_ta_linear_order_book_1";
-        static final String BYBIT_TA_LINEAR_ORDER_BOOK_50 = "crypto_scout.bybit_ta_linear_order_book_50";
-        static final String BYBIT_TA_LINEAR_ORDER_BOOK_200 = "crypto_scout.bybit_ta_linear_order_book_200";
-        static final String BYBIT_TA_LINEAR_ORDER_BOOK_1000 = "crypto_scout.bybit_ta_linear_order_book_1000";
-        static final String BYBIT_TA_LINEAR_ALL_LIQUIDATION = "crypto_scout.bybit_ta_linear_all_liquidation";
+        static final String BYBIT_LINEAR_PUBLIC_TRADE = "crypto_scout.bybit_linear_public_trade";
+        static final String BYBIT_LINEAR_ORDER_BOOK_1 = "crypto_scout.bybit_linear_order_book_1";
+        static final String BYBIT_LINEAR_ORDER_BOOK_50 = "crypto_scout.bybit_linear_order_book_50";
+        static final String BYBIT_LINEAR_ORDER_BOOK_200 = "crypto_scout.bybit_linear_order_book_200";
+        static final String BYBIT_LINEAR_ORDER_BOOK_1000 = "crypto_scout.bybit_linear_order_book_1000";
+        static final String BYBIT_LINEAR_ALL_LIQUIDATION = "crypto_scout.bybit_linear_all_liquidation";
     }
 
     final static class MockData {
@@ -118,12 +116,9 @@ final class Constants {
         static final int FIVE_ROWS = 5;
         static final int TWENTY_ONE_ROWS = 21;
         // Source directories
-        static final String CMC_PARSER = "cmc-parser";
-        static final String BYBIT_PARSER = "bybit-parser";
+        static final String CRYPTO_SCOUT = "crypto-scout";
         static final String BYBIT_SPOT = "bybit-spot";
-        static final String BYBIT_TA_SPOT = "bybit-ta-spot";
         static final String BYBIT_LINEAR = "bybit-linear";
-        static final String BYBIT_TA_LINEAR = "bybit-ta-linear";
         // Stream types
         static final String FGI = "fgi";
         static final String LPL = "lpl";
@@ -156,14 +151,14 @@ final class Constants {
         static final String COMPOSE_FILE_LOCATION = "podman";
         static final String COMPOSE_FILE_NAME = "podman-compose.yml";
         static final String DB_CONTAINER_NAME = "crypto-scout-collector-db";
-        //
+        // Podman settings
         static final String PODMAN_COMPOSE_CMD = System.getProperty("podman.compose.cmd", "podman-compose");
         static final String PODMAN_CMD = System.getProperty("podman.cmd", "podman");
         static final String MQ_HOST = System.getProperty("test.mq.host", "localhost");
         static final int MQ_PORT = Integer.parseInt(System.getProperty("test.mq.port", Integer.toString(5552)));
         static final String MQ_USER = System.getProperty("test.mq.user", "crypto_scout_mq");
         static final String MQ_PASSWORD = System.getProperty("test.mq.password", "crypto_scout_mq");
-        static final String MQ_STREAM = System.getProperty("test.mq.stream", "bybit-crypto-stream");
+        static final String MQ_STREAM = System.getProperty("test.mq.stream", "bybit-stream");
         static final Duration UP_TIMEOUT = Duration.ofMinutes(Long.getLong("podman.compose.up.timeout.min",
                 3L));
         static final Duration DOWN_TIMEOUT = Duration.ofMinutes(Long.getLong("podman.compose.down.timeout.min",
@@ -176,11 +171,8 @@ final class Constants {
         static final String SCRIPT_DIR_NAME = "script";
         static final String INIT_SQL = "init.sql";
         static final String BYBIT_LINEAR_TABLES_SQL = "bybit_linear_tables.sql";
-        static final String BYBIT_PARSER_TABLES_SQL = "bybit_parser_tables.sql";
         static final String BYBIT_SPOT_TABLES_SQL = "bybit_spot_tables.sql";
-        static final String BYBIT_TA_LINEAR_TABLES_SQL = "bybit_ta_linear_tables.sql";
-        static final String BYBIT_TA_SPOT_TABLES_SQL = "bybit_ta_spot_tables.sql";
-        static final String CMC_PARSER_TABLES_SQL = "cmc_parser_tables.sql";
+        static final String CRYPTO_SCOUT_TABLES_SQL = "crypto_scout_tables.sql";
         static final String RABBITMQ_DIR_NAME = "rabbitmq";
         static final String RABBITMQ_ENABLED_PLUGINS = "enabled_plugins";
         static final String RABBITMQ_CONF_NAME = "rabbitmq.conf";

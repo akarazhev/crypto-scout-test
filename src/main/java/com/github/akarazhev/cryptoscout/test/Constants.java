@@ -120,6 +120,8 @@ final class Constants {
         static final String BYBIT_SPOT = "bybit-spot";
         static final String BYBIT_LINEAR = "bybit-linear";
         // Stream types
+        static final String BTC_PRICE_RISK = "btcPriceRisk";
+        static final String BTC_RISK_PRICE = "btcRiskPrice";
         static final String FGI = "fgi";
         static final String LPL = "lpl";
         static final String KLINE_1 = "kline.1";
@@ -135,7 +137,7 @@ final class Constants {
         static final String ORDER_BOOK_50 = "orderbook.50";
         static final String ORDER_BOOK_200 = "orderbook.200";
         static final String ORDER_BOOK_1000 = "orderbook.1000";
-        static final String ALL_LIQUDATION = "allLiquidation";
+        static final String ALL_LIQUIDATION = "allLiquidation";
         // File extension
         static final String JSON_EXTENSION = ".json";
         // Error messages

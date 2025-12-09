@@ -88,7 +88,6 @@ services:
     hostname: crypto_scout_mq
     ports:
       - "127.0.0.1:5672:5672"   # AMQP protocol
-      - "127.0.0.1:15672:15672" # Management UI (loopback only)
       - "127.0.0.1:5552:5552"   # Stream protocol (required for RabbitMQ streams)
     volumes:
       - "./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro"

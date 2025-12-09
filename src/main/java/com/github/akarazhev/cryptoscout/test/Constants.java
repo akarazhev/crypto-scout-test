@@ -77,6 +77,8 @@ final class Constants {
         static final String CMC_KLINE_1D = "crypto_scout.cmc_kline_1d";
         static final String CMC_KLINE_1W = "crypto_scout.cmc_kline_1w";
         static final String BYBIT_LPL = "crypto_scout.bybit_lpl";
+        static final String BTC_PRICE_RISK = "crypto_scout.btc_price_risk";
+        static final String BTC_RISK_PRICE = "crypto_scout.btc_risk_price";
         // Bybit spot
         static final String BYBIT_SPOT_TICKERS = "crypto_scout.bybit_spot_tickers";
         static final String BYBIT_SPOT_KLINE_1M = "crypto_scout.bybit_spot_kline_1m";
@@ -111,6 +113,7 @@ final class Constants {
             throw new UnsupportedOperationException();
         }
 
+        static final int TWO_ROWS = 2;
         static final int THREE_ROWS = 3;
         static final int FOUR_ROWS = 4;
         static final int FIVE_ROWS = 5;

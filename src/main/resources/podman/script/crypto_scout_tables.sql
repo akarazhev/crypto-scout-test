@@ -1,10 +1,10 @@
--- Bybit parser tables and policies (TimescaleDB PG17)
+-- Crypto Scout tables and policies (TimescaleDB PG17)
 
 -- =========================
 -- BYBIT LAUNCH POOL (LPL)
 -- =========================
 
-create TABLE IF NOT EXISTS crypto_scout.bybit_lpl (
+CREATE TABLE IF NOT EXISTS crypto_scout.bybit_lpl (
     return_coin TEXT NOT NULL,
     return_coin_icon TEXT NOT NULL,
     description TEXT NOT NULL,
@@ -17,48 +17,49 @@ create TABLE IF NOT EXISTS crypto_scout.bybit_lpl (
     CONSTRAINT bybit_lpl_pkey PRIMARY KEY (return_coin, stake_begin_time)
 );
 
-alter table crypto_scout.bybit_lpl OWNER TO crypto_scout_db;
-create index IF NOT EXISTS idx_bybit_lpl_stake_end_time ON crypto_scout.bybit_lpl(stake_end_time DESC);
-create index IF NOT EXISTS idx_bybit_lpl_trade_begin_time ON crypto_scout.bybit_lpl(trade_begin_time DESC);
-select public.create_hypertable('crypto_scout.bybit_lpl', 'stake_begin_time', chunk_time_interval => INTERVAL '1 year', if_not_exists => TRUE);
+ALTER TABLE crypto_scout.bybit_lpl OWNER TO crypto_scout_db;
+CREATE INDEX IF NOT EXISTS idx_bybit_lpl_stake_end_time ON crypto_scout.bybit_lpl(stake_end_time DESC);
+CREATE INDEX IF NOT EXISTS idx_bybit_lpl_trade_begin_time ON crypto_scout.bybit_lpl(trade_begin_time DESC);
+SELECT public.create_hypertable('crypto_scout.bybit_lpl', 'stake_begin_time', chunk_time_interval => INTERVAL '1 year', if_not_exists => TRUE);
 
-alter table crypto_scout.bybit_lpl set (
+ALTER TABLE crypto_scout.bybit_lpl SET (
     timescaledb.compress,
     timescaledb.compress_segmentby = 'return_coin',
     timescaledb.compress_orderby = 'stake_begin_time DESC'
 );
 
-select public.add_compression_policy('crypto_scout.bybit_lpl', interval '35 days');
+SELECT public.add_compression_policy('crypto_scout.bybit_lpl', INTERVAL '30 days');
+SELECT public.add_reorder_policy('crypto_scout.bybit_lpl', 'idx_bybit_lpl_stake_end_time');
 
 -- =========================
 -- CMC FEAR & GREED INDEX (FGI)
 -- =========================
 
-create TABLE IF NOT EXISTS crypto_scout.cmc_fgi (
+CREATE TABLE IF NOT EXISTS crypto_scout.cmc_fgi (
     value INTEGER NOT NULL,
     value_classification TEXT NOT NULL CHECK (value_classification IN ('Extreme Fear','Fear','Neutral','Greed','Extreme Greed')),
     update_time TIMESTAMP WITH TIME ZONE NOT NULL,
     CONSTRAINT fgi_pkey PRIMARY KEY (update_time)
 );
 
-alter table crypto_scout.cmc_fgi OWNER TO crypto_scout_db;
-create index IF NOT EXISTS idx_cmc_fgi_update_time ON crypto_scout.cmc_fgi(update_time DESC);
-select public.create_hypertable('crypto_scout.cmc_fgi', 'update_time', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
+ALTER TABLE crypto_scout.cmc_fgi OWNER TO crypto_scout_db;
+CREATE INDEX IF NOT EXISTS idx_cmc_fgi_update_time ON crypto_scout.cmc_fgi(update_time DESC);
+SELECT public.create_hypertable('crypto_scout.cmc_fgi', 'update_time', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
 
-alter table crypto_scout.cmc_fgi set (
+ALTER TABLE crypto_scout.cmc_fgi SET (
     timescaledb.compress,
     timescaledb.compress_orderby = 'update_time DESC'
 );
 
-select public.add_compression_policy('crypto_scout.cmc_fgi', INTERVAL '35 days');
-select public.add_reorder_policy('crypto_scout.cmc_fgi', 'idx_cmc_fgi_update_time');
+SELECT public.add_compression_policy('crypto_scout.cmc_fgi', INTERVAL '30 days');
+SELECT public.add_reorder_policy('crypto_scout.cmc_fgi', 'idx_cmc_fgi_update_time');
 
 -- =========================
 -- KLINE TABLES (1d/1w)
 -- Schema is identical across intervals.
 -- =========================
 
-create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1d (
+CREATE TABLE IF NOT EXISTS crypto_scout.cmc_kline_1d (
     symbol TEXT NOT NULL,
     time_open TIMESTAMP WITH TIME ZONE NOT NULL,
     time_close TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -75,20 +76,20 @@ create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1d (
     CONSTRAINT cmc_kline_1d_pkey PRIMARY KEY (symbol, timestamp)
 );
 
-alter table crypto_scout.cmc_kline_1d OWNER TO crypto_scout_db;
-create index IF NOT EXISTS idx_cmc_kline_1d_symbol_time ON crypto_scout.cmc_kline_1d(symbol, timestamp DESC);
-select public.create_hypertable('crypto_scout.cmc_kline_1d', 'timestamp', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
+ALTER TABLE crypto_scout.cmc_kline_1d OWNER TO crypto_scout_db;
+CREATE INDEX IF NOT EXISTS idx_cmc_kline_1d_symbol_time ON crypto_scout.cmc_kline_1d(symbol, timestamp DESC);
+SELECT public.create_hypertable('crypto_scout.cmc_kline_1d', 'timestamp', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
 
-alter table crypto_scout.cmc_kline_1d set (
+ALTER TABLE crypto_scout.cmc_kline_1d SET (
     timescaledb.compress,
     timescaledb.compress_segmentby = 'symbol',
     timescaledb.compress_orderby = 'timestamp DESC'
 );
 
-select public.add_compression_policy('crypto_scout.cmc_kline_1d', INTERVAL '35 days');
-select public.add_reorder_policy('crypto_scout.cmc_kline_1d', 'idx_cmc_kline_1d_symbol_time');
+SELECT public.add_compression_policy('crypto_scout.cmc_kline_1d', INTERVAL '30 days');
+SELECT public.add_reorder_policy('crypto_scout.cmc_kline_1d', 'idx_cmc_kline_1d_symbol_time');
 
-create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1w (
+CREATE TABLE IF NOT EXISTS crypto_scout.cmc_kline_1w (
     symbol TEXT NOT NULL,
     time_open TIMESTAMP WITH TIME ZONE NOT NULL,
     time_close TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -105,24 +106,24 @@ create TABLE IF NOT EXISTS crypto_scout.cmc_kline_1w (
     CONSTRAINT cmc_kline_1w_pkey PRIMARY KEY (symbol, timestamp)
 );
 
-alter table crypto_scout.cmc_kline_1w OWNER TO crypto_scout_db;
-create index IF NOT EXISTS idx_cmc_kline_1w_symbol_time ON crypto_scout.cmc_kline_1w(symbol, timestamp DESC);
-select public.create_hypertable('crypto_scout.cmc_kline_1w', 'timestamp', chunk_time_interval => INTERVAL '3 months', if_not_exists => TRUE);
+ALTER TABLE crypto_scout.cmc_kline_1w OWNER TO crypto_scout_db;
+CREATE INDEX IF NOT EXISTS idx_cmc_kline_1w_symbol_time ON crypto_scout.cmc_kline_1w(symbol, timestamp DESC);
+SELECT public.create_hypertable('crypto_scout.cmc_kline_1w', 'timestamp', chunk_time_interval => INTERVAL '3 months', if_not_exists => TRUE);
 
-alter table crypto_scout.cmc_kline_1w set (
+ALTER TABLE crypto_scout.cmc_kline_1w SET (
     timescaledb.compress,
     timescaledb.compress_segmentby = 'symbol',
     timescaledb.compress_orderby = 'timestamp DESC'
 );
 
-select public.add_compression_policy('crypto_scout.cmc_kline_1w', INTERVAL '35 days');
-select public.add_reorder_policy('crypto_scout.cmc_kline_1w', 'idx_cmc_kline_1w_symbol_time');
+SELECT public.add_compression_policy('crypto_scout.cmc_kline_1w', INTERVAL '30 days');
+SELECT public.add_reorder_policy('crypto_scout.cmc_kline_1w', 'idx_cmc_kline_1w_symbol_time');
 
 -- =========================
 -- BTC PRICE RISK (risk-to-price mapping)
 -- =========================
 
-create TABLE IF NOT EXISTS crypto_scout.btc_price_risk (
+CREATE TABLE IF NOT EXISTS crypto_scout.btc_price_risk (
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     risk DOUBLE PRECISION NOT NULL,
     price_of_price_risk BIGINT NOT NULL,
@@ -130,24 +131,24 @@ create TABLE IF NOT EXISTS crypto_scout.btc_price_risk (
     CONSTRAINT btc_price_risk_pkey PRIMARY KEY (timestamp, risk)
 );
 
-alter table crypto_scout.btc_price_risk OWNER TO crypto_scout_db;
-create index IF NOT EXISTS idx_btc_price_risk_timestamp ON crypto_scout.btc_price_risk(timestamp DESC);
-select public.create_hypertable('crypto_scout.btc_price_risk', 'timestamp', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
+ALTER TABLE crypto_scout.btc_price_risk OWNER TO crypto_scout_db;
+CREATE INDEX IF NOT EXISTS idx_btc_price_risk_timestamp ON crypto_scout.btc_price_risk(timestamp DESC);
+SELECT public.create_hypertable('crypto_scout.btc_price_risk', 'timestamp', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
 
-alter table crypto_scout.btc_price_risk set (
+ALTER TABLE crypto_scout.btc_price_risk SET (
     timescaledb.compress,
     timescaledb.compress_segmentby = 'risk',
     timescaledb.compress_orderby = 'timestamp DESC'
 );
 
-select public.add_compression_policy('crypto_scout.btc_price_risk', INTERVAL '35 days');
-select public.add_reorder_policy('crypto_scout.btc_price_risk', 'idx_btc_price_risk_timestamp');
+SELECT public.add_compression_policy('crypto_scout.btc_price_risk', INTERVAL '30 days');
+SELECT public.add_reorder_policy('crypto_scout.btc_price_risk', 'idx_btc_price_risk_timestamp');
 
 -- =========================
 -- BTC RISK PRICE (current risk assessment)
 -- =========================
 
-create TABLE IF NOT EXISTS crypto_scout.btc_risk_price (
+CREATE TABLE IF NOT EXISTS crypto_scout.btc_risk_price (
     timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
     price BIGINT NOT NULL,
     price_risk DOUBLE PRECISION NOT NULL,
@@ -155,14 +156,14 @@ create TABLE IF NOT EXISTS crypto_scout.btc_risk_price (
     CONSTRAINT btc_risk_price_pkey PRIMARY KEY (timestamp)
 );
 
-alter table crypto_scout.btc_risk_price OWNER TO crypto_scout_db;
-create index IF NOT EXISTS idx_btc_risk_price_timestamp ON crypto_scout.btc_risk_price(timestamp DESC);
-select public.create_hypertable('crypto_scout.btc_risk_price', 'timestamp', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
+ALTER TABLE crypto_scout.btc_risk_price OWNER TO crypto_scout_db;
+CREATE INDEX IF NOT EXISTS idx_btc_risk_price_timestamp ON crypto_scout.btc_risk_price(timestamp DESC);
+SELECT public.create_hypertable('crypto_scout.btc_risk_price', 'timestamp', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
 
-alter table crypto_scout.btc_risk_price set (
+ALTER TABLE crypto_scout.btc_risk_price SET (
     timescaledb.compress,
     timescaledb.compress_orderby = 'timestamp DESC'
 );
 
-select public.add_compression_policy('crypto_scout.btc_risk_price', INTERVAL '35 days');
-select public.add_reorder_policy('crypto_scout.btc_risk_price', 'idx_btc_risk_price_timestamp');
+SELECT public.add_compression_policy('crypto_scout.btc_risk_price', INTERVAL '30 days');
+SELECT public.add_reorder_policy('crypto_scout.btc_risk_price', 'idx_btc_risk_price_timestamp');

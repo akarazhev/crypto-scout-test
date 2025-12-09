@@ -117,3 +117,52 @@ alter table crypto_scout.cmc_kline_1w set (
 
 select public.add_compression_policy('crypto_scout.cmc_kline_1w', INTERVAL '35 days');
 select public.add_reorder_policy('crypto_scout.cmc_kline_1w', 'idx_cmc_kline_1w_symbol_time');
+
+-- =========================
+-- BTC PRICE RISK (risk-to-price mapping)
+-- =========================
+
+create TABLE IF NOT EXISTS crypto_scout.btc_price_risk (
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    risk DOUBLE PRECISION NOT NULL,
+    price_of_price_risk BIGINT NOT NULL,
+    price_of_composite_risk BIGINT NOT NULL,
+    CONSTRAINT btc_price_risk_pkey PRIMARY KEY (timestamp, risk)
+);
+
+alter table crypto_scout.btc_price_risk OWNER TO crypto_scout_db;
+create index IF NOT EXISTS idx_btc_price_risk_timestamp ON crypto_scout.btc_price_risk(timestamp DESC);
+select public.create_hypertable('crypto_scout.btc_price_risk', 'timestamp', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
+
+alter table crypto_scout.btc_price_risk set (
+    timescaledb.compress,
+    timescaledb.compress_segmentby = 'risk',
+    timescaledb.compress_orderby = 'timestamp DESC'
+);
+
+select public.add_compression_policy('crypto_scout.btc_price_risk', INTERVAL '35 days');
+select public.add_reorder_policy('crypto_scout.btc_price_risk', 'idx_btc_price_risk_timestamp');
+
+-- =========================
+-- BTC RISK PRICE (current risk assessment)
+-- =========================
+
+create TABLE IF NOT EXISTS crypto_scout.btc_risk_price (
+    timestamp TIMESTAMP WITH TIME ZONE NOT NULL,
+    price BIGINT NOT NULL,
+    price_risk DOUBLE PRECISION NOT NULL,
+    composite_risk DOUBLE PRECISION NOT NULL,
+    CONSTRAINT btc_risk_price_pkey PRIMARY KEY (timestamp)
+);
+
+alter table crypto_scout.btc_risk_price OWNER TO crypto_scout_db;
+create index IF NOT EXISTS idx_btc_risk_price_timestamp ON crypto_scout.btc_risk_price(timestamp DESC);
+select public.create_hypertable('crypto_scout.btc_risk_price', 'timestamp', chunk_time_interval => INTERVAL '1 month', if_not_exists => TRUE);
+
+alter table crypto_scout.btc_risk_price set (
+    timescaledb.compress,
+    timescaledb.compress_orderby = 'timestamp DESC'
+);
+
+select public.add_compression_policy('crypto_scout.btc_risk_price', INTERVAL '35 days');
+select public.add_reorder_policy('crypto_scout.btc_risk_price', 'idx_btc_risk_price_timestamp');

@@ -9,7 +9,7 @@
       "password_hash": "2xB5uNpCTDH0DPZxWUn5miYLbwQde5QKkx+gKKElY7msw2f8",
       "hashing_algorithm": "rabbit_password_hashing_sha256",
       "tags": [
-        "administrator"
+        "management"
       ]
     }
   ],
@@ -27,9 +27,9 @@
     {
       "user": "crypto_scout_mq",
       "vhost": "/",
-      "configure": ".*",
-      "write": ".*",
-      "read": ".*"
+      "configure": "^(bybit|crypto-scout|collector|chatbot|analyst|dlx).*$",
+      "write": "^(bybit|crypto-scout|collector|chatbot|analyst|dlx).*$",
+      "read": "^(bybit|crypto-scout|collector|chatbot|analyst|dlx).*$"
     }
   ],
   "policies": [
@@ -92,7 +92,9 @@
         "x-max-length": 2500,
         "x-message-ttl": 21600000,
         "x-queue-mode": "lazy",
-        "x-overflow": "reject-publish"
+        "x-overflow": "reject-publish",
+        "x-dead-letter-exchange": "dlx-exchange",
+        "x-dead-letter-routing-key": "dlx"
       }
     },
     {
@@ -104,7 +106,9 @@
         "x-max-length": 2500,
         "x-message-ttl": 21600000,
         "x-queue-mode": "lazy",
-        "x-overflow": "reject-publish"
+        "x-overflow": "reject-publish",
+        "x-dead-letter-exchange": "dlx-exchange",
+        "x-dead-letter-routing-key": "dlx"
       }
     },
     {
@@ -116,13 +120,34 @@
         "x-max-length": 2500,
         "x-message-ttl": 21600000,
         "x-queue-mode": "lazy",
-        "x-overflow": "reject-publish"
+        "x-overflow": "reject-publish",
+        "x-dead-letter-exchange": "dlx-exchange",
+        "x-dead-letter-routing-key": "dlx"
+      }
+    },
+    {
+      "name": "dlx-queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-message-ttl": 604800000,
+        "x-queue-mode": "lazy"
       }
     }
   ],
   "exchanges": [
     {
       "name": "crypto-scout-exchange",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "dlx-exchange",
       "vhost": "/",
       "type": "direct",
       "durable": true,
@@ -178,6 +203,14 @@
       "destination": "crypto-scout-stream",
       "destination_type": "queue",
       "routing_key": "crypto-scout",
+      "arguments": {}
+    },
+    {
+      "source": "dlx-exchange",
+      "vhost": "/",
+      "destination": "dlx-queue",
+      "destination_type": "queue",
+      "routing_key": "dlx",
       "arguments": {}
     }
   ]

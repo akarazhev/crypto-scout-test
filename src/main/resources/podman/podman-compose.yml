@@ -90,7 +90,6 @@ services:
       - "127.0.0.1:5672:5672"   # AMQP protocol
       - "127.0.0.1:15672:15672" # Management UI (loopback only)
       - "127.0.0.1:5552:5552"   # Stream protocol (required for RabbitMQ streams)
-      - "127.0.0.1:15692:15692" # Prometheus metrics (loopback only)
     volumes:
       - "./rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro"
       - "./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro"

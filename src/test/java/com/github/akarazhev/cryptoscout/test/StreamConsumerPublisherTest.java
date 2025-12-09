@@ -41,7 +41,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_H
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PASSWORD;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
-import static com.github.akarazhev.cryptoscout.test.Constants.Stream.BYBIT_CRYPTO_STREAM;
+import static com.github.akarazhev.cryptoscout.test.Constants.Stream.BYBIT_STREAM;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -63,8 +63,8 @@ final class StreamConsumerPublisherTest {
                 .username(MQ_USER)
                 .password(MQ_PASSWORD)
                 .build();
-        publisher = StreamTestPublisher.create(reactor, executor, environment, BYBIT_CRYPTO_STREAM);
-        consumer = StreamTestConsumer.create(reactor, executor, environment, BYBIT_CRYPTO_STREAM);
+        publisher = StreamTestPublisher.create(reactor, executor, environment, BYBIT_STREAM);
+        consumer = StreamTestConsumer.create(reactor, executor, environment, BYBIT_STREAM);
         TestUtils.await(publisher.start(), consumer.start());
     }
 

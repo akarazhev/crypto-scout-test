@@ -35,12 +35,9 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PATH_SEPARATOR;
 public final class MockData {
 
     public enum Source {
-        CMC_PARSER(Constants.MockData.CMC_PARSER),
-        BYBIT_PARSER(Constants.MockData.BYBIT_PARSER),
+        CRYPTO_SCOUT(Constants.MockData.CRYPTO_SCOUT),
         BYBIT_SPOT(Constants.MockData.BYBIT_SPOT),
-        BYBIT_TA_SPOT(Constants.MockData.BYBIT_TA_SPOT),
-        BYBIT_LINEAR(Constants.MockData.BYBIT_LINEAR),
-        BYBIT_TA_LINEAR(Constants.MockData.BYBIT_TA_LINEAR);
+        BYBIT_LINEAR(Constants.MockData.BYBIT_LINEAR);
 
         private final String source;
 
@@ -50,11 +47,8 @@ public final class MockData {
     }
 
     public enum Type {
-        // Bybit parser
         LPL(Constants.MockData.LPL),
-        // CMC parser
         FGI(Constants.MockData.FGI),
-        // Klines
         KLINE_1(Constants.MockData.KLINE_1),
         KLINE_5(Constants.MockData.KLINE_5),
         KLINE_15(Constants.MockData.KLINE_15),
@@ -62,16 +56,12 @@ public final class MockData {
         KLINE_240(Constants.MockData.KLINE_240),
         KLINE_D(Constants.MockData.KLINE_D),
         KLINE_W(Constants.MockData.KLINE_W),
-        // Ticker
         TICKERS(Constants.MockData.TICKERS),
-        // Public trade
         PUBLIC_TRADE(Constants.MockData.PUBLIC_TRADE),
-        // Order books
         ORDER_BOOK_1(Constants.MockData.ORDER_BOOK_1),
         ORDER_BOOK_50(Constants.MockData.ORDER_BOOK_50),
         ORDER_BOOK_200(Constants.MockData.ORDER_BOOK_200),
         ORDER_BOOK_1000(Constants.MockData.ORDER_BOOK_1000),
-        // All liquidations
         ALL_LIQUIDATION(Constants.MockData.ALL_LIQUDATION);
 
         private final String type;

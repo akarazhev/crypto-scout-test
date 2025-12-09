@@ -26,16 +26,101 @@ package com.github.akarazhev.cryptoscout.test;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.Map;
+
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.FIVE_ROWS;
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.THREE_ROWS;
 import static com.github.akarazhev.cryptoscout.test.Constants.MockData.TWENTY_ONE_ROWS;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CLOSE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.MARKET_CAP2;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.OPEN;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.QUOTE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.QUOTES;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIMESTAMP;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIME_CLOSE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIME_HIGH;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIME_LOW;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.TIME_OPEN;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.UPDATE_TIME;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VALUE_CLASSIFICATION;
+import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.VOLUME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 final class MockBybitParserDataTest {
 
     @Test
     void shouldLplDataReturnMap() throws Exception {
-        final var data = MockData.get(MockData.Source.BYBIT_PARSER, MockData.Type.LPL);
+        final var data = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.LPL);
         assertNotNull(data);
         assertEquals(TWENTY_ONE_ROWS, data.size());
+    }
+
+    @Test
+    void shouldFgiDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.FGI);
+        assertNotNull(data);
+        assertEquals(THREE_ROWS, data.size());
+        assertTrue(data.containsKey(VALUE));
+        assertTrue(data.containsKey(UPDATE_TIME));
+        assertTrue(data.containsKey(VALUE_CLASSIFICATION));
+    }
+
+    @Test
+    void shouldKline1dDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.KLINE_D);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+        assertTrue(data.containsKey(QUOTES));
+        final var quotes = (List<Map<String, Object>>) data.get(QUOTES);
+        assertFalse(quotes.isEmpty());
+        for (final var quote : quotes) {
+            assertTrue(quote.containsKey(TIME_OPEN));
+            assertTrue(quote.containsKey(TIME_CLOSE));
+            assertTrue(quote.containsKey(TIME_HIGH));
+            assertTrue(quote.containsKey(TIME_LOW));
+            assertTrue(quote.containsKey(QUOTE));
+            final var value = (Map<String, Object>) quote.get(QUOTE);
+            assertFalse(value.isEmpty());
+            assertTrue(value.containsKey(OPEN));
+            assertTrue(value.containsKey(CLOSE));
+            assertTrue(value.containsKey(HIGH));
+            assertTrue(value.containsKey(LOW));
+            assertTrue(value.containsKey(VOLUME));
+            assertTrue(value.containsKey(MARKET_CAP2));
+            assertTrue(value.containsKey(TIMESTAMP));
+        }
+    }
+
+    @Test
+    void shouldKline1wDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.KLINE_W);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+        assertTrue(data.containsKey(QUOTES));
+        final var quotes = (List<Map<String, Object>>) data.get(QUOTES);
+        assertFalse(quotes.isEmpty());
+        for (final var quote : quotes) {
+            assertTrue(quote.containsKey(TIME_OPEN));
+            assertTrue(quote.containsKey(TIME_CLOSE));
+            assertTrue(quote.containsKey(TIME_HIGH));
+            assertTrue(quote.containsKey(TIME_LOW));
+            assertTrue(quote.containsKey(QUOTE));
+            final var value = (Map<String, Object>) quote.get(QUOTE);
+            assertFalse(value.isEmpty());
+            assertTrue(value.containsKey(OPEN));
+            assertTrue(value.containsKey(CLOSE));
+            assertTrue(value.containsKey(HIGH));
+            assertTrue(value.containsKey(LOW));
+            assertTrue(value.containsKey(VOLUME));
+            assertTrue(value.containsKey(MARKET_CAP2));
+            assertTrue(value.containsKey(TIMESTAMP));
+        }
     }
 }

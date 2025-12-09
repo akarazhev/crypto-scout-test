@@ -81,4 +81,46 @@ final class MockBybitLinearDataTest {
         assertNotNull(data);
         assertEquals(FIVE_ROWS, data.size());
     }
+
+    @Test
+    void shouldLinearPublicTradeDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_LINEAR, MockData.Type.PUBLIC_TRADE);
+        assertNotNull(data);
+        assertEquals(FOUR_ROWS, data.size());
+    }
+
+    @Test
+    void shouldLinearOrderBook1DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_LINEAR, MockData.Type.ORDER_BOOK_1);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+    }
+
+    @Test
+    void shouldLinearOrderBook50DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_LINEAR, MockData.Type.ORDER_BOOK_50);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+    }
+
+    @Test
+    void shouldLinearOrderBook200DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_LINEAR, MockData.Type.ORDER_BOOK_200);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+    }
+
+    @Test
+    void shouldLinearOrderBook1000DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_LINEAR, MockData.Type.ORDER_BOOK_1000);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+    }
+
+    @Test
+    void shouldLinearAllLiquidationDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_LINEAR, MockData.Type.ALL_LIQUIDATION);
+        assertNotNull(data);
+        assertEquals(FOUR_ROWS, data.size());
+    }
 }

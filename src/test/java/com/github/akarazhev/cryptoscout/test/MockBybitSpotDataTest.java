@@ -81,4 +81,39 @@ final class MockBybitSpotDataTest {
         assertNotNull(data);
         assertEquals(FIVE_ROWS, data.size());
     }
+
+    @Test
+    void shouldSpotPublicTradeDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.PUBLIC_TRADE);
+        assertNotNull(data);
+        assertEquals(FOUR_ROWS, data.size());
+    }
+
+    @Test
+    void shouldSpotOrderBook1DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.ORDER_BOOK_1);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+    }
+
+    @Test
+    void shouldSpotOrderBook50DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.ORDER_BOOK_50);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+    }
+
+    @Test
+    void shouldSpotOrderBook200DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.ORDER_BOOK_200);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+    }
+
+    @Test
+    void shouldSpotOrderBook1000DataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.ORDER_BOOK_1000);
+        assertNotNull(data);
+        assertEquals(FIVE_ROWS, data.size());
+    }
 }

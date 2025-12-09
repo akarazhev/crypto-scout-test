@@ -28,6 +28,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_ALL_LIQUIDATION;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_ORDER_BOOK_1;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_ORDER_BOOK_1000;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_ORDER_BOOK_200;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_ORDER_BOOK_50;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_PUBLIC_TRADE;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_TICKERS;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_KLINE_1M;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LINEAR_KLINE_5M;
@@ -82,5 +88,35 @@ final class AssertBybitLinearTablesTest {
     @Test
     void shouldBybitLinearKline1dTableCountReturnZero() throws Exception {
         Assertions.assertTableCount(BYBIT_LINEAR_KLINE_1D, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearPublicTradeTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_PUBLIC_TRADE, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearOrderBook1TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_ORDER_BOOK_1, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearOrderBook50TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_ORDER_BOOK_50, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearOrderBook200TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_ORDER_BOOK_200, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearOrderBook1000TableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_ORDER_BOOK_1000, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBybitLinearAllLiquidationTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LINEAR_ALL_LIQUIDATION, ZERO_ROWS);
     }
 }

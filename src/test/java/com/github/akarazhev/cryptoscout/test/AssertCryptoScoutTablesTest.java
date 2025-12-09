@@ -28,12 +28,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LPL;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.CMC_FGI;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.CMC_KLINE_1D;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.CMC_KLINE_1W;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.ZERO_ROWS;
 
-final class AssertCmcParserTablesTest {
+final class AssertCryptoScoutTablesTest {
 
     @BeforeAll
     static void setup() {
@@ -43,6 +44,11 @@ final class AssertCmcParserTablesTest {
     @AfterAll
     static void cleanup() {
         PodmanCompose.down();
+    }
+
+    @Test
+    void shouldBybitLplTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BYBIT_LPL, ZERO_ROWS);
     }
 
     @Test

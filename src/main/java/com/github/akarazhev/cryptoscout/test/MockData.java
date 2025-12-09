@@ -47,6 +47,8 @@ public final class MockData {
     }
 
     public enum Type {
+        BTC_PRICE_RISK(Constants.MockData.BTC_PRICE_RISK),
+        BTC_RISK_PRICE(Constants.MockData.BTC_RISK_PRICE),
         LPL(Constants.MockData.LPL),
         FGI(Constants.MockData.FGI),
         KLINE_1(Constants.MockData.KLINE_1),
@@ -62,7 +64,7 @@ public final class MockData {
         ORDER_BOOK_50(Constants.MockData.ORDER_BOOK_50),
         ORDER_BOOK_200(Constants.MockData.ORDER_BOOK_200),
         ORDER_BOOK_1000(Constants.MockData.ORDER_BOOK_1000),
-        ALL_LIQUIDATION(Constants.MockData.ALL_LIQUDATION);
+        ALL_LIQUIDATION(Constants.MockData.ALL_LIQUIDATION);
 
         private final String type;
 

@@ -28,6 +28,8 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BTC_PRICE_RISK;
+import static com.github.akarazhev.cryptoscout.test.Constants.DB.BTC_RISK_PRICE;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.BYBIT_LPL;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.CMC_FGI;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.CMC_KLINE_1D;
@@ -44,6 +46,16 @@ final class AssertCryptoScoutTablesTest {
     @AfterAll
     static void cleanup() {
         PodmanCompose.down();
+    }
+
+    @Test
+    void shouldBtcPriceRiskTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BTC_PRICE_RISK, ZERO_ROWS);
+    }
+
+    @Test
+    void shouldBtcRiskPriceTableCountReturnZero() throws Exception {
+        Assertions.assertTableCount(BTC_RISK_PRICE, ZERO_ROWS);
     }
 
     @Test

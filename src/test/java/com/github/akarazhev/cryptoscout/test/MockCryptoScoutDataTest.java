@@ -30,8 +30,10 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.akarazhev.cryptoscout.test.Constants.MockData.FIVE_ROWS;
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.FOUR_ROWS;
 import static com.github.akarazhev.cryptoscout.test.Constants.MockData.THREE_ROWS;
 import static com.github.akarazhev.cryptoscout.test.Constants.MockData.TWENTY_ONE_ROWS;
+import static com.github.akarazhev.cryptoscout.test.Constants.MockData.TWO_ROWS;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.CLOSE;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.HIGH;
 import static com.github.akarazhev.jcryptolib.cmc.Constants.Response.LOW;
@@ -53,7 +55,21 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-final class MockBybitParserDataTest {
+final class MockCryptoScoutDataTest {
+
+    @Test
+    void shouldBtcPriceRiskDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.BTC_PRICE_RISK);
+        assertNotNull(data);
+        assertEquals(TWO_ROWS, data.size());
+    }
+
+    @Test
+    void shouldBtcRiskPriceDataReturnMap() throws Exception {
+        final var data = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.BTC_RISK_PRICE);
+        assertNotNull(data);
+        assertEquals(FOUR_ROWS, data.size());
+    }
 
     @Test
     void shouldLplDataReturnMap() throws Exception {

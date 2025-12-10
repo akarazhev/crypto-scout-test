@@ -2,8 +2,8 @@
 
 Production-ready test support library for the `crypto-scout` ecosystem. It provides:
 
-- Bybit mock data fixtures accessible via a tiny Java API.
-- A Podman Compose manager to spin up and tear down TimescaleDB (PostgreSQL) and RabbitMQ (Streams) services for
+- Mock data fixtures (Bybit, CoinMarketCap, crypto-scout internal) accessible via a typed Java API.
+- A Podman Compose manager to spin up and tear down TimescaleDB (PostgreSQL) and RabbitMQ (Streams + AMQP) services for
   integration tests.
 
 Use this library as a `test`-scope dependency to enable deterministic market data samples and a reproducible database
@@ -14,22 +14,27 @@ fail-fast errors, clear defaults, and repeatable test setup.
 
 ## Features
 
-- **Bybit mock data API** (`com.github.akarazhev.cryptoscout.test.MockData`)
+- **Mock data API** (`com.github.akarazhev.cryptoscout.test.MockData`)
     - Typed access to bundled JSON fixtures.
-    - Sources (`MockData.Source`): `CMC_PARSER`, `BYBIT_PARSER`, `BYBIT_SPOT`, `BYBIT_TA_SPOT`, `BYBIT_LINEAR`,
-      `BYBIT_TA_LINEAR`.
+    - Sources (`MockData.Source`): `CRYPTO_SCOUT`, `BYBIT_SPOT`, `BYBIT_LINEAR`.
     - Supported types (`MockData.Type`):
-      `FGI`, `LPL`, `KLINE_1`, `KLINE_5`, `KLINE_15`, `KLINE_60`, `KLINE_240`, `KLINE_D`,
-      `TICKERS`, `PUBLIC_TRADE`, `ORDER_BOOK_1`, `ORDER_BOOK_50`, `ORDER_BOOK_200`, `ORDER_BOOK_1000`,
-      `ALL_LIQUIDATION`.
+      `BTC_PRICE_RISK`, `BTC_RISK_PRICE`, `FGI`, `LPL`, `KLINE_1`, `KLINE_5`, `KLINE_15`, `KLINE_60`, `KLINE_240`,
+      `KLINE_D`, `KLINE_W`, `TICKERS`, `PUBLIC_TRADE`, `ORDER_BOOK_1`, `ORDER_BOOK_50`, `ORDER_BOOK_200`,
+      `ORDER_BOOK_1000`, `ALL_LIQUIDATION`.
 - **Podman Compose manager** (`com.github.akarazhev.cryptoscout.test.PodmanCompose`)
     - `up()` starts the services defined in `src/main/resources/podman/podman-compose.yml` and waits until they are
-      ready: TimescaleDB (PostgreSQL) and RabbitMQ (with Streams enabled).
+      ready: TimescaleDB (PostgreSQL) and RabbitMQ (with Streams and AMQP enabled).
     - `down()` stops and removes the containers and waits until they are gone.
 - **RabbitMQ Streams test utilities** (`com.github.akarazhev.cryptoscout.test.StreamTestPublisher`,
   `com.github.akarazhev.cryptoscout.test.StreamTestConsumer`)
-    - Lightweight helpers to publish/consume JSON payloads during integration tests.
+    - Lightweight helpers to publish/consume JSON payloads via RabbitMQ Streams protocol during integration tests.
     - Built on `com.rabbitmq:stream-client` and intended to work with the Streams service started by `PodmanCompose`.
+- **RabbitMQ AMQP test utilities** (`com.github.akarazhev.cryptoscout.test.AmqpTestPublisher`,
+  `com.github.akarazhev.cryptoscout.test.AmqpTestConsumer`)
+    - Lightweight helpers to publish/consume JSON messages via standard AMQP protocol.
+    - Built on `com.rabbitmq:amqp-client` for traditional queue-based messaging tests.
+- **Database utilities** (`com.github.akarazhev.cryptoscout.test.DBUtils`)
+    - Helper methods for database operations in tests (e.g., `deleteFromTables`).
 - **Robust defaults and configurability** via system properties (see Configuration).
 
 ## Requirements
@@ -84,11 +89,13 @@ to pin a different version, add `org.postgresql:postgresql` to your test scope e
 import com.github.akarazhev.cryptoscout.test.MockData;
 
 // Load SPOT 1m klines
-var data = MockData.get(
-        MockData.Source.BYBIT_SPOT,
-        MockData.Type.KLINE_1
-);
-// "data" is a Map<String, Object> parsed from the bundled JSON fixture
+var spotKlines = MockData.get(MockData.Source.BYBIT_SPOT, MockData.Type.KLINE_1);
+// Load LINEAR tickers
+var linearTickers = MockData.get(MockData.Source.BYBIT_LINEAR, MockData.Type.TICKERS);
+// Load crypto-scout FGI (Fear & Greed Index)
+var fgi = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.FGI);
+// Load crypto-scout BTC price risk data
+var btcPriceRisk = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.BTC_PRICE_RISK);
 ```
 
 ### Podman Compose lifecycle in tests
@@ -126,7 +133,7 @@ All settings are provided via system properties (see `Constants.PodmanCompose`):
 - `test.mq.port` (default: `5552`)
 - `test.mq.user` (default: `crypto_scout_mq`)
 - `test.mq.password` (default: `crypto_scout_mq`)
-- `test.mq.stream` (default: `bybit-crypto-stream`)
+- `test.mq.stream` (default: `bybit-stream`)
 - `podman.compose.up.timeout.min` (default: `3`)
 - `podman.compose.down.timeout.min` (default: `1`)
 - `podman.compose.ready.interval.sec` (default: `2`)
@@ -137,35 +144,29 @@ Example:
 mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://localhost:5432/crypto_scout test
 ```
 
-## RabbitMQ management UI
+## RabbitMQ
 
-- **URL**: http://127.0.0.1:15672
 - **Credentials**: use `test.mq.user` / `test.mq.password` (defaults: `crypto_scout_mq` / `crypto_scout_mq`).
-- **Streams**: Stream protocol on `localhost:5552` (configurable via `test.mq.port`).
+- **Streams protocol**: `localhost:5552` (configurable via `test.mq.port`).
+- **AMQP protocol**: `localhost:5672` (standard AMQP port).
 
 ## Packaged resources
 
+- `src/main/resources/crypto-scout/`
+    - `btcPriceRisk.json`, `btcRiskPrice.json`, `fgi.json`, `kline.D.json`, `kline.W.json`, `lpl.json`
 - `src/main/resources/bybit-spot/`
     - `kline.1.json`, `kline.5.json`, `kline.15.json`, `kline.60.json`, `kline.240.json`, `kline.D.json`
-    - `tickers.json`
+    - `tickers.json`, `publicTrade.json`
+    - `orderbook.1.json`, `orderbook.50.json`, `orderbook.200.json`, `orderbook.1000.json`
 - `src/main/resources/bybit-linear/`
     - `kline.1.json`, `kline.5.json`, `kline.15.json`, `kline.60.json`, `kline.240.json`, `kline.D.json`
-    - `tickers.json`
-- `src/main/resources/bybit-ta-spot/`
-    - `orderbook.1.json`, `orderbook.50.json`, `orderbook.200.json`, `orderbook.1000.json`, `publicTrade.json`
-- `src/main/resources/bybit-ta-linear/`
-    - `orderbook.1.json`, `orderbook.50.json`, `orderbook.200.json`, `orderbook.1000.json`, `publicTrade.json`,
-      `allLiquidation.json`
-- `src/main/resources/cmc-parser/`
-    - `fgi.json`
-- `src/main/resources/bybit-parser/`
-    - `lpl.json`
+    - `tickers.json`, `publicTrade.json`, `allLiquidation.json`
+    - `orderbook.1.json`, `orderbook.50.json`, `orderbook.200.json`, `orderbook.1000.json`
 - `src/main/resources/podman/podman-compose.yml`
-    - Services: TimescaleDB PG17 (`crypto-scout-collector-db`, port `5432`) and RabbitMQ 4.x (`crypto-scout-mq`, ports
-      `5672`, `5552`, `15672`, `15692`).
+    - Services: TimescaleDB PG17 (`crypto-scout-collector-db`, port `5432`) and RabbitMQ 4.1.4 (`crypto-scout-mq`, ports
+      `5672`, `5552`).
 - `src/main/resources/podman/script/`
-    - `init.sql`, `bybit_spot_tables.sql`, `bybit_ta_spot_tables.sql`, `bybit_linear_tables.sql`,
-      `bybit_ta_linear_tables.sql`, `cmc_parser_tables.sql`, `bybit_parser_tables.sql`
+    - `init.sql`, `bybit_spot_tables.sql`, `bybit_linear_tables.sql`, `crypto_scout_tables.sql`
 - `src/main/resources/podman/rabbitmq/`
     - `enabled_plugins`, `rabbitmq.conf`, `definitions.json`
 

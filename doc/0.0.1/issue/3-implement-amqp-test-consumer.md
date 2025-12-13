@@ -12,7 +12,7 @@ Take the following roles:
 ## Conditions
 
 - Use the best practices and design patterns.
-- Use the current technological stack, that's: `ActiveJ 6.0`, `Java 25`, `maven 3.9.1`, `podman 5.6.2`,
+- Use the current technological stack, that's: `ActiveJ 6.0`, `Java 25`, `maven 3.9.1`, `podman 5.7.0`,
   `podman-compose 1.5.0`, `timescale/timescaledb:latest-pg17`, `JUnit 6.0.1`, `Amqp Client 5.27.1`.
 - Rely on the `sample` section. Use implementation of the `StreamTestConsumer` service as an example how to implement
   the `AmqpTestConsumer` service that consumes messages from a RabbitMQ queue.

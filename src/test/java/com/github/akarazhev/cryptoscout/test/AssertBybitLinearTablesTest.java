@@ -76,7 +76,7 @@ final class AssertBybitLinearTablesTest {
     }
 
     @Test
-    void shouldBybitLinearKline6ZERO_ROWSmTableCountReturnZero() throws Exception {
+    void shouldBybitLinearKline60mTableCountReturnZero() throws Exception {
         Assertions.assertTableCount(BYBIT_LINEAR_KLINE_60M, ZERO_ROWS);
     }
 

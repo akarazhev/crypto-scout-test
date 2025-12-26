@@ -80,13 +80,14 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
 
                 final DeliverCallback deliver = (_, delivery) -> {
                     try {
-                        message.set((Message<?>) JsonUtils.bytes2Object(delivery.getBody(), Message.class));
+                        final var msg = (Message<?>) JsonUtils.bytes2Object(delivery.getBody(), Message.class);
                         channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+                        message.set(msg);
                     } catch (final Exception e) {
                         try {
                             channel.basicNack(delivery.getEnvelope().getDeliveryTag(), false, false);
                         } catch (final IOException ex) {
-                            LOGGER.debug("Error cancelling AMQP consumer", ex);
+                            LOGGER.debug("Error nacking AMQP message", ex);
                         }
 
                         message.setException(e);

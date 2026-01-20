@@ -95,7 +95,7 @@ services:
       - "./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro"
     environment:
       TZ: UTC
-      RABBITMQ_ERLANG_COOKIE: CRYPTO_SCOUT_MQ_COOKIE_2025
+      RABBITMQ_ERLANG_COOKIE: CRYPTO_SCOUT_MQ_COOKIE_2026
     cpus: "2.0"
     user: "rabbitmq:rabbitmq"
     mem_limit: "1g"

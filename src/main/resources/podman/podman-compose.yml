@@ -1,17 +1,20 @@
+# Podman Compose configuration optimized for test environments
+# Resource limits are reduced for faster startup and lower resource consumption
+# Restart policy is set to "no" to ensure clean teardown after tests
 version: "3.9"
 
 services:
   crypto-scout-collector-db:
     image: timescale/timescaledb:latest-pg17
     container_name: crypto-scout-collector-db
-    cpus: "2.00"
-    mem_limit: "8g"
-    mem_reservation: "4g"
-    shm_size: "512m"
+    cpus: "1.00"
+    mem_limit: "2g"
+    mem_reservation: "1g"
+    shm_size: "256m"
     ulimits:
       nofile:
-        soft: 262144
-        hard: 262144
+        soft: 65536
+        hard: 65536
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
@@ -38,11 +41,11 @@ services:
       - -c
       - max_connections=50
       - -c
-      - shared_buffers=256MB
+      - shared_buffers=128MB
       - -c
-      - effective_cache_size=512MB
+      - effective_cache_size=256MB
       - -c
-      - maintenance_work_mem=128MB
+      - maintenance_work_mem=64MB
       - -c
       - work_mem=4MB
       - -c
@@ -50,11 +53,11 @@ services:
       - -c
       - wal_level=replica
       - -c
-      - max_wal_size=8GB
+      - max_wal_size=1GB
       - -c
-      - min_wal_size=2GB
+      - min_wal_size=256MB
       - -c
-      - checkpoint_timeout=15min
+      - checkpoint_timeout=5min
       - -c
       - checkpoint_completion_target=0.9
       - -c
@@ -62,9 +65,9 @@ services:
       - -c
       - timezone=UTC
       - -c
-      - log_min_duration_statement=500ms
+      - log_min_duration_statement=-1
       - -c
-      - log_checkpoints=on
+      - log_checkpoints=off
       - -c
       - timescaledb.telemetry_level=off
       - -c
@@ -72,15 +75,15 @@ services:
       - -c
       - pg_stat_statements.max=10000
       - -c
-      - timescaledb.max_background_workers=16
+      - timescaledb.max_background_workers=64
       - -c
-      - max_worker_processes=32
+      - max_worker_processes=80
       - -c
       - track_io_timing=on
       - -c
       - track_functions=pl
-    restart: unless-stopped
-    stop_grace_period: 1m
+    restart: "no"
+    stop_grace_period: 30s
 
   crypto-scout-mq:
     image: rabbitmq:4.1.4-management
@@ -96,26 +99,26 @@ services:
     environment:
       TZ: UTC
       RABBITMQ_ERLANG_COOKIE: CRYPTO_SCOUT_MQ_COOKIE_2026
-    cpus: "2.0"
+    cpus: "1.0"
     user: "rabbitmq:rabbitmq"
-    mem_limit: "1g"
-    mem_reservation: "512m"
+    mem_limit: "512m"
+    mem_reservation: "256m"
     healthcheck:
       test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
-    restart: unless-stopped
+    restart: "no"
     security_opt:
       - no-new-privileges=true
     init: true
-    pids_limit: 1024
+    pids_limit: 512
     stop_signal: SIGTERM
     tmpfs:
-      - /tmp:rw,size=64m,mode=1777,nodev,nosuid
+      - /tmp:rw,size=32m,mode=1777,nodev,nosuid
     ulimits:
       nofile:
-        soft: 65536
-        hard: 65536
-    stop_grace_period: 1m
+        soft: 32768
+        hard: 32768
+    stop_grace_period: 30s

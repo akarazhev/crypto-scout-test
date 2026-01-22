@@ -156,6 +156,7 @@ final class Constants {
         static final String COMPOSE_FILE_LOCATION = "podman";
         static final String COMPOSE_FILE_NAME = "podman-compose.yml";
         static final String DB_CONTAINER_NAME = "crypto-scout-collector-db";
+        static final String MQ_CONTAINER_NAME = "crypto-scout-mq";
         // Podman settings
         static final String PODMAN_COMPOSE_CMD = System.getProperty("podman.compose.cmd", "podman-compose");
         static final String PODMAN_CMD = System.getProperty("podman.cmd", "podman");
@@ -188,6 +189,7 @@ final class Constants {
         static final String FILE_ARG = "-f";
         static final String UP_CMD = "up";
         static final String DOWN_CMD = "down";
+        static final String DOWN_VOLUMES_ARG = "-v";
         static final String DETACHED_ARG = "-d";
         // Podman ps invocation
         static final String PS_CMD = "ps";

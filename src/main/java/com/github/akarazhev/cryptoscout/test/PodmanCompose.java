@@ -27,7 +27,6 @@ package com.github.akarazhev.cryptoscout.test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,6 +50,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.COMP
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DB_CONTAINER_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DETACHED_ARG;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DOWN_CMD;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DOWN_VOLUMES_ARG;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.DOWN_TIMEOUT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_CMD_FAILED_MIDDLE;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_CMD_FAILED_PREFIX;
@@ -77,6 +77,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_P
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_PORT;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_STREAM;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_USER;
+import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.MQ_CONTAINER_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.OUTPUT_THREAD_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_CMD;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.PODMAN_COMPOSE_CMD;
@@ -143,10 +144,11 @@ public final class PodmanCompose {
     }
 
     public static void down() {
-        // Stop and remove containers
-        runCommand(COMPOSE_DIR, DOWN_TIMEOUT, PODMAN_COMPOSE_CMD, FILE_ARG, COMPOSE_FILE_NAME, DOWN_CMD);
-        // Wait until DB container is removed
+        // Stop and remove containers + volumes (prevents stale DB state across test runs)
+        runCommand(COMPOSE_DIR, DOWN_TIMEOUT, PODMAN_COMPOSE_CMD, FILE_ARG, COMPOSE_FILE_NAME, DOWN_CMD, DOWN_VOLUMES_ARG);
+        // Wait until containers are removed
         waitForContainerRemoval(DB_CONTAINER_NAME, DOWN_TIMEOUT);
+        waitForContainerRemoval(MQ_CONTAINER_NAME, DOWN_TIMEOUT);
     }
 
     private static void waitForDatabaseReady(final Duration timeout) {
@@ -180,38 +182,25 @@ public final class PodmanCompose {
     }
 
     private static boolean canConnectToDb() {
-        return isReachable(JDBC_HOST, READY_RETRY_INTERVAL) && DBUtils.canConnect();
+        return DBUtils.canConnect();
     }
 
     private static boolean canConnectToMq() {
-        if (isReachable(MQ_HOST, READY_RETRY_INTERVAL)) {
-            try (final var environment = Environment.builder()
-                    .host(MQ_HOST)
-                    .port(MQ_PORT)
-                    .username(MQ_USER)
-                    .password(MQ_PASSWORD)
-                    .build();
-                 final var _ = environment.producerBuilder()
-                         .name(MQ_STREAM)
-                         .stream(MQ_STREAM)
-                         .build()) {
-                LOGGER.info("Connected to RabbitMQ: {}", environment);
-                return true;
-            } catch (final Exception e) {
-                return false;
-            }
+        try (final var environment = Environment.builder()
+                .host(MQ_HOST)
+                .port(MQ_PORT)
+                .username(MQ_USER)
+                .password(MQ_PASSWORD)
+                .build();
+             final var _ = environment.producerBuilder()
+                     .name(MQ_STREAM)
+                     .stream(MQ_STREAM)
+                     .build()) {
+            LOGGER.info("Connected to RabbitMQ: {}", environment);
+            return true;
+        } catch (final Exception e) {
+            return false;
         }
-
-        return true;
-    }
-
-    private static boolean isReachable(final String host, final Duration duration) {
-        try {
-            return InetAddress.getByName(host).isReachable((int) duration.toMillis());
-        } catch (final IOException _) {
-        }
-
-        return false;
     }
 
     private static void waitForContainerRemoval(final String containerName, final Duration timeout) {

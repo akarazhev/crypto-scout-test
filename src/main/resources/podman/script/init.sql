@@ -1,3 +1,10 @@
+-- Override TimescaleDB auto-tuning worker settings early
+-- This ensures we have enough background workers for all policies
+-- These settings will be written to postgresql.auto.conf and take precedence
+-- Values are reduced from production settings to match test resource limits
+ALTER SYSTEM SET timescaledb.max_background_workers = 64;
+ALTER SYSTEM SET max_worker_processes = 80;
+
 -- Ensure required extensions are installed in the target database
 CREATE EXTENSION IF NOT EXISTS timescaledb;
 CREATE EXTENSION IF NOT EXISTS pg_stat_statements;

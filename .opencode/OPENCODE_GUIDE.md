@@ -186,7 +186,7 @@ compatibility: opencode
 ### Override Model
 Add `model` to agent frontmatter:
 ```yaml
-model: z-ai/glm-4.7
+model: zai/glm-4.7
 ```
 
 ## Best Practices

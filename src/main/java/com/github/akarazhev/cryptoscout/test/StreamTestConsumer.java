@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 public final class StreamTestConsumer extends AbstractReactive implements ReactiveService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(StreamTestConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StreamTestConsumer.class);
     private final Executor executor;
     private final Environment environment;
     private final String stream;

@@ -82,12 +82,20 @@ final class StreamConsumerPublisherTest {
 
     @AfterAll
     static void cleanup() {
-        reactor.post(() -> consumer.stop()
-                .whenComplete(() -> publisher.stop()
-                        .whenComplete(() -> reactor.breakEventloop())));
-        reactor.run();
-        environment.close();
-        executor.shutdown();
-        PodmanCompose.down();
+        try {
+            reactor.post(() -> consumer.stop()
+                    .whenComplete(() -> publisher.stop()
+                            .whenComplete(() -> reactor.breakEventloop())));
+            reactor.run();
+        } finally {
+            try {
+                environment.close();
+            } catch (final Exception e) {
+                System.err.println("Failed to close environment: " + e.getMessage());
+            } finally {
+                executor.shutdown();
+                PodmanCompose.down();
+            }
+        }
     }
 }

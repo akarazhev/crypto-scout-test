@@ -45,8 +45,12 @@ import java.util.concurrent.Executor;
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.CONSUMER_CLIENT_NAME;
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.PREFETCH_COUNT;
 
+/**
+ * Test consumer for AMQP messages. This consumer processes exactly one message
+ * per test and automatically cancels the subscription after message delivery.
+ */
 public final class AmqpTestConsumer extends AbstractReactive implements ReactiveService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(AmqpTestConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AmqpTestConsumer.class);
     private final Executor executor;
     private final ConnectionFactory connectionFactory;
     private final String queue;
@@ -95,8 +99,8 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
                         if (consumerTag != null && channel.isOpen()) {
                             try {
                                 channel.basicCancel(consumerTag);
-                            } catch (final Exception ex) {
-                                LOGGER.debug("Error cancelling AMQP consumer", ex);
+                            } catch (final Exception e) {
+                                LOGGER.debug("Error cancelling AMQP consumer", e);
                             }
                         }
                     }
@@ -104,9 +108,9 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
 
                 final CancelCallback cancel = tag -> LOGGER.debug("AMQP consumer cancelled: {}", tag);
                 consumerTag = channel.basicConsume(queue, false, deliver, cancel);
-            } catch (final Exception ex) {
-                LOGGER.error("Failed to start AmqpTestConsumer", ex);
-                throw new RuntimeException(ex);
+            } catch (final Exception e) {
+                LOGGER.error("Failed to start AmqpTestConsumer", e);
+                throw new IllegalStateException("Failed to start AmqpTestConsumer", e);
             }
         });
     }
@@ -125,23 +129,23 @@ public final class AmqpTestConsumer extends AbstractReactive implements Reactive
                             channel.basicCancel(consumerTag);
                             consumerTag = null;
                         }
-                    } catch (final Exception ex) {
-                        LOGGER.debug("Error cancelling AMQP consumer on stop", ex);
+                    } catch (final Exception e) {
+                        LOGGER.debug("Error cancelling AMQP consumer on stop", e);
                     }
 
                     channel.close();
                     channel = null;
                 }
-            } catch (final Exception ex) {
-                LOGGER.warn("Error closing AMQP channel", ex);
+            } catch (final Exception e) {
+                LOGGER.warn("Error closing AMQP channel", e);
             } finally {
                 try {
                     if (connection != null) {
                         connection.close();
                         connection = null;
                     }
-                } catch (final Exception ex) {
-                    LOGGER.warn("Error closing AMQP connection", ex);
+                } catch (final Exception e) {
+                    LOGGER.warn("Error closing AMQP connection", e);
                 }
 
                 message = null;

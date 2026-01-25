@@ -38,26 +38,45 @@ import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_URL;
 import static com.github.akarazhev.cryptoscout.test.Constants.DB.SELECT_ONE;
 
 public class DBUtils {
+    private DBUtils() {
+        throw new UnsupportedOperationException("Utility class");
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DBUtils.class);
 
+    /**
+     * Checks if a database connection can be established.
+     *
+     * @return true if connection succeeds, false otherwise
+     */
     static boolean canConnect() {
         try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
              final var st = conn.createStatement(); final var rs = st.executeQuery(SELECT_ONE)) {
             LOGGER.info("Connected to DB: {}", conn.getClientInfo());
             return rs.next();
         } catch (final SQLException e) {
+            LOGGER.warn("Failed to connect to database: {}", e.getMessage());
             return false;
         }
     }
 
-    public static void deleteFromTables(final DataSource dataSource, final String... tables) {
+    /**
+     * Deletes all rows from the specified database tables.
+     *
+     * @param dataSource the data source to use for connection
+     * @param tables the table names to delete from
+     * @return true if all deletions succeeded, false otherwise
+     */
+    public static boolean deleteFromTables(final DataSource dataSource, final String... tables) {
         try (final var conn = dataSource.getConnection();
              final var st = conn.createStatement()) {
             for (final var table : tables) {
                 st.execute(String.format(DELETE_FROM_TABLE, table));
             }
+            return true;
         } catch (final SQLException e) {
             LOGGER.error("Failed to delete tables", e);
+            return false;
         }
     }
 }

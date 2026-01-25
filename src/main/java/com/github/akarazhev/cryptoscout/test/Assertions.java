@@ -36,8 +36,21 @@ import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.ERR_
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Test assertion helpers for database state verification.
+ */
 public final class Assertions {
+    private Assertions() {
+        throw new UnsupportedOperationException("Utility class");
+    }
 
+    /**
+     * Asserts that a table contains exactly the specified number of rows.
+     *
+     * @param table the table to check
+     * @param expected the expected row count
+     * @throws SQLException if the query fails
+     */
     public static void assertTableCount(final String table, final long expected) throws SQLException {
         try (final var c = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
              final var rs = c.createStatement().executeQuery(String.format(SELECT_COUNT, table))) {

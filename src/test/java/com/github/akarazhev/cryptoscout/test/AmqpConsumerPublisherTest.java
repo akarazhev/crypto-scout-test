@@ -83,7 +83,7 @@ final class AmqpConsumerPublisherTest {
         assertEquals(METHOD, message.command().method());
         assertNotNull(message.value());
         assertEquals(data, message.value());
-        TestUtils.await(consumer.stop());
+        // Consumer cleanup handled in @AfterAll
     }
 
     @AfterAll

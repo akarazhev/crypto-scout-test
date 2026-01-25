@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.concurrent.Executor;
 
 public final class StreamTestPublisher extends AbstractReactive implements ReactiveService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(StreamTestPublisher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StreamTestPublisher.class);
     private final Executor executor;
     private final Environment environment;
     private final String stream;
@@ -97,6 +97,7 @@ public final class StreamTestPublisher extends AbstractReactive implements React
                 });
             } catch (final Exception ex) {
                 LOGGER.error("Failed to publish payload to stream: {}", ex.getMessage(), ex);
+                throw new IllegalStateException("Failed to publish payload to stream", ex);
             }
         });
     }

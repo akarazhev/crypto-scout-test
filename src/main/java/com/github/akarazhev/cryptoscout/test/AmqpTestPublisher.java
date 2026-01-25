@@ -44,7 +44,7 @@ import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.DELIVERY_MODE
 import static com.github.akarazhev.cryptoscout.test.Constants.Amqp.PUBLISHER_CLIENT_NAME;
 
 public final class AmqpTestPublisher extends AbstractReactive implements ReactiveService {
-    private final static Logger LOGGER = LoggerFactory.getLogger(AmqpTestPublisher.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AmqpTestPublisher.class);
     private final Executor executor;
     private final ConnectionFactory connectionFactory;
     private final String queue;
@@ -73,9 +73,9 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
                 channel.confirmSelect();
                 // Ensure the queue exists (will throw if it doesn't)
                 channel.queueDeclarePassive(queue);
-            } catch (final Exception ex) {
-                LOGGER.error("Failed to start AmqpTestPublisher", ex);
-                throw new RuntimeException(ex);
+            } catch (final Exception e) {
+                LOGGER.error("Failed to start AmqpTestPublisher", e);
+                throw new IllegalStateException("Failed to start AmqpTestPublisher", e);
             }
         });
     }
@@ -88,16 +88,16 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
                     channel.close();
                     channel = null;
                 }
-            } catch (final Exception ex) {
-                LOGGER.warn("Error closing AMQP channel", ex);
+            } catch (final Exception e) {
+                LOGGER.warn("Error closing AMQP channel", e);
             } finally {
                 try {
                     if (connection != null) {
                         connection.close();
                         connection = null;
                     }
-                } catch (final Exception ex) {
-                    LOGGER.warn("Error closing AMQP connection", ex);
+                } catch (final Exception e) {
+                    LOGGER.warn("Error closing AMQP connection", e);
                 }
             }
         });
@@ -116,9 +116,9 @@ public final class AmqpTestPublisher extends AbstractReactive implements Reactiv
                         .build();
                 channel.basicPublish(exchange, routingKey, props, JsonUtils.object2Bytes(message));
                 channel.waitForConfirmsOrDie();
-            } catch (final Exception ex) {
-                LOGGER.error("Failed to publish payload to AMQP queue {}: {}", queue, ex.getMessage(), ex);
-                throw new RuntimeException(ex);
+            } catch (final Exception e) {
+                LOGGER.error("Failed to publish payload to AMQP queue {}: {}", queue, e.getMessage(), e);
+                throw new IllegalStateException("Failed to publish payload to AMQP queue: " + queue, e);
             }
         });
     }

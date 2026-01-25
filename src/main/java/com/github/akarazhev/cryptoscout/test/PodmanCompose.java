@@ -272,12 +272,11 @@ public final class PodmanCompose {
             }
 
             return out.toString();
-        } catch (final IOException | InterruptedException e) {
-            if (e instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            }
-
+        } catch (final IOException e) {
             throw new IllegalStateException(ERR_RUN_CMD_PREFIX + String.join(" ", command), e);
+        } catch (final InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while running command: " + String.join(" ", command), e);
         }
     }
 
@@ -315,9 +314,10 @@ public final class PodmanCompose {
     private static void copyScript(final Path scriptDir, final String scriptName) throws IOException {
         final var scriptPath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + SCRIPT_DIR_NAME + PATH_SEPARATOR + scriptName;
         try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(scriptPath)) {
-            if (is != null) {
-                Files.copy(is, scriptDir.resolve(scriptName), StandardCopyOption.REPLACE_EXISTING);
+            if (is == null) {
+                throw new IllegalStateException("Required script not found: " + scriptPath);
             }
+            Files.copy(is, scriptDir.resolve(scriptName), StandardCopyOption.REPLACE_EXISTING);
         }
     }
 

@@ -81,6 +81,14 @@ public final class MockData {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Returns mock data for the specified source and type.
+     *
+     * @param source the data source (e.g., BYBIT_SPOT, COIN_MARKET_CAP)
+     * @param type the data type (e.g., KLINE_1)
+     * @return a Map containing the mock data
+     * @throws Exception if the requested data is not found or cannot be read
+     */
     public static Map<String, Object> get(final Source source, final Type type) throws Exception {
         try (final var is = MockData.class.getClassLoader().getResourceAsStream(type.getPath(source))) {
             if (is == null) {

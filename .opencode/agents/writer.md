@@ -1,7 +1,7 @@
 ---
 description: Creates and maintains technical documentation for the crypto-scout-test library
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: z-ai/glm-4.7
 temperature: 0.3
 tools:
   write: true

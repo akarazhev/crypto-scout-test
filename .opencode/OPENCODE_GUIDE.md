@@ -186,7 +186,7 @@ compatibility: opencode
 ### Override Model
 Add `model` to agent frontmatter:
 ```yaml
-model: anthropic/claude-sonnet-4-20250514
+model: z-ai/glm-4.7
 ```
 
 ## Best Practices

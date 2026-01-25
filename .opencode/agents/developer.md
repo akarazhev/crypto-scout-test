@@ -1,7 +1,7 @@
 ---
 description: Develops and maintains Java 25 test utilities for the crypto-scout ecosystem
 mode: primary
-model: anthropic/claude-sonnet-4-20250514
+model: z-ai/glm-4.7
 temperature: 0.2
 tools:
   write: true

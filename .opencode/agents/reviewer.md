@@ -1,7 +1,7 @@
 ---
 description: Reviews Java code for quality, security, and adherence to crypto-scout-test conventions
 mode: subagent
-model: zai/glm-4.7
+model: zai-coding-plan/glm-4.7
 temperature: 0.1
 tools:
   write: false

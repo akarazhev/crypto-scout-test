@@ -1,7 +1,7 @@
 ---
 description: Creates and maintains technical documentation for the crypto-scout-test library
 mode: subagent
-model: zai/glm-4.7
+model: zai-coding-plan/glm-4.7
 temperature: 0.3
 tools:
   write: true

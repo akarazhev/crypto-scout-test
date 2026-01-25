@@ -1,13 +1,11 @@
 # Podman Compose configuration optimized for test environments
 # Resource limits are reduced for faster startup and lower resource consumption
 # Restart policy is set to "no" to ensure clean teardown after tests
-version: "3.9"
-
 services:
   crypto-scout-collector-db:
     image: timescale/timescaledb:latest-pg17
     container_name: crypto-scout-collector-db
-    cpus: "1.00"
+    cpus: "1.0"
     mem_limit: "2g"
     mem_reservation: "1g"
     shm_size: "256m"

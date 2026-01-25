@@ -83,7 +83,7 @@ services:
       - -c
       - track_functions=pl
     restart: "no"
-    stop_graceful_period: 30s
+    stop_grace_period: 30s
 
   crypto-scout-mq:
     image: rabbitmq:4.1.4-management
@@ -121,4 +121,4 @@ services:
       nofile:
         soft: 32768
         hard: 32768
-    stop_graceful_period: 30s
+    stop_grace_period: 30s

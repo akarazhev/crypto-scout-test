@@ -55,7 +55,7 @@ public class DBUtils {
             LOGGER.info("Connected to DB: {}", conn.getClientInfo());
             return rs.next();
         } catch (final SQLException e) {
-            LOGGER.warn("Failed to connect to database: {}", e.getMessage());
+            LOGGER.debug("Database not ready yet: {}", e.getMessage());
             return false;
         }
     }

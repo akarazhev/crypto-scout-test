@@ -53,7 +53,8 @@ public final class Assertions {
      */
     public static void assertTableCount(final String table, final long expected) throws SQLException {
         try (final var c = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
-             final var rs = c.createStatement().executeQuery(String.format(SELECT_COUNT, table))) {
+             final var stmt = c.createStatement();
+             final var rs = stmt.executeQuery(String.format(SELECT_COUNT, table))) {
             assertTrue(rs.next());
             assertEquals(expected, rs.getLong(FIRST_ROW), ERR_TABLE_ROW_COUNT + table);
         }

@@ -200,8 +200,6 @@ mvn -q -Dpodman.compose.up.timeout.min=5 -Dtest.db.jdbc.url=jdbc:postgresql://lo
 The library is production-ready with comprehensive quality assurance:
 
 - **Last Verified**: January 25, 2026 - Complete project review confirmed documentation accuracy and alignment with current codebase.
-- **Code Review**: Comprehensive code review completed (commit `b3f76c5`) with 17 issues fixed across critical, major,
-  and minor severity levels. See `doc/0.0.1/code-review.md` for details.
 - **Test Coverage**: 100% test pass rate (65/65 tests) with comprehensive coverage of all public APIs.
 - **Exception Handling**: Proper exception propagation with `IllegalStateException` throughout. All publishers/consumers
   now throw exceptions on failure instead of swallowing them silently.
@@ -246,6 +244,5 @@ through code and tests.
 
 ## Documentation
 
-- **Code Review**: Comprehensive code review documentation is available at `doc/0.0.1/code-review.md`.
 - **API Documentation**: All public APIs include comprehensive Javadoc. Use your IDE's built-in documentation support.
 - **Development Guidelines**: See `AGENTS.md` for code style conventions, build commands, and testing patterns.

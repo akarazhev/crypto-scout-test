@@ -40,13 +40,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicReference;
 
 public final class StreamTestConsumer extends AbstractReactive implements ReactiveService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamTestConsumer.class);
     private final Executor executor;
     private final Environment environment;
     private final String stream;
-    private final SettablePromise<Payload<Map<String, Object>>> result = new SettablePromise<>();
+    private final AtomicReference<SettablePromise<Payload<Map<String, Object>>>> resultRef = new AtomicReference<>();
     private volatile Consumer consumer;
 
     public static StreamTestConsumer create(final NioReactor reactor, final Executor executor,
@@ -66,6 +67,10 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
     @Override
     public Promise<Void> start() {
         return Promise.ofBlocking(executor, () -> {
+            final var result = new SettablePromise<Payload<Map<String, Object>>>();
+            if (!resultRef.compareAndSet(null, result)) {
+                throw new IllegalStateException("Consumer already started");
+            }
             consumer = environment.consumerBuilder()
                     .name(stream)
                     .stream(stream)
@@ -73,10 +78,13 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
                     .manualTrackingStrategy().
                     builder()
                     .messageHandler((_, message) -> {
-                        try {
-                            result.set(JsonUtils.bytes2Object(message.getBodyAsBinary(), Payload.class));
-                        } catch (final IOException e) {
-                            result.setException(e);
+                        final var promise = resultRef.get();
+                        if (promise != null && !promise.isComplete()) {
+                            try {
+                                promise.set(JsonUtils.bytes2Object(message.getBodyAsBinary(), Payload.class));
+                            } catch (final IOException e) {
+                                promise.setException(e);
+                            }
                         }
                     })
                     .build();
@@ -84,6 +92,10 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
     }
 
     public Promise<Payload<Map<String, Object>>> getResult() {
+        final var result = resultRef.get();
+        if (result == null) {
+            return Promise.ofException(new IllegalStateException("Consumer not started"));
+        }
         return result;
     }
 
@@ -97,6 +109,8 @@ public final class StreamTestConsumer extends AbstractReactive implements Reacti
                 }
             } catch (final Exception ex) {
                 LOGGER.warn("Error closing stream consumer", ex);
+            } finally {
+                resultRef.set(null);
             }
         });
     }

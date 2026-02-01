@@ -41,7 +41,6 @@ import com.rabbitmq.stream.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.github.akarazhev.cryptoscout.test.Constants.DB.JDBC_HOST;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_LINEAR_TABLES_SQL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.BYBIT_SPOT_TABLES_SQL;
 import static com.github.akarazhev.cryptoscout.test.Constants.PodmanCompose.CRYPTO_SCOUT_TABLES_SQL;
@@ -252,7 +251,8 @@ public final class PodmanCompose {
                         out.append(line).append(System.lineSeparator());
                     }
 
-                } catch (final IOException _) {
+                } catch (final IOException e) {
+                    LOGGER.warn("Error reading process output", e);
                 }
             }, OUTPUT_THREAD_NAME);
             reader.setDaemon(true);
@@ -284,6 +284,7 @@ public final class PodmanCompose {
         try {
             // Create temp podman directory
             final var tempRoot = Files.createTempDirectory(TEMP_DIR_PREFIX);
+            registerCleanupHook(tempRoot);
             final var podmanTargetDir = tempRoot.resolve(COMPOSE_FILE_LOCATION);
             final var scriptDir = podmanTargetDir.resolve(SCRIPT_DIR_NAME);
             final var rabbitDir = podmanTargetDir.resolve(RABBITMQ_DIR_NAME);
@@ -311,6 +312,31 @@ public final class PodmanCompose {
         }
     }
 
+    private static void registerCleanupHook(final Path tempRoot) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                deleteDirectory(tempRoot);
+            } catch (final IOException e) {
+                LOGGER.warn("Failed to cleanup temp directory: {}", tempRoot, e);
+            }
+        }));
+    }
+
+    private static void deleteDirectory(final Path dir) throws IOException {
+        if (!Files.exists(dir)) {
+            return;
+        }
+        try (final var stream = Files.walk(dir)) {
+            stream.sorted((a, b) -> -a.compareTo(b)).forEach(path -> {
+                try {
+                    Files.delete(path);
+                } catch (final IOException e) {
+                    LOGGER.debug("Failed to delete: {}", path, e);
+                }
+            });
+        }
+    }
+
     private static void copyScript(final Path scriptDir, final String scriptName) throws IOException {
         final var scriptPath = COMPOSE_FILE_LOCATION + PATH_SEPARATOR + SCRIPT_DIR_NAME + PATH_SEPARATOR + scriptName;
         try (final var is = PodmanCompose.class.getClassLoader().getResourceAsStream(scriptPath)) {
@@ -335,8 +361,9 @@ public final class PodmanCompose {
     private static void sleep(final Duration duration) {
         try {
             Thread.sleep(Math.max(MIN_MILLIS, duration.toMillis()));
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             Thread.currentThread().interrupt();
+            LOGGER.warn("Sleep interrupted", e);
         }
     }
 }

@@ -37,13 +37,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicReference;
 
 public final class StreamTestPublisher extends AbstractReactive implements ReactiveService {
     private static final Logger LOGGER = LoggerFactory.getLogger(StreamTestPublisher.class);
     private final Executor executor;
     private final Environment environment;
     private final String stream;
-    private volatile Producer producer;
+    private final AtomicReference<Producer> producerRef = new AtomicReference<>();
 
     public static StreamTestPublisher create(final NioReactor reactor, final Executor executor,
                                              final Environment environment, final String stream) {
@@ -62,13 +63,17 @@ public final class StreamTestPublisher extends AbstractReactive implements React
     public Promise<Void> start() {
         return Promise.ofBlocking(executor, () -> {
             try {
-                producer = environment.producerBuilder()
+                final var producer = environment.producerBuilder()
                         .name(stream)
                         .stream(stream)
                         .build();
+                if (!producerRef.compareAndSet(null, producer)) {
+                    producer.close();
+                    throw new IllegalStateException("Publisher already started");
+                }
             } catch (final Exception ex) {
                 LOGGER.error("Failed to start StreamTestPublisher", ex);
-                throw new RuntimeException(ex);
+                throw new IllegalStateException("Failed to start StreamTestPublisher", ex);
             }
         });
     }
@@ -76,19 +81,23 @@ public final class StreamTestPublisher extends AbstractReactive implements React
     @Override
     public Promise<Void> stop() {
         return Promise.ofBlocking(executor, () -> {
-            try {
-                if (producer != null) {
+            final var producer = producerRef.getAndSet(null);
+            if (producer != null) {
+                try {
                     producer.close();
-                    producer = null;
+                } catch (final Exception ex) {
+                    LOGGER.warn("Error closing stream producer", ex);
                 }
-            } catch (final Exception ex) {
-                LOGGER.warn("Error closing stream producer", ex);
             }
         });
     }
 
     public Promise<Void> publish(final Payload<Map<String, Object>> payload) {
         return Promise.ofBlocking(executor, () -> {
+            final var producer = producerRef.get();
+            if (producer == null) {
+                throw new IllegalStateException("Publisher not started. Call start() before publish().");
+            }
             try {
                 final var message = producer.messageBuilder()
                         .addData(JsonUtils.object2Bytes(payload))

@@ -19,12 +19,46 @@ You are a senior Java developer specializing in test infrastructure for the cryp
 ## Project Context
 
 This is a **Java 25 Maven library** (`crypto-scout-test`) providing test support utilities:
-- **MockData**: Typed API for loading bundled JSON fixtures (Bybit spot/linear, CoinMarketCap)
+- **MockData**: Typed API for loading bundled JSON fixtures (Bybit Spot/Linear, Crypto Scout)
 - **PodmanCompose**: Container lifecycle management for TimescaleDB and RabbitMQ
 - **StreamTestPublisher/Consumer**: RabbitMQ Streams protocol helpers
 - **AmqpTestPublisher/Consumer**: Standard AMQP protocol helpers
 - **DBUtils**: Database operations (connection checks, table cleanup)
 - **Assertions**: Test assertion helpers for database state verification
+
+## Project Structure
+
+```
+src/main/java/.../test/
+├── Constants.java              # Configuration constants
+├── MockData.java               # Typed mock data loader (Source, Type enums)
+├── PodmanCompose.java          # Container lifecycle management
+├── DBUtils.java                # Database utilities
+├── StreamTestPublisher.java    # RabbitMQ Streams publisher
+├── StreamTestConsumer.java     # RabbitMQ Streams consumer
+├── AmqpTestPublisher.java      # AMQP publisher with confirmation
+└── AmqpTestConsumer.java       # AMQP consumer
+
+src/main/resources/
+├── bybit-spot/                 # 12 JSON mock files
+├── bybit-linear/               # 13 JSON mock files
+├── crypto-scout/               # 6 JSON mock files
+└── podman/                     # Container configuration
+    ├── podman-compose.yml
+    ├── script/                 # SQL initialization
+    └── rabbitmq/               # RabbitMQ config
+
+src/test/java/.../test/
+├── MockBybitSpotDataTest.java
+├── MockBybitLinearDataTest.java
+├── MockCryptoScoutDataTest.java
+├── StreamConsumerPublisherTest.java
+├── AmqpConsumerPublisherTest.java
+├── PodmanComposeTest.java
+├── AssertBybitSpotTablesTest.java
+├── AssertBybitLinearTablesTest.java
+└── AssertCryptoScoutTablesTest.java
+```
 
 ## Code Style Requirements
 
@@ -76,11 +110,22 @@ mvn test -Dtest=Class#method   # Run single test method
 ```
 
 ## Key Dependencies
-- `jcryptolib` (0.0.3): JSON utilities, Payload/Message types
-- `junit-jupiter` (6.0.1): Testing framework
+- `jcryptolib` (0.0.4): JSON utilities, Payload/Message types
+- `junit-jupiter` (6.1.0-M1): Testing framework
 - `stream-client` (1.4.0): RabbitMQ Streams
-- `amqp-client` (5.27.1): RabbitMQ AMQP
-- `postgresql` (42.7.8): JDBC driver
+- `amqp-client` (5.28.0): RabbitMQ AMQP
+- `postgresql` (42.7.9): JDBC driver
+
+## MockData Sources and Types
+
+**Sources:** `CRYPTO_SCOUT`, `BYBIT_SPOT`, `BYBIT_LINEAR`
+
+**Types:**
+- Timeframes: `KLINE_1`, `KLINE_5`, `KLINE_15`, `KLINE_60`, `KLINE_240`, `KLINE_D`, `KLINE_W`
+- Market data: `TICKERS`, `PUBLIC_TRADE`
+- Order books: `ORDER_BOOK_1`, `ORDER_BOOK_50`, `ORDER_BOOK_200`, `ORDER_BOOK_1000`
+- Linear only: `ALL_LIQUIDATION`
+- Crypto-scout: `FGI`, `LPL`, `BTC_PRICE_RISK`, `BTC_RISK_PRICE`
 
 ## Your Responsibilities
 1. Write clean, idiomatic Java 25 code following project conventions

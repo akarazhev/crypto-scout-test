@@ -13,6 +13,28 @@ metadata:
 
 Provide guidance for developing and maintaining the crypto-scout-test library, a Java 25 Maven library offering test support utilities.
 
+## Project Structure
+
+```
+crypto-scout-test/
+├── src/main/java/.../test/
+│   ├── Constants.java              # All configuration constants
+│   ├── MockData.java               # Typed mock data loader
+│   ├── PodmanCompose.java          # Container lifecycle
+│   ├── DBUtils.java                # Database utilities
+│   ├── StreamTestPublisher.java    # RabbitMQ Streams publisher
+│   ├── StreamTestConsumer.java     # RabbitMQ Streams consumer
+│   ├── AmqpTestPublisher.java      # AMQP publisher
+│   ├── AmqpTestConsumer.java       # AMQP consumer
+│   └── Assertions.java             # Test assertions
+├── src/main/resources/
+│   ├── bybit-spot/           # 12 JSON mock data files
+│   ├── bybit-linear/         # 13 JSON mock data files
+│   ├── crypto-scout/         # 6 JSON mock data files
+│   └── podman/               # Container configuration
+└── src/test/java/.../test/   # 9 test classes
+```
+
 ## Core Components
 
 ### MockData
@@ -27,7 +49,13 @@ var fgi = MockData.get(MockData.Source.CRYPTO_SCOUT, MockData.Type.FGI);
 ```
 
 **Sources**: `CRYPTO_SCOUT`, `BYBIT_SPOT`, `BYBIT_LINEAR`
-**Types**: `KLINE_1`, `KLINE_5`, `KLINE_15`, `KLINE_60`, `KLINE_240`, `KLINE_D`, `KLINE_W`, `TICKERS`, `PUBLIC_TRADE`, `ORDER_BOOK_1`, `ORDER_BOOK_50`, `ORDER_BOOK_200`, `ORDER_BOOK_1000`, `FGI`, `LPL`, `BTC_PRICE_RISK`, `BTC_RISK_PRICE`, `ALL_LIQUIDATION`
+
+**Types (17 total):**
+- Timeframes: `KLINE_1`, `KLINE_5`, `KLINE_15`, `KLINE_60`, `KLINE_240`, `KLINE_D`, `KLINE_W`
+- Market data: `TICKERS`, `PUBLIC_TRADE`
+- Order books: `ORDER_BOOK_1`, `ORDER_BOOK_50`, `ORDER_BOOK_200`, `ORDER_BOOK_1000`
+- Linear only: `ALL_LIQUIDATION`
+- Crypto-scout: `FGI`, `LPL`, `BTC_PRICE_RISK`, `BTC_RISK_PRICE`
 
 ### PodmanCompose
 Container lifecycle management:
@@ -43,7 +71,12 @@ static void tearDown() {
 }
 ```
 
+**Waits for:**
+- Database connectivity (port 5432)
+- RabbitMQ Streams (port 5552)
+
 ### RabbitMQ Utilities
+
 **Streams Protocol** (port 5552):
 - `StreamTestPublisher.create(reactor, executor, environment, stream)`
 - `StreamTestConsumer.create(reactor, executor, environment, stream)`
@@ -52,12 +85,21 @@ static void tearDown() {
 - `AmqpTestPublisher.create(reactor, executor, connectionFactory, queue)`
 - `AmqpTestConsumer.create(reactor, executor, connectionFactory, queue)`
 
+**Features:**
+- Thread-safe using `AtomicReference`
+- ActiveJ `ReactiveService` integration
+- Automatic connection/channel management
+- 5s confirmation timeout for AMQP publisher
+
 ### DBUtils
 ```java
 // Check connectivity
 DBUtils.canConnect();
+
 // Clean tables for test isolation
-DBUtils.deleteFromTables(dataSource, "crypto_scout.bybit_spot_tickers", "crypto_scout.bybit_spot_kline_1m");
+DBUtils.deleteFromTables(dataSource, 
+    "crypto_scout.bybit_spot_tickers", 
+    "crypto_scout.bybit_spot_kline_1m");
 ```
 
 ### Assertions
@@ -78,8 +120,29 @@ All settings via system properties:
 | `test.mq.port` | `5552` | RabbitMQ Streams port |
 | `test.mq.user` | `crypto_scout_mq` | RabbitMQ user |
 | `test.mq.password` | `crypto_scout_mq` | RabbitMQ password |
+| `podman.compose.cmd` | `podman-compose` | Podman Compose binary |
 | `podman.compose.up.timeout.min` | `3` | Container startup timeout |
 | `podman.compose.down.timeout.min` | `1` | Container shutdown timeout |
+| `podman.compose.ready.interval.sec` | `2` | Readiness check interval |
+
+## Resource Files
+
+Located in `src/main/resources/`:
+
+**Mock Data:**
+- `bybit-spot/` - 12 JSON files (klines, tickers, orderbooks, trades)
+- `bybit-linear/` - 13 JSON files (includes allLiquidation)
+- `crypto-scout/` - 6 JSON files (fgi, lpl, btc price/risk)
+
+**Podman Configuration:**
+- `podman/podman-compose.yml` - Service definitions
+- `podman/script/init.sql` - Database initialization
+- `podman/script/bybit_spot_tables.sql` - Spot table schemas
+- `podman/script/bybit_linear_tables.sql` - Linear table schemas
+- `podman/script/crypto_scout_tables.sql` - Crypto scout table schemas
+- `podman/rabbitmq/enabled_plugins` - RabbitMQ plugins
+- `podman/rabbitmq/rabbitmq.conf` - RabbitMQ configuration
+- `podman/rabbitmq/definitions.json` - RabbitMQ definitions
 
 ## When to Use Me
 

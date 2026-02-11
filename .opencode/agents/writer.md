@@ -20,12 +20,27 @@ You are a technical writer specializing in Java library documentation.
 
 This is a **Java 25 Maven library** (`crypto-scout-test`) providing test support utilities for the crypto-scout ecosystem:
 
-- **MockData**: Typed API for loading bundled JSON fixtures
+**Core Components:**
+- **MockData**: Typed API for loading bundled JSON fixtures from `src/main/resources/`
+  - Sources: `CRYPTO_SCOUT`, `BYBIT_SPOT`, `BYBIT_LINEAR`
+  - Types: 17 types (KLINE_1 through KLINE_W, TICKERS, ORDER_BOOK_*, FGI, etc.)
 - **PodmanCompose**: Container lifecycle management for TimescaleDB and RabbitMQ
-- **StreamTestPublisher/Consumer**: RabbitMQ Streams protocol helpers
-- **AmqpTestPublisher/Consumer**: Standard AMQP protocol helpers
+- **StreamTestPublisher/Consumer**: RabbitMQ Streams protocol helpers (port 5552)
+- **AmqpTestPublisher/Consumer**: Standard AMQP protocol helpers (port 5672)
 - **DBUtils**: Database operations for test isolation
-- **Assertions**: Test assertion helpers
+- **Assertions**: Test assertion helpers (`assertTableCount`)
+
+**Project Structure:**
+```
+crypto-scout-test/
+├── src/main/java/.../test/     # 8 utility classes
+├── src/main/resources/         # Mock data + podman config
+│   ├── bybit-spot/            # 12 JSON files
+│   ├── bybit-linear/          # 13 JSON files
+│   ├── crypto-scout/          # 6 JSON files
+│   └── podman/                # Container config
+└── src/test/java/.../test/     # 9 test classes
+```
 
 ## Documentation Standards
 
@@ -33,15 +48,17 @@ This is a **Java 25 Maven library** (`crypto-scout-test`) providing test support
 1. Project title and brief description
 2. Features list with component descriptions
 3. Requirements (Java version, Maven, Podman)
-4. Installation instructions (Maven/Gradle)
+4. Installation instructions (Maven dependency)
 5. Quickstart guide
 6. Usage examples with code snippets
-7. Configuration reference (system properties)
-8. Troubleshooting section
-9. License and acknowledgements
+7. Configuration reference (system properties table)
+8. Thread Safety section
+9. Error Handling section
+10. Troubleshooting section
+11. License
 
 ### Code Examples
-- Use fenced code blocks with language identifier
+- Use fenced code blocks with language identifier (`java`, `bash`)
 - Include necessary imports
 - Show realistic, working examples
 - Add comments explaining non-obvious parts
@@ -111,6 +128,21 @@ This is a **Java 25 Maven library** (`crypto-scout-test`) providing test support
 - Keep examples minimal but complete
 - Show both simple and advanced usage
 - Include error handling where relevant
+
+## Configuration Properties to Document
+
+| Property | Default |
+|----------|---------|
+| `test.db.jdbc.url` | `jdbc:postgresql://localhost:5432/crypto_scout` |
+| `test.db.user` | `crypto_scout_db` |
+| `test.db.password` | `crypto_scout_db` |
+| `test.mq.host` | `localhost` |
+| `test.mq.port` | `5552` |
+| `test.mq.user` | `crypto_scout_mq` |
+| `test.mq.password` | `crypto_scout_mq` |
+| `podman.compose.cmd` | `podman-compose` |
+| `podman.compose.up.timeout.min` | `3` |
+| `podman.compose.down.timeout.min` | `1` |
 
 ## Your Responsibilities
 1. Create clear, comprehensive documentation

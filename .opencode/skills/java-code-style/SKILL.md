@@ -43,12 +43,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 | Element | Convention | Example |
 |---------|------------|---------|
-| Classes | PascalCase | `StreamTestPublisher`, `MockData` |
-| Methods | camelCase with verb | `waitForDatabaseReady`, `deleteFromTables` |
-| Constants | UPPER_SNAKE_CASE | `JDBC_URL`, `DB_USER` |
+| Classes | PascalCase | `StreamTestPublisher`, `MockData`, `AmqpTestConsumer` |
+| Methods | camelCase with verb | `waitForDatabaseReady`, `deleteFromTables`, `canConnect` |
+| Constants | UPPER_SNAKE_CASE | `JDBC_URL`, `DB_USER`, `BYBIT_STREAM` |
 | Parameters/locals | `final var` | `final var timeout`, `final var data` |
-| Test classes | `<ClassName>Test` | `MockBybitSpotDataTest` |
-| Test methods | `should<Subject><Action>` | `shouldSpotKline1DataReturnMap` |
+| Test classes | `<ClassName>Test` | `MockBybitSpotDataTest`, `StreamConsumerPublisherTest` |
+| Test methods | `should<Subject><Action>` | `shouldSpotKline1DataReturnMap`, `shouldPublishPayloadToStream` |
 
 ## Access Modifiers
 
@@ -75,7 +75,9 @@ final class Constants {
 ```java
 public final class StreamTestPublisher extends AbstractReactive implements ReactiveService {
     private final Executor executor;
-    private volatile Producer producer;
+    private final Environment environment;
+    private final String stream;
+    private final AtomicReference<Producer> producerRef = new AtomicReference<>();
     
     public static StreamTestPublisher create(final NioReactor reactor, final Executor executor,
                                              final Environment environment, final String stream) {
@@ -86,7 +88,8 @@ public final class StreamTestPublisher extends AbstractReactive implements React
                                 final Environment environment, final String stream) {
         super(reactor);
         this.executor = executor;
-        // ...
+        this.environment = environment;
+        this.stream = stream;
     }
 }
 ```
@@ -111,7 +114,7 @@ try (final var conn = DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD
 // Interrupt handling
 try {
     Thread.sleep(duration.toMillis());
-} catch (InterruptedException e) {
+} catch (final InterruptedException e) {
     Thread.currentThread().interrupt();
 }
 
@@ -160,6 +163,19 @@ static final String VALUE = System.getProperty("property.key", "defaultValue");
 static final int PORT = Integer.parseInt(System.getProperty("port.key", "5552"));
 static final Duration TIMEOUT = Duration.ofMinutes(Long.getLong("timeout.key", 3L));
 ```
+
+## Key Project Classes
+
+| Class | Package | Purpose |
+|-------|---------|---------|
+| `MockData` | `com.github.akarazhev.cryptoscout.test` | Typed mock data loader with Source/Type enums |
+| `PodmanCompose` | `com.github.akarazhev.cryptoscout.test` | Container lifecycle management |
+| `DBUtils` | `com.github.akarazhev.cryptoscout.test` | Database utilities |
+| `StreamTestPublisher` | `com.github.akarazhev.cryptoscout.test` | RabbitMQ Streams publisher |
+| `StreamTestConsumer` | `com.github.akarazhev.cryptoscout.test` | RabbitMQ Streams consumer |
+| `AmqpTestPublisher` | `com.github.akarazhev.cryptoscout.test` | AMQP publisher |
+| `AmqpTestConsumer` | `com.github.akarazhev.cryptoscout.test` | AMQP consumer |
+| `Assertions` | `com.github.akarazhev.cryptoscout.test` | Test assertions |
 
 ## When to Use Me
 

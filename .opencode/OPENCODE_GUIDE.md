@@ -44,6 +44,8 @@ Implement a new utility method in DBUtils to truncate tables
 Fix the timeout issue in PodmanCompose.waitForDatabaseReady()
 
 Add support for Bybit inverse contracts in MockData
+
+Create a new test class for AmqpTestPublisher
 ```
 
 ### 2. Code Reviewer Agent (`reviewer`)
@@ -71,7 +73,9 @@ Add support for Bybit inverse contracts in MockData
 
 @reviewer Audit the error handling in PodmanCompose
 
-@reviewer Review the new test class for best practices
+@reviewer Review the MockBybitSpotDataTest class for best practices
+
+@reviewer Check all files changed in the last commit for style violations
 ```
 
 ### 3. Technical Writer Agent (`writer`)
@@ -100,6 +104,8 @@ Add support for Bybit inverse contracts in MockData
 @writer Create a troubleshooting section for RabbitMQ issues
 
 @writer Document the new configuration properties
+
+@writer Add examples for using StreamTestPublisher
 ```
 
 ## Available Skills
@@ -135,6 +141,8 @@ Podman Compose integration testing patterns for TimescaleDB and RabbitMQ contain
 @reviewer Check all files changed in the last commit for style violations
 
 @reviewer Audit the error handling across the entire codebase
+
+@reviewer Review the test coverage in StreamConsumerPublisherTest
 ```
 
 ### Documentation Workflow
@@ -145,6 +153,43 @@ Podman Compose integration testing patterns for TimescaleDB and RabbitMQ contain
 @writer Add examples for using StreamTestPublisher
 
 @writer Create a configuration reference table
+
+@writer Document the MockData.Source and MockData.Type enums
+```
+
+## Project Structure
+
+```
+crypto-scout-test/
+├── .opencode/
+│   ├── agents/
+│   │   ├── developer.md    # Primary development agent
+│   │   ├── reviewer.md     # Code review subagent
+│   │   └── writer.md       # Documentation subagent
+│   ├── skills/
+│   │   ├── java-code-style/
+│   │   │   └── SKILL.md    # Code style conventions
+│   │   ├── java-test-library/
+│   │   │   └── SKILL.md    # Library development patterns
+│   │   └── podman-testing/
+│   │       └── SKILL.md    # Container testing patterns
+│   └── OPENCODE_GUIDE.md   # This guide
+├── src/main/java/.../test/
+│   ├── Constants.java              # Configuration constants
+│   ├── MockData.java               # Typed mock data loader
+│   ├── PodmanCompose.java          # Container lifecycle
+│   ├── DBUtils.java                # Database utilities
+│   ├── StreamTestPublisher.java    # Streams publisher
+│   ├── StreamTestConsumer.java     # Streams consumer
+│   ├── AmqpTestPublisher.java      # AMQP publisher
+│   ├── AmqpTestConsumer.java       # AMQP consumer
+│   └── Assertions.java             # Test assertions
+├── src/main/resources/
+│   ├── bybit-spot/           # 12 JSON mock files
+│   ├── bybit-linear/         # 13 JSON mock files
+│   ├── crypto-scout/         # 6 JSON mock files
+│   └── podman/               # Container configuration
+└── src/test/java/.../test/   # 9 test classes
 ```
 
 ## Agent Navigation
@@ -186,7 +231,7 @@ compatibility: opencode
 ### Override Model
 Add `model` to agent frontmatter:
 ```yaml
-model: zai-coding-plan/glm-4.7
+model: opencode/kimi-k2.5-free
 ```
 
 ## Best Practices
@@ -229,22 +274,23 @@ tools:
   bash: true
 ```
 
-## File Structure
+## Build and Test Commands
 
-```
-.opencode/
-├── agents/
-│   ├── developer.md    # Primary development agent
-│   ├── reviewer.md     # Code review subagent
-│   └── writer.md       # Documentation subagent
-├── skills/
-│   ├── java-test-library/
-│   │   └── SKILL.md    # Library development patterns
-│   ├── java-code-style/
-│   │   └── SKILL.md    # Code style conventions
-│   └── podman-testing/
-│       └── SKILL.md    # Container testing patterns
-└── OPENCODE_GUIDE.md   # This guide
+```bash
+# Build the library
+mvn clean install
+
+# Quick build without tests
+mvn -q -DskipTests install
+
+# Run all tests
+mvn test
+
+# Run specific test
+mvn test -Dtest=MockBybitSpotDataTest
+
+# Run with extended timeout
+mvn -q -Dpodman.compose.up.timeout.min=5 test
 ```
 
 ## Additional Resources

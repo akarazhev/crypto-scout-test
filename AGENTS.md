@@ -6,6 +6,46 @@ This document provides guidelines for agentic coding contributors to the crypto-
 
 **crypto-scout-test** is a Java 25 Maven library providing test support utilities for the crypto-scout ecosystem:
 
+## MCP Server Configuration
+
+This module uses the **Context7 MCP server** for enhanced code intelligence and documentation retrieval.
+
+### Available MCP Tools
+
+When working with this codebase, you can use the following MCP tools via the context7 server:
+
+- **resolve-library-id**: Resolve a library name to its Context7 library ID
+- **get-library-docs**: Retrieve up-to-date documentation for a library by its ID
+
+### Configuration
+
+The MCP server is configured in `.opencode/package.json`:
+
+```json
+{
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "CONTEXT7_API_KEY": "ctx7sk-4cec80b8-d947-4ff4-a29a-d00bea5a2fac"
+      },
+      "enabled": true
+    }
+  }
+}
+```
+
+### Usage Guidelines
+
+1. **JUnit 6/Jupiter**: Use `resolve-library-id` for "junit" to get the latest testing patterns, lifecycle management, and assertion best practices.
+
+2. **TestContainers/Podman**: Retrieve container testing documentation for database and messaging infrastructure testing.
+
+3. **RabbitMQ Testing**: Access stream and AMQP testing patterns for publisher/consumer test implementations.
+
+4. **Mock Data Patterns**: Get guidance on JSON fixture management and test data organization best practices.
+
 | Category | Files | Purpose |
 |----------|-------|---------|
 | Main Source | 9 | Test utilities, mock data, RabbitMQ helpers |
